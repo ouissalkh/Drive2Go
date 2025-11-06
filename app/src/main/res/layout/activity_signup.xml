@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/registerScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@drawable/car_signup"
+    tools:context=".ui.creationCompte.SignUpActivity">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clipToPadding="false">
+
+        <!--  Titre principal -->
+        <TextView
+            android:text="Créer un compte"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="#2E7D32"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!--  Champ Nom -->
+        <EditText
+            android:id="@+id/inputNom"
+            android:hint="Nom"
+            android:inputType="textPersonName"
+            android:padding="12dp"
+            android:textColor="#424242"
+            android:textColorHint="#9E9E9E"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Champ Prénom -->
+        <EditText
+            android:id="@+id/inputPrenom"
+            android:hint="Prénom"
+            android:inputType="textPersonName"
+            android:padding="12dp"
+            android:textColor="#424242"
+            android:textColorHint="#9E9E9E"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Téléphone -->
+        <EditText
+            android:id="@+id/inputTelephone"
+            android:hint="Numéro de téléphone"
+            android:inputType="phone"
+            android:padding="12dp"
+            android:textColor="#424242"
+            android:textColorHint="#9E9E9E"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Email -->
+        <EditText
+            android:id="@+id/inputEmail"
+            android:hint="Adresse e-mail"
+            android:inputType="textEmailAddress"
+            android:padding="12dp"
+            android:textColor="#424242"
+            android:textColorHint="#9E9E9E"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"/>
+
+        <!--  Mot de passe -->
+        <EditText
+            android:id="@+id/inputPassword"
+            android:hint="Mot de passe"
+            android:inputType="textPassword"
+            android:padding="12dp"
+            android:textColor="#424242"
+            android:textColorHint="#9E9E9E"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Confirmation du mot de passe -->
+        <EditText
+            android:id="@+id/inputConfirmPassword"
+            android:hint="Confirmer le mot de passe"
+            android:inputType="textPassword"
+            android:padding="12dp"
+            android:textColor="#424242"
+            android:textColorHint="#9E9E9E"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"/>
+
+        <!--  Bouton Créer un compte -->
+        <Button
+            android:id="@+id/btnCreateAccount"
+            android:text="Créer un compte"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#2E7D32"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Lien vers la connexion -->
+        <TextView
+            android:text="Vous avez Déjà un compte ? Connectez-vous"
+            android:textColor="#1B5E20"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</ScrollView>
