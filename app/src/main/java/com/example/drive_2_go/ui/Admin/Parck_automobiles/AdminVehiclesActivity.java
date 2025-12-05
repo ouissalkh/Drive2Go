@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.drive_2_go.R;
+import com.example.drive_2_go.ui.Admin.addeditCar.AddEditVehicleActivity;
 import com.example.drive_2_go.ui.adapter.CarAdapter;
 import com.example.drive_2_go.data.model.Car;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -36,7 +37,7 @@ public class AdminVehiclesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_vehicles);
+        setContentView(R.layout.activity_admin_vehicules);
 
         db = FirebaseFirestore.getInstance();
 
