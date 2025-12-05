@@ -16,27 +16,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Drive_2_GO">
-        <activity
-<<<<<<< HEAD
-=======
-            android:name=".ui.Admin.Parck_automobiles.ParckAutomobileActivity"
-            android:exported="false" />
+
 
 
         <activity
-            android:name=".ui.Admin.addCar.AddCarActivity"
+            android:name=".ui.Admin.addeditCar.AddEditVehicleActivity"
             android:exported="false" />
 
         <activity
             android:name=".ui.Admin.Gestion_Users.UsersGestionActivity"
             android:exported="false" />
-        <activity
->>>>>>> 5d37a57c54970dd9dd71f1ac3924cdaf257ecc1d
-            android:name=".ui.Admin.Table_bord.adminActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.Admin.addCar.addCarActivity"
-            android:exported="false" />
+
 
         <activity android:name=".ui.Client.accueil.AccueilActivity"
             android:exported="false"/>
