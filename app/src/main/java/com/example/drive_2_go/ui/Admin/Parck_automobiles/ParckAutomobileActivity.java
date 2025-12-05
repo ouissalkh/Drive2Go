@@ -36,7 +36,7 @@ public class AdminVehiclesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_vehicles); // Note: layout différent
+        setContentView(R.layout.activity_admin_vehicles);
 
         db = FirebaseFirestore.getInstance();
 

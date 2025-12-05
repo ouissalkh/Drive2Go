@@ -3,7 +3,6 @@ package com.example.drive_2_go.ui.Admin.Gestion_Users;
 import android.os.Bundle;
 import android.widget.Toast;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,53 +16,51 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+public class GestionUsersActivity extends AppCompatActivity { // 1. Étendre AppCompatActivity
 
-public class GestionUsersActivity {
+    private RecyclerView recyclerView;
+    private UserAdapter adapter;
+    private List<User> userList;
+    private FirebaseFirestore db;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_users_gestion);
 
+        db = FirebaseFirestore.getInstance();
 
-        private RecyclerView recyclerView;
-        private UserAdapter adapter;
-        private List<User> userList;
-        private FirebaseFirestore db;
+        recyclerView = findViewById(R.id.recyclerViewUsers);
+        userList = new ArrayList<>();
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_users_gestion);
+        // 2. Correction du constructeur de l'adaptateur
+        adapter = new UserAdapter(GestionUsersActivity.this, userList);
 
-            db = FirebaseFirestore.getInstance();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
-            recyclerView = findViewById(R.id.recyclerViewUsers);
-            userList = new ArrayList<>();
-            adapter = new UserAdapter(this, userList);
+        loadUsers();
+    }
 
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(adapter);
+    private void loadUsers() {
+        db.collection("users")
+                .get() // 3. Récupérer tous les utilisateurs, pas seulement les clients
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    userList.clear();
 
-            loadUsers();
-        }
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        User user = document.toObject(User.class);
+                        user.setId(document.getId()); // 4. IMPORTANT: Définir l'ID du document
+                        userList.add(user);
+                    }
 
-        private void loadUsers() {
-            db.collection("users")
-                    .whereEqualTo("role", "client")
-                    .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        userList.clear();
+                    adapter.notifyDataSetChanged();
 
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            User user = document.toObject(User.class);
-                            userList.add(user);
-                        }
-
-                        adapter.notifyDataSetChanged();
-
-                        if (userList.isEmpty()) {
-                            Toast.makeText(this, "Aucun utilisateur", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(e ->
-                            Toast.makeText(this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show());
-        }
+                    if (userList.isEmpty()) {
+                        Toast.makeText(GestionUsersActivity.this, "Aucun utilisateur", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(GestionUsersActivity.this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }

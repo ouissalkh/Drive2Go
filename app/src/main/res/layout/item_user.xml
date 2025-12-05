@@ -108,6 +108,7 @@
                 app:tint="#757575"/>
             <!-- Note: crée bg_white_rounded_small ou retire le background -->
 
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
