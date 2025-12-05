@@ -100,7 +100,7 @@ public class AddEditVehicleActivity extends AppCompatActivity {
         etColor = findViewById(R.id.etColor);
         etPrice = findViewById(R.id.etPrice);
         etMaxKm = findViewById(R.id.etMaxKm);
-        etLocation = findViewById(R.id.etLocation);
+
         etDescription = findViewById(R.id.etDescription);
 
         spinnerFuelType = findViewById(R.id.spinnerFuelType);

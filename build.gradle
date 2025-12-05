@@ -1,14 +1,9 @@
-// build.gradle (root)
-
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    // Déclare les plugins Android et Kotlin ici, mais ne les applique pas au root
-    id 'com.android.application' version '8.13.1' apply false
-    id 'com.android.library' version '8.13.1' apply false
-    id 'org.jetbrains.kotlin.android' version '1.9.10' apply false
-    //alias(libs.plugins.google.gms.google.services) apply false
-    id("com.google.gms.google-services") version "4.4.1" apply false
-}
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+    id("com.android.application") version "8.13.1" apply false
+    id("com.android.library") version "8.13.1" apply false
+    id("com.google.gms.google-services") version "4.4.1" apply false
+
+
 }

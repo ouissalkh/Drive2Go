@@ -7,9 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".ui.Admin.Gestion_Reservations.ReservationsActivity">
 
-<<<<<<< HEAD
 </androidx.constraintlayout.widget.ConstraintLayout>
-=======
+
     <!-- CHANGEMENT ICI : On remplace LinearLayout par ConstraintLayout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
