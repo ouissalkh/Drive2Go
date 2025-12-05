@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 456aea0 (supprimer EmailSender)
     <uses-permission android:name="android.permission.INTERNET" />
 
 
@@ -20,13 +23,33 @@
 
 
         <activity
+<<<<<<< HEAD
             android:name=".ui.Admin.addeditCar.AddEditVehicleActivity"
+=======
+
+            android:name=".ui.Admin.Parck_automobiles.ParckAutomobileActivity"
+            android:exported="false" />
+
+
+        <activity
+            android:name=".ui.Admin.addCar.AddCarActivity"
+>>>>>>> 456aea0 (supprimer EmailSender)
             android:exported="false" />
 
         <activity
             android:name=".ui.Admin.Gestion_Users.UsersGestionActivity"
             android:exported="false" />
 
+<<<<<<< HEAD
+=======
+        <activity
+            android:name=".ui.Admin.Gestion_Reservations.ReservationsActivity"
+            android:exported="false" />
+        <activity
+
+            android:name=".ui.Admin.Table_bord.adminActivity"
+            android:exported="false" />
+>>>>>>> 456aea0 (supprimer EmailSender)
 
         <activity android:name=".ui.Client.accueil.AccueilActivity"
             android:exported="false"/>
