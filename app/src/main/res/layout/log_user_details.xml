@@ -26,7 +26,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
-                android:background="@drawable/bg_avatar"
+                android:background="@drawable/backgoundte"
                 android:gravity="center"/>
 
             <LinearLayout

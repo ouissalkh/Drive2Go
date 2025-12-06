@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "119490826026",
-    "project_id": "drive2go-44566",
-    "storage_bucket": "drive2go-44566.firebasestorage.app"
+    "project_number": "984715216794",
+    "project_id": "locationvoitureapp",
+    "storage_bucket": "locationvoitureapp.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:119490826026:android:e73ced55e35b0cefff1853",
+        "mobilesdk_app_id": "1:984715216794:android:8c326a1f98a8c349e8dc23",
         "android_client_info": {
           "package_name": "com.example.drive_2_go"
         }
@@ -15,7 +15,26 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBkLzPBzdlJhHuWVtU1X29i5JHPqp1ozgQ"
+          "current_key": "AIzaSyBD96fih1ugjmiUJ8OXrEUNOnUYqcUt3uo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984715216794:android:8fbde6603848ec98e8dc23",
+        "android_client_info": {
+          "package_name": "com.example.locationvoiture"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBD96fih1ugjmiUJ8OXrEUNOnUYqcUt3uo"
         }
       ],
       "services": {

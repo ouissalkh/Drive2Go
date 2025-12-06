@@ -14,8 +14,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.drive_2_go.ui.Admin.AdminMainActivity;
-import com.example.drive_2_go.client.HomeActivityClient;
+import com.example.drive_2_go.R;
+import com.example.drive_2_go.ui.Admin.Table_bord.adminActivity;
+import com.example.drive_2_go.ui.Client.accueil.AccueilActivity;
 import com.example.drive_2_go.ui.Client.creationCompte.RegisterActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -292,12 +293,12 @@ public class LoginActivity extends AppCompatActivity {
 
                         Intent intent;
                         if ("admin".equalsIgnoreCase(role)) {
-                            intent = new Intent(LoginActivity.this, AdminMainActivity.class);
+                            intent = new Intent(LoginActivity.this, adminActivity.class);
                             Toast.makeText(this, "🔐 Bienvenue Admin !", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "✅ Redirection vers AdminMainActivity");
                         } else {
                             if (isVerified != null && isVerified) {
-                                intent = new Intent(LoginActivity.this, HomeActivityClient.class);
+                                intent = new Intent(LoginActivity.this, AccueilActivity.class);
                                 Toast.makeText(this, "👋 Bienvenue !", Toast.LENGTH_SHORT).show();
                                 Log.d(TAG, "✅ Redirection vers HomeActivityClient");
                             } else {
@@ -378,7 +379,7 @@ public class LoginActivity extends AppCompatActivity {
                     btnLogin.setEnabled(true);
 
                     // Rediriger vers l'interface admin
-                    Intent intent = new Intent(LoginActivity.this, AdminMainActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, adminActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();

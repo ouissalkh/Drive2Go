@@ -34,16 +34,7 @@ public class DescriptionCarActivity extends AppCompatActivity {
         // Récupérer l'objet Car de l'Intent
         Car selectedCar = (Car) getIntent().getSerializableExtra("selected_car");
         // Au départ -> afficher icône selon favoris
-        updateFavIcon(favBtn, selectedCar.isFavorite());
-        // Quand on clique sur bouton favoris
-        favBtn.setOnClickListener(v -> {
-            boolean newState = !selectedCar.isFavorite();
-            selectedCar.setFavorite(newState);
 
-            // Changer l’icône
-            updateFavIcon(favBtn, newState);
-
-        });
 
         if (selectedCar != null) {
             // Vous pouvez maintenant utiliser selectedCar pour afficher les détails
