@@ -18,5 +18,7 @@
     <color name="white">#FFFFFF</color>
     <color name="teal_700">#00796B</color>
     <color name="rouge">#EF2C2C</color>
+    <color name="green">#4CAF50</color> <!-- Exemple de vert -->
+    <color name="gris">#808080</color>  <!-- Exemple de gris -->
 
 </resources>

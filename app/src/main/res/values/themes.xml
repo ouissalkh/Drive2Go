@@ -10,7 +10,10 @@
         <!-- false = Icônes Blanches (pour fond foncé) -->
         <!-- true = Icônes Noires (pour fond clair) -->
         <item name="android:windowLightStatusBar">false</item>
-
+        parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/white</item>
+        <item name="hintTextColor">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
 
     </style>
 

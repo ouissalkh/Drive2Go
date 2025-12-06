@@ -2,11 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-<<<<<<< HEAD
-=======
     <uses-permission android:name="android.permission.INTERNET" />
 
->>>>>>> 5d37a57c54970dd9dd71f1ac3924cdaf257ecc1d
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,23 +13,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Drive_2_GO">
-
-
-
         <activity
-            android:name=".ui.Admin.addeditCar.AddEditVehicleActivity"
+            android:name=".ui.Admin.Parck_automobiles.AdminVehiculesActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".ui.Admin.Parck_automobiles.ParckAutomobileActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.Admin.Gestion_Users.UsersGestionActivity"
             android:exported="false" />
-
-
-        <activity android:name=".ui.Client.accueil.AccueilActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".ui.Admin.Gestion_Reservations.ReservationsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.Admin.Table_bord.adminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.Client.accueil.AccueilActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.Client.favoris.Favoris"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".ui.Client.profil.Profil"
             android:exported="false" />

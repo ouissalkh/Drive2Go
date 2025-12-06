@@ -1,4 +1,4 @@
-package com.example.drive_2_go.ui.Admin.addeditCar;
+/*package com.example.drive_2_go.ui.Admin.addeditCar;
 
 import android.app.ProgressDialog;
 import android.net.Uri;
@@ -256,4 +256,4 @@ public class AddEditVehicleActivity extends AppCompatActivity {
     }
 
 
-    }
+    }*/
