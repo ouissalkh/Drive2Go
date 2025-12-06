@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    android:background="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,73 +15,76 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- En-tête : Nom + Rôle -->
+        <!-- En-tête avec avatar et badges -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="12dp">
 
-            <!-- Icône du rôle -->
-            <ImageView
-                android:id="@+id/iconRole"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_users"
-                android:layout_marginEnd="12dp"/>
+            <!-- Avatar circulaire avec initiales -->
+            <TextView
+                android:id="@+id/tvAvatar"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_avatar_circle"
+                android:gravity="center"
+                android:text="AB"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
 
-            <!-- Nom et statut -->
+            <!-- Nom et badges -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="12dp">
 
                 <TextView
-                    android:id="@+id/tvUserName"
+                    android:id="@+id/tvClientName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nom Prénom"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="4dp"/>
 
+                <!-- Badges -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="4dp">
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/tvUserRole"
+                        android:id="@+id/badgeRole"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Client"
-                        android:textSize="12sp"
-                        android:background="@drawable/bg_role_client"
+                        android:textSize="11sp"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/bg_badge_blue"
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        android:textColor="#047857"
-                        android:layout_marginEnd="8dp"/>
-
-                    <ImageView
-                        android:id="@+id/iconStatus"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@drawable/ic_check_circle"
-                        android:layout_marginEnd="4dp"/>
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:layout_marginEnd="6dp"/>
 
                     <TextView
-                        android:id="@+id/tvUserStatus"
+                        android:id="@+id/badgeStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Actif"
-                        android:textSize="12sp"
-                        android:textColor="#047857"/>
+                        android:textSize="11sp"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/bg_badge_green"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -90,8 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#E0E0E0"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="12dp"/>
 
         <!-- Informations de contact -->
         <LinearLayout
@@ -105,22 +108,36 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="4dp">
+                android:layout_marginBottom="8dp">
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_email_noir"
-                    android:layout_marginEnd="8dp"
-                    app:tint="@color/emerald_700"/>
+                    app:tint="@color/emerald_700"
+                    android:layout_marginEnd="12dp"/>
 
-                <TextView
-                    android:id="@+id/tvUserEmail"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="email@example.com"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray"/>
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email"
+                        android:textSize="11sp"
+                        android:textColor="#999"/>
+
+                    <TextView
+                        android:id="@+id/tvEmailValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="email@example.com"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"/>
+                </LinearLayout>
             </LinearLayout>
 
             <!-- Téléphone -->
@@ -129,89 +146,123 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="4dp">
+                android:layout_marginBottom="12dp">
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_phone"
-                    android:layout_marginEnd="8dp"
-                    app:tint="#047857"/>
+                    app:tint="@color/emerald_700"
+                    android:layout_marginEnd="12dp"/>
 
-                <TextView
-                    android:id="@+id/tvUserPhone"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="+212 600 000 000"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray"/>
-            </LinearLayout>
+                    android:orientation="vertical">
 
-            <!-- Date d'inscription -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Téléphone"
+                        android:textSize="11sp"
+                        android:textColor="#999"/>
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/ic_calendar"
-                    android:layout_marginEnd="8dp"
-                    app:tint="#047857"/>
-
-                <TextView
-                    android:id="@+id/tvUserDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Inscrit le 01/01/2024"
-                    android:textSize="12sp"
-                    android:textColor="@android:color/darker_gray"
-                    android:fontFamily="sans-serif-light"/>
+                    <TextView
+                        android:id="@+id/tvPhoneValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+212 600 000 000"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Boutons d'action -->
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Statistiques -->
         <LinearLayout
+            android:id="@+id/layoutStats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="end"
-            android:layout_marginTop="12dp">
+            android:gravity="center"
+            android:layout_marginBottom="12dp">
 
-            <!-- Bouton Détails -->
-            <ImageView
-                android:id="@+id/btnDetails"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@drawable/ic_info"
-                android:padding="6dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:layout_marginEnd="8dp"
-                app:tint="#047857"/>
+            <!-- Date d'inscription -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
 
-            <!-- Bouton Modifier (Activer/Bloquer) -->
-            <ImageView
-                android:id="@+id/btnEdit"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@drawable/ic_edit"
-                android:padding="6dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:layout_marginEnd="8dp"
-                app:tint="@android:color/holo_orange_dark"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Inscrit le"
+                    android:textSize="11sp"
+                    android:textColor="#999"/>
 
-            <!-- Bouton Supprimer -->
-            <ImageView
-                android:id="@+id/btnDelete"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@drawable/ic_delete"
-                android:padding="6dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@android:color/holo_red_dark"/>
+                <TextView
+                    android:id="@+id/tvDateInscription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2024-01-15"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/emerald_700"/>
+            </LinearLayout>
+
+            <!-- Divider vertical -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#E0E0E0"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"/>
+
+            <!-- Nombre de réservations -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Réservations"
+                    android:textSize="11sp"
+                    android:textColor="#999"/>
+
+                <TextView
+                    android:id="@+id/tvReservationsCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/emerald_700"/>
+            </LinearLayout>
         </LinearLayout>
+
+        <!-- Bouton gérer -->
+        <Button
+            android:id="@+id/btnManage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gérer l'utilisateur"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/emerald_700"
+            app:cornerRadius="8dp"/>
 
     </LinearLayout>
 

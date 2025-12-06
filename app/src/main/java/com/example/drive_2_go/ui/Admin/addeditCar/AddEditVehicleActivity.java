@@ -3,6 +3,8 @@ package com.example.drive_2_go.ui.Admin.addeditCar;
 import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -33,18 +35,27 @@ public class AddEditVehicleActivity extends AppCompatActivity {
     private Button btnSelectImage;
     private MaterialButton btnSaveCar;
     private TextView tvTitle, tvDoorCount, tvPeopleCount, tvBaggageCount;
-    private TextInputEditText etName, etBrand, etModel, etLicensePlate, etYear, etColor,
-            etPrice, etMaxKm, etLocation, etDescription;
-    private AutoCompleteTextView spinnerFuelType, spinnerGearType;
+    private TextInputEditText etName, etModel, etLicensePlate, etYear, etColor,
+            etPrice, etMaxKm, etDescription;
+    private AutoCompleteTextView spinnerBrand, spinnerFuelType, spinnerGearType;
     private SwitchMaterial switchAC, switchChecked, switchAvailable;
 
     // Variables de données
     private int doorCount = 4;
     private int peopleCount = 5;
     private int baggageCount = 2;
-    private Uri selectedImageUri; // URI temporaire de la galerie
-    private Car carToEdit; // Objet reçu si modification
+    private Uri selectedImageUri;
+    private Car carToEdit;
     private FirebaseFirestore db;
+
+    // Liste des marques disponibles
+    private static final String[] BRANDS = {
+            "BMW",
+            "Ford",
+            "Audi",
+            "Mercedes",
+            "Volkswagen"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,20 +68,20 @@ public class AddEditVehicleActivity extends AppCompatActivity {
         setupSpinners();
         setupCounters();
 
-        // Gestionnaire de résultat pour la sélection d'image dans la galerie
+        // Gestionnaire de résultat pour la sélection d'image
         ActivityResultLauncher<String> imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 uri -> {
                     if (uri != null) {
                         selectedImageUri = uri;
-                        ivCarImage.setImageURI(uri); // Aperçu immédiat
+                        ivCarImage.setImageURI(uri);
                     }
                 }
         );
 
         btnSelectImage.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
 
-        // Vérifier si on est en mode ÉDITION (Update)
+        // Vérifier si on est en mode ÉDITION
         if (getIntent().hasExtra("CAR_OBJECT")) {
             carToEdit = (Car) getIntent().getSerializableExtra("CAR_OBJECT");
             if (carToEdit != null) {
@@ -85,7 +96,6 @@ public class AddEditVehicleActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        // Liaison avec tous les IDs du XML
         ivCarImage = findViewById(R.id.ivCarImage);
         btnSelectImage = findViewById(R.id.btnSelectImage);
         btnSaveCar = findViewById(R.id.btnSaveCar);
@@ -93,14 +103,13 @@ public class AddEditVehicleActivity extends AppCompatActivity {
         tvTitle = findViewById(R.id.tvTitle);
 
         etName = findViewById(R.id.etName);
-        etBrand = findViewById(R.id.etBrand);
+        spinnerBrand = findViewById(R.id.etBrand);
         etModel = findViewById(R.id.etModel);
         etLicensePlate = findViewById(R.id.etLicensePlate);
         etYear = findViewById(R.id.etYear);
         etColor = findViewById(R.id.etColor);
         etPrice = findViewById(R.id.etPrice);
         etMaxKm = findViewById(R.id.etMaxKm);
-
         etDescription = findViewById(R.id.etDescription);
 
         spinnerFuelType = findViewById(R.id.spinnerFuelType);
@@ -124,40 +133,101 @@ public class AddEditVehicleActivity extends AppCompatActivity {
     }
 
     private void setupSpinners() {
-        String[] fuels = {"Essence", "Diesel", "Électrique", "Hybride"};
-        spinnerFuelType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, fuels));
+        // Configuration du spinner MARQUES
+        ArrayAdapter<String> brandAdapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                BRANDS
+        );
+        spinnerBrand.setAdapter(brandAdapter);
 
+        // Définir une valeur par défaut
+        spinnerBrand.setText(BRANDS[0], false);
+
+        // Configuration du spinner CARBURANT
+        String[] fuels = {"Essence", "Diesel", "Électrique", "Hybride"};
+        ArrayAdapter<String> fuelAdapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                fuels
+        );
+        spinnerFuelType.setAdapter(fuelAdapter);
+        spinnerFuelType.setText("Diesel", false);
+
+        // Configuration du spinner BOÎTE DE VITESSE
         String[] gears = {"Manuelle", "Automatique"};
-        spinnerGearType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, gears));
+        ArrayAdapter<String> gearAdapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                gears
+        );
+        spinnerGearType.setAdapter(gearAdapter);
+        spinnerGearType.setText("Manuelle", false);
     }
 
     private void setupCounters() {
-        // Logique des boutons + et -
-        btnDecreaseDoors.setOnClickListener(v -> { if (doorCount > 2) tvDoorCount.setText(String.valueOf(--doorCount)); });
-        btnIncreaseDoors.setOnClickListener(v -> { if (doorCount < 10) tvDoorCount.setText(String.valueOf(++doorCount)); });
+        // Portes
+        btnDecreaseDoors.setOnClickListener(v -> {
+            if (doorCount > 2) {
+                doorCount--;
+                tvDoorCount.setText(String.valueOf(doorCount));
+            }
+        });
 
-        btnDecreasePeople.setOnClickListener(v -> { if (peopleCount > 1) tvPeopleCount.setText(String.valueOf(--peopleCount)); });
-        btnIncreasePeople.setOnClickListener(v -> { if (peopleCount < 50) tvPeopleCount.setText(String.valueOf(++peopleCount)); });
+        btnIncreaseDoors.setOnClickListener(v -> {
+            if (doorCount < 10) {
+                doorCount++;
+                tvDoorCount.setText(String.valueOf(doorCount));
+            }
+        });
 
-        btnDecreaseBaggage.setOnClickListener(v -> { if (baggageCount > 0) tvBaggageCount.setText(String.valueOf(--baggageCount)); });
-        btnIncreaseBaggage.setOnClickListener(v -> { if (baggageCount < 10) tvBaggageCount.setText(String.valueOf(++baggageCount)); });
+        // Passagers
+        btnDecreasePeople.setOnClickListener(v -> {
+            if (peopleCount > 1) {
+                peopleCount--;
+                tvPeopleCount.setText(String.valueOf(peopleCount));
+            }
+        });
+
+        btnIncreasePeople.setOnClickListener(v -> {
+            if (peopleCount < 50) {
+                peopleCount++;
+                tvPeopleCount.setText(String.valueOf(peopleCount));
+            }
+        });
+
+        // Bagages
+        btnDecreaseBaggage.setOnClickListener(v -> {
+            if (baggageCount > 0) {
+                baggageCount--;
+                tvBaggageCount.setText(String.valueOf(baggageCount));
+            }
+        });
+
+        btnIncreaseBaggage.setOnClickListener(v -> {
+            if (baggageCount < 10) {
+                baggageCount++;
+                tvBaggageCount.setText(String.valueOf(baggageCount));
+            }
+        });
     }
 
     private void fillFormWithData(Car car) {
         etName.setText(car.getName());
-        etBrand.setText(car.getBrand());
+        spinnerBrand.setText(car.getBrand(), false);
         etModel.setText(car.getModel());
         etLicensePlate.setText(car.getLicensePlate());
         etYear.setText(car.getYear());
         etColor.setText(car.getColor());
         etPrice.setText(car.getPrice());
         etMaxKm.setText(car.getMaxKm());
-        etLocation.setText(car.getLocation());
         etDescription.setText(car.getDescription());
 
         spinnerFuelType.setText(car.getFuelType(), false);
         String gearLabel = "A".equals(car.getGearType()) ? "Automatique" : "Manuelle";
         spinnerGearType.setText(gearLabel, false);
+
+        boolean isFavorite = (carToEdit != null) ? carToEdit.isFavorite() : false;
 
         doorCount = car.getDoorCount();
         peopleCount = car.getPeopleCount();
@@ -180,14 +250,43 @@ public class AddEditVehicleActivity extends AppCompatActivity {
     }
 
     private void validateAndSave() {
+        // Validation des champs obligatoires
         String name = etName.getText().toString().trim();
+        String brand = spinnerBrand.getText().toString().trim();
+        String model = etModel.getText().toString().trim();
+        String licensePlate = etLicensePlate.getText().toString().trim();
         String price = etPrice.getText().toString().trim();
 
-        if (name.isEmpty() || price.isEmpty()) {
-            Toast.makeText(this, "Veuillez remplir le nom et le prix", Toast.LENGTH_SHORT).show();
+        if (name.isEmpty()) {
+            etName.setError("Le nom est requis");
+            etName.requestFocus();
             return;
         }
 
+        if (brand.isEmpty()) {
+            Toast.makeText(this, "Veuillez sélectionner une marque", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (model.isEmpty()) {
+            etModel.setError("Le modèle est requis");
+            etModel.requestFocus();
+            return;
+        }
+
+        if (licensePlate.isEmpty()) {
+            etLicensePlate.setError("La plaque d'immatriculation est requise");
+            etLicensePlate.requestFocus();
+            return;
+        }
+
+        if (price.isEmpty()) {
+            etPrice.setError("Le prix est requis");
+            etPrice.requestFocus();
+            return;
+        }
+
+        // Afficher le loader
         ProgressDialog pd = new ProgressDialog(this);
         pd.setMessage("Enregistrement en cours...");
         pd.setCancelable(false);
@@ -195,19 +294,17 @@ public class AddEditVehicleActivity extends AppCompatActivity {
 
         String finalImagePath = "";
 
-        // CAS 1 : L'utilisateur a choisi une nouvelle image
+        // Gestion de l'image
         if (selectedImageUri != null) {
             String uniqueName = ImageUtils.createUniqueFileName();
-            // Utilisation de notre classe utilitaire ImageUtils
             finalImagePath = ImageUtils.copyImageToInternalStorage(this, selectedImageUri, uniqueName);
 
-            // Si c'est une modification, on supprime l'ancienne image pour nettoyer
+            // Supprimer l'ancienne image en cas de modification
             if (carToEdit != null && carToEdit.getImageUrl() != null) {
                 ImageUtils.deleteImage(carToEdit.getImageUrl());
             }
-        }
-        // CAS 2 : Pas de nouvelle image, on garde l'ancienne (en modif)
-        else if (carToEdit != null) {
+        } else if (carToEdit != null) {
+            // Garder l'ancienne image
             finalImagePath = carToEdit.getImageUrl();
         }
 
@@ -215,45 +312,64 @@ public class AddEditVehicleActivity extends AppCompatActivity {
     }
 
     private void saveToFirestore(String imagePath, ProgressDialog pd) {
+        // Génération ou récupération de l'ID
         String carId = (carToEdit != null) ? carToEdit.getId() : db.collection("cars").document().getId();
+
+        // Conversion du type de boîte
         String gearShort = spinnerGearType.getText().toString().equals("Automatique") ? "A" : "M";
+
+        // Récupération des valeurs
+        String year = etYear.getText().toString().trim();
+        String maxKm = etMaxKm.getText().toString().trim();
+        String color = etColor.getText().toString().trim();
+        String description = etDescription.getText().toString().trim();
+
+        // Valeurs par défaut si vides
+        if (year.isEmpty()) year = "2024";
+        if (maxKm.isEmpty()) maxKm = "1000";
+        if (color.isEmpty()) color = "Non spécifié";
+        if (description.isEmpty()) description = "Aucune description";
+
+        // ⭐ IMPORTANT : Gestion du champ isFavorite
+        // - Si c'est une nouvelle voiture : false par défaut
+        // - Si c'est une modification : on garde la valeur existante
+        boolean isFavorite = (carToEdit != null) ? carToEdit.isFavorite() : false;
 
         // Création de l'objet Car
         Car car = new Car(
                 carId,
-                etName.getText().toString(),
-                etLicensePlate.getText().toString(),
-                etPrice.getText().toString(),
+                etName.getText().toString().trim(),
+                etLicensePlate.getText().toString().trim(),
+                etPrice.getText().toString().trim(),
                 imagePath,
                 spinnerFuelType.getText().toString(),
-                etMaxKm.getText().toString(),
+                maxKm,
                 baggageCount,
                 switchAC.isChecked(),
                 gearShort,
                 doorCount,
                 peopleCount,
                 switchChecked.isChecked(),
-                false, // ICI : On met 'false' pour satisfaire le constructeur sans gérer les favoris
-                etDescription.getText().toString(),
-                etBrand.getText().toString(),
-                etModel.getText().toString(),
-                etYear.getText().toString(),
-                etColor.getText().toString(),
-                etLocation.getText().toString(),
+                isFavorite, // ✅ Valeur gérée correctement
+                description,
+                spinnerBrand.getText().toString(), // ✅ Marque depuis le spinner
+                etModel.getText().toString().trim(),
+                year,
+                color,
+                "", // location (vide pour l'instant)
                 switchAvailable.isChecked()
         );
 
+        // Sauvegarde dans Firestore
         db.collection("cars").document(carId).set(car)
                 .addOnSuccessListener(unused -> {
                     pd.dismiss();
-                    Toast.makeText(this, "Véhicule enregistré !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "✅ Véhicule enregistré avec succès !", Toast.LENGTH_SHORT).show();
                     finish();
                 })
                 .addOnFailureListener(e -> {
                     pd.dismiss();
-                    Toast.makeText(this, "Erreur lors de la sauvegarde", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "❌ Erreur : " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
-
-
-    }
+}

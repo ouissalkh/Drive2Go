@@ -12,7 +12,7 @@ import com.example.drive_2_go.R;
 import com.example.drive_2_go.ui.Admin.Table_bord.adminActivity;
 import com.example.drive_2_go.ui.Admin.Parck_automobiles.AdminVehiclesActivity; // Chemin à vérifier
 import com.example.drive_2_go.ui.Admin.Gestion_Reservations.ReservationsActivity;     // Chemin à vérifier
-import com.example.drive_2_go.ui.Admin.Gestion_Users.;    // Chemin à vérifier
+import com.example.drive_2_go.ui.Admin.Gestion_Users.*;    // Chemin à vérifier
 import com.example.drive_2_go.ui.Client.login.LoginActivity;
 
 public abstract class BaseAdminActivity extends AppCompatActivity {
@@ -36,9 +36,9 @@ public abstract class BaseAdminActivity extends AppCompatActivity {
         // Le code va comparer "this" (la page actuelle) avec la classe cible
 
         gererBouton(btnHome, adminActivity.class);
-        gererBouton(btnParck, ParckAutomobileActivity.class);
+        gererBouton(btnParck, AdminVehiclesActivity.class);
         gererBouton(btnResa, ReservationsActivity.class);
-        gererBouton(btnUsers, UsersGestionActivity.class);
+        gererBouton(btnUsers, GestionUsersActivity.class);
 
         // 3. Cas spécial pour la Déconnexion
         if (btnLogout != null) {

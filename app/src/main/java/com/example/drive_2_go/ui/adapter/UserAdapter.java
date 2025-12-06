@@ -15,11 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.drive_2_go.R;
 import com.example.drive_2_go.data.model.User;
+import com.example.drive_2_go.ui.Admin.Gestion_Users.GestionUsersActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -54,40 +54,43 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         User user = userList.get(position);
 
-        // Avatar initiales
-        String initials = user.getPrenom().substring(0, 1).toUpperCase() +
-                user.getNom().substring(0, 1).toUpperCase();
+        // Avatar avec initiales
+        String initials = "";
+        if (user.getPrenom() != null && !user.getPrenom().isEmpty() &&
+                user.getNom() != null && !user.getNom().isEmpty()) {
+            initials = user.getPrenom().substring(0, 1).toUpperCase() +
+                    user.getNom().substring(0, 1).toUpperCase();
+        }
         holder.tvAvatar.setText(initials);
 
         // Nom complet
-        holder.tvClientName.setText(user.getPrenom() + " " + user.getNom());
+        String fullName = (user.getPrenom() != null ? user.getPrenom() : "") + " " +
+                (user.getNom() != null ? user.getNom() : "");
+        holder.tvClientName.setText(fullName.trim());
+
+        // Badge rôle
+        if ("admin".equalsIgnoreCase(user.getRole())) {
+            holder.badgeRole.setText("Administrateur");
+            holder.badgeRole.setBackgroundResource(R.drawable.bg_badge_blue);
+        } else {
+            holder.badgeRole.setText("Client");
+            holder.badgeRole.setBackgroundResource(R.drawable.bg_badge_blue);
+        }
+
+        // Badge statut
+        if (user.isVerified()) {
+            holder.badgeStatus.setText("Actif");
+            holder.badgeStatus.setBackgroundResource(R.drawable.bg_badge_green);
+        } else {
+            holder.badgeStatus.setText("En attente");
+            holder.badgeStatus.setBackgroundResource(R.drawable.bg_badge_green);
+        }
 
         // Email
-        holder.tvEmailValue.setText(user.getEmail());
+        holder.tvEmailValue.setText(user.getEmail() != null ? user.getEmail() : "N/A");
 
         // Téléphone
-        holder.tvPhoneValue.setText(user.getTelephone());
-
-        // Badges rôle et statut
-        LinearLayout badgeContainer = (LinearLayout) holder.tvClientName.getParent().getParent();
-        TextView badgeRole = (TextView) badgeContainer.getChildAt(0);
-        TextView badgeStatus = (TextView) badgeContainer.getChildAt(1);
-
-        if ("admin".equalsIgnoreCase(user.getRole())) {
-            badgeRole.setText("Administrateur");
-            badgeRole.setBackgroundResource(R.drawable.bg_badge_blue);
-        } else {
-            badgeRole.setText("Client");
-            badgeRole.setBackgroundResource(R.drawable.bg_badge_blue);
-        }
-
-        if (user.isVerified()) {
-            badgeStatus.setText("Actif");
-            badgeStatus.setBackgroundResource(R.drawable.bg_badge_green);
-        } else {
-            badgeStatus.setText("En attente");
-            badgeStatus.setBackgroundResource(R.drawable.bg_badge_green);
-        }
+        holder.tvPhoneValue.setText(user.getTelephone() != null ? user.getTelephone() : "N/A");
 
         // Date d'inscription
         if (user.getDateInscription() != null) {
@@ -100,13 +103,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         // Nombre de réservations
         loadUserReservationsCount(user.getId(), holder.tvReservationsCount);
 
-        // Bouton gérer utilisateur
-        holder.btnManage.setOnClickListener(v -> {
-            showUserDetailsDialog(user);
-        });
+        // Bouton gérer
+        holder.btnManage.setOnClickListener(v -> showUserDetailsDialog(user));
     }
 
     private void loadUserReservationsCount(String userId, TextView textView) {
+        if (userId == null || userId.isEmpty()) {
+            textView.setText("0");
+            return;
+        }
+
         db.collection("reservations")
                 .whereEqualTo("utilisateur_id", userId)
                 .get()
@@ -123,9 +129,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.log_user_details);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        // Récupérer les vues du dialog
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        // Récupération des vues
         TextView tvDialogInitials = dialog.findViewById(R.id.tvInitials);
         TextView tvDialogUserName = dialog.findViewById(R.id.tvUserName);
         TextView tvDialogEmail = dialog.findViewById(R.id.tvEmail);
@@ -147,22 +160,33 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         Button btnClose = dialog.findViewById(R.id.btnClose);
 
         // Remplir les informations
-        String initials = user.getPrenom().substring(0, 1).toUpperCase() +
-                user.getNom().substring(0, 1).toUpperCase();
+        String initials = "";
+        if (user.getPrenom() != null && !user.getPrenom().isEmpty() &&
+                user.getNom() != null && !user.getNom().isEmpty()) {
+            initials = user.getPrenom().substring(0, 1).toUpperCase() +
+                    user.getNom().substring(0, 1).toUpperCase();
+        }
         tvDialogInitials.setText(initials);
-        tvDialogUserName.setText(user.getPrenom() + " " + user.getNom());
-        tvDialogEmail.setText(user.getEmail());
-        tvDialogPhone.setText(user.getTelephone());
+
+        String fullName = (user.getPrenom() != null ? user.getPrenom() : "") + " " +
+                (user.getNom() != null ? user.getNom() : "");
+        tvDialogUserName.setText(fullName.trim());
+
+        tvDialogEmail.setText(user.getEmail() != null ? user.getEmail() : "N/A");
+        tvDialogPhone.setText(user.getTelephone() != null ? user.getTelephone() : "N/A");
 
         if (user.getDateInscription() != null) {
             Date date = new Date(user.getDateInscription());
             tvDialogDateInscription.setText(dateFormat.format(date));
+        } else {
+            tvDialogDateInscription.setText("N/A");
         }
 
+        // État actuel
         tvCurrentRole.setText("admin".equalsIgnoreCase(user.getRole()) ? "Administrateur" : "Client");
         tvCurrentStatus.setText(user.isVerified() ? "Actif" : "En attente");
 
-        // Pré-sélectionner les radio buttons
+        // Pré-sélection radio buttons
         if ("admin".equalsIgnoreCase(user.getRole())) {
             radioAdmin.setChecked(true);
         } else {
@@ -175,14 +199,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             radioSuspended.setChecked(true);
         }
 
-        // Charger le nombre de réservations
+        // Charger les réservations
         loadUserReservationsCount(user.getId(), tvDialogReservations);
 
         // Bouton sauvegarder
         btnSave.setOnClickListener(v -> {
             String newRole = radioClient.isChecked() ? "client" : "admin";
             boolean newStatus = radioActive.isChecked();
-
             updateUser(user.getId(), newRole, newStatus, dialog);
         });
 
@@ -203,8 +226,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                     Toast.makeText(context, "✅ Utilisateur mis à jour", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
 
-                    // Recharger la liste
-                    notifyDataSetChanged();
+                    // Rafraîchir la liste
+                    if (context instanceof GestionUsersActivity) {
+                        ((GestionUsersActivity) context).refreshUsers();
+                    }
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(context, "❌ Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -217,34 +242,33 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     public static class UserViewHolder extends RecyclerView.ViewHolder {
-        CardView cardView;
-        TextView tvAvatar;
-        TextView tvClientName;
-        TextView tvEmailValue;
-        TextView tvPhoneValue;
-        TextView tvDateInscription;
-        TextView tvReservationsCount;
+        TextView tvAvatar, tvClientName, badgeRole, badgeStatus;
+        TextView tvEmailValue, tvPhoneValue, tvDateInscription, tvReservationsCount;
         Button btnManage;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            // cardView = itemView.findViewById(R.id.cardView);
             tvAvatar = itemView.findViewById(R.id.tvAvatar);
             tvClientName = itemView.findViewById(R.id.tvClientName);
+            badgeRole = itemView.findViewById(R.id.badgeRole);
+            badgeStatus = itemView.findViewById(R.id.badgeStatus);
             tvEmailValue = itemView.findViewById(R.id.tvEmailValue);
             tvPhoneValue = itemView.findViewById(R.id.tvPhoneValue);
 
-            // Pour les statistiques, on va chercher les vues dans le layoutStats
+            // Récupération des TextViews dans layoutStats
             LinearLayout layoutStats = itemView.findViewById(R.id.layoutStats);
+            if (layoutStats != null && layoutStats.getChildCount() >= 2) {
+                LinearLayout inscriptionLayout = (LinearLayout) layoutStats.getChildAt(0);
+                if (inscriptionLayout != null && inscriptionLayout.getChildCount() >= 2) {
+                    tvDateInscription = (TextView) inscriptionLayout.getChildAt(1);
+                }
 
-            // La première LinearLayout dans layoutStats contient la date d'inscription
-            LinearLayout inscriptionLayout = (LinearLayout) layoutStats.getChildAt(0);
-            tvDateInscription = (TextView) inscriptionLayout.getChildAt(1);
-
-            // La deuxième LinearLayout dans layoutStats contient le nombre de réservations
-            LinearLayout reservationsLayout = (LinearLayout) layoutStats.getChildAt(1);
-            tvReservationsCount = (TextView) reservationsLayout.getChildAt(1);
+                LinearLayout reservationsLayout = (LinearLayout) layoutStats.getChildAt(2);
+                if (reservationsLayout != null && reservationsLayout.getChildCount() >= 2) {
+                    tvReservationsCount = (TextView) reservationsLayout.getChildAt(1);
+                }
+            }
 
             btnManage = itemView.findViewById(R.id.btnManage);
         }
