@@ -10,9 +10,9 @@ import androidx.core.content.ContextCompat;
 // Vérifie bien que le chemin (package) est correct pour chaque ligne
 import com.example.drive_2_go.R;
 import com.example.drive_2_go.ui.Admin.Table_bord.adminActivity;
-import com.example.drive_2_go.ui.Admin.Parck_automobiles.ParckAutomobileActivity; // Chemin à vérifier
+import com.example.drive_2_go.ui.Admin.Parck_automobiles.AdminVehiclesActivity; // Chemin à vérifier
 import com.example.drive_2_go.ui.Admin.Gestion_Reservations.ReservationsActivity;     // Chemin à vérifier
-import com.example.drive_2_go.ui.Admin.Gestion_Users.UsersGestionActivity;    // Chemin à vérifier
+import com.example.drive_2_go.ui.Admin.Gestion_Users.;    // Chemin à vérifier
 import com.example.drive_2_go.ui.Client.login.LoginActivity;
 
 public abstract class BaseAdminActivity extends AppCompatActivity {

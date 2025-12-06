@@ -303,6 +303,5 @@
     </RelativeLayout>
 <<<<<<< HEAD
 </androidx.drawerlayout.widget.DrawerLayout>
-=======
 </androidx.drawerlayout.widget.DrawerLayout>
->>>>>>> 456aea0 (supprimer EmailSender)
+
