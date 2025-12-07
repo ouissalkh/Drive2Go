@@ -16,6 +16,7 @@ import com.example.drive_2_go.R;
 import com.example.drive_2_go.data.model.Car;
 import com.example.drive_2_go.ui.Client.description.DescriptionCarActivity;
 
+import java.io.File;
 import java.util.List;
 
 // Changement : On utilise ClientCarViewHolder comme type générique
@@ -74,11 +75,31 @@ public class ClientCarAdapter extends RecyclerView.Adapter<ClientCarAdapter.Clie
         // Statut vérifié
         holder.imgCheckStatus.setVisibility(car.isChecked() ? View.VISIBLE : View.GONE);
 
-        // --- 4. Chargement de l'image (via Glide) ---
-        Glide.with(context)
-                .load(car.getImageUrl())
-                .placeholder(R.drawable.car) // Image par défaut
-                .into(holder.imgCar);
+        // --- 4. Image ---
+        String imagePath = car.getImageUrl();
+
+        if (imagePath != null && !imagePath.isEmpty()) {
+            // Tenter de créer un objet File à partir du chemin local sauvegardé
+            File imgFile = new File(imagePath);
+
+            // Vérifier si le fichier existe réellement sur le système de fichiers
+            if (imgFile.exists()) {
+                Glide.with(context)
+                        .load(imgFile) // 👈 Charge l'objet File (chemin local)
+                        .placeholder(R.drawable.car) // Affiché pendant le chargement
+                        .centerCrop() // Optionnel : ajuste l'image pour remplir la ImageView
+                        .into(holder.imgCar);
+            } else {
+                // Le chemin existe dans la DB, mais le fichier n'est pas trouvé sur l'appareil
+                // (ex: l'utilisateur a supprimé l'image).
+                holder.imgCar.setImageResource(R.drawable.car);
+            }
+        } else {
+            // Le chemin (imagePath) est vide ou null dans la base de données.
+            holder.imgCar.setImageResource(R.drawable.car);
+        }
+
+
 
 
         // --- 5. GESTION DU CLIC CLIENT ---

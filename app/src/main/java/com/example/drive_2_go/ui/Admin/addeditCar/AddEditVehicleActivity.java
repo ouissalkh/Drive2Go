@@ -24,6 +24,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 
@@ -49,6 +51,7 @@ public class AddEditVehicleActivity extends AppCompatActivity {
     private Uri selectedImageUri;
     private Car carToEdit;
     private FirebaseFirestore db;
+    private FirebaseStorage storage;
     private ActivityResultLauncher<String> imagePickerLauncher;
 
     // ✅ MARQUES DISPONIBLES (utilisées pour le filtrage client)
@@ -72,6 +75,7 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             setContentView(R.layout.activity_add_edit_vehicule);
 
             db = FirebaseFirestore.getInstance();
+            storage = FirebaseStorage.getInstance();
             Log.d(TAG, "✅ Activity créée, Firebase initialisé");
 
             initViews();
@@ -280,10 +284,24 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             switchAvailable.setChecked(car.isAvailable());
 
             // Affichage image existante
-            if (car.getImageUrl() != null && !car.getImageUrl().isEmpty()) {
-                File imgFile = new File(car.getImageUrl());
-                if (imgFile.exists()) {
-                    Glide.with(this).load(imgFile).into(ivCarImage);
+            String imageUrl = car.getImageUrl();
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                // Vérifie si le chemin est une URL (commence par http) ou un ancien chemin local
+                if (imageUrl.startsWith("http")) {
+                    // ✅ CHARGEMENT D'URL (Firebase Storage)
+                    Glide.with(this)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.car) // Optionnel
+                            .into(ivCarImage);
+                } else {
+                    // CHARGEMENT D'ANCIEN CHEMIN LOCAL (Pour la rétrocompatibilité si vous avez d'anciennes données)
+                    File imgFile = new File(imageUrl);
+                    if (imgFile.exists()) {
+                        Glide.with(this).load(imgFile).into(ivCarImage);
+                    } else {
+                        // Afficher l'icône par défaut si ni URL, ni fichier local
+                        ivCarImage.setImageResource(R.drawable.car);
+                    }
                 }
             }
 
@@ -336,21 +354,59 @@ public class AddEditVehicleActivity extends AppCompatActivity {
         pd.setCancelable(false);
         pd.show();
 
-        String finalImagePath = "";
-
-        // Gestion image
         if (selectedImageUri != null) {
-            String uniqueName = ImageUtils.createUniqueFileName();
-            finalImagePath = ImageUtils.copyImageToInternalStorage(this, selectedImageUri, uniqueName);
-
-            if (carToEdit != null && carToEdit.getImageUrl() != null) {
-                ImageUtils.deleteImage(carToEdit.getImageUrl());
-            }
+            // ✅ Nouvelle image sélectionnée : UPLOAD vers le cloud
+            uploadImageAndSaveCar(pd);
         } else if (carToEdit != null) {
-            finalImagePath = carToEdit.getImageUrl();
+            // Pas de nouvelle image, mode édition : on garde l'URL/Chemin existant
+            saveToFirestore(carToEdit.getImageUrl(), pd);
+        } else {
+            // Nouvelle voiture sans image sélectionnée
+            saveToFirestore(null, pd);
+        }
+    }
+    /**
+     * Gère l'upload de l'image sélectionnée vers Firebase Storage.
+     * Une fois l'upload réussi, récupère l'URL publique et appelle saveToFirestore.
+     */
+    private void uploadImageAndSaveCar(ProgressDialog pd) {
+        if (selectedImageUri == null) {
+            // Ce cas ne devrait pas arriver ici, mais par sécurité
+            saveToFirestore(null, pd);
+            return;
         }
 
-        saveToFirestore(finalImagePath, pd);
+        // 1. Créer un nom de fichier unique (utilisant un timestamp par exemple)
+        String uniqueName = System.currentTimeMillis() + "_" + selectedImageUri.getLastPathSegment();
+        StorageReference storageRef = storage.getReference().child("car_images/" + uniqueName);
+
+        // 2. Démarrer l'upload du fichier (Uri)
+        storageRef.putFile(selectedImageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    // 3. Upload réussi : Récupérer l'URL de téléchargement publique
+                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String downloadUrl = uri.toString();
+
+                        Log.d(TAG, "✅ Image uploadée. URL: " + downloadUrl);
+
+                        // 4. Sauvegarder l'URL (HTTP) dans Firestore
+                        saveToFirestore(downloadUrl, pd);
+
+                    }).addOnFailureListener(e -> {
+                        pd.dismiss();
+                        Toast.makeText(this, "❌ Erreur URL de téléchargement : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    pd.dismiss();
+                    Log.e(TAG, "❌ Erreur Upload vers Storage : " + e.getMessage(), e);
+                    Toast.makeText(this, "❌ Erreur Upload : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                })
+                .addOnProgressListener(snapshot -> {
+                    // Optionnel : Afficher la progression dans le loader
+                    double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                    pd.setMessage("Chargement image: " + (int) progress + "%");
+                });
     }
 
     private void saveToFirestore(String imagePath, ProgressDialog pd) {
