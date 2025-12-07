@@ -18,7 +18,7 @@ public class EmailSender {
     private static final String TAG = "EmailSender";
 
     //  BREVO API Configuration
-    private static final String BREVO_API_KEY = "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";
+    private static final String BREVO_API_KEY = "";
     private static final String BREVO_URL = "https://api.brevo.com/v3/smtp/email";
     private static final String FROM_EMAIL = "drive2go.verify@gmail.com";
     private static final String FROM_NAME = "Drive2Go";
