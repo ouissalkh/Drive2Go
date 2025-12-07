@@ -2,11 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 456aea0 (supprimer EmailSender)
     <uses-permission android:name="android.permission.INTERNET" />
 
 
@@ -18,30 +13,26 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Drive_2_GO">
-
-
+        android:theme="@style/Theme.Drive_2_Go">
 
         <activity
-<<<<<<< HEAD
-            android:name=".ui.Admin.addeditCar.AddEditVehicleActivity"
-=======
-
-            android:name=".ui.Admin.Parck_automobiles.ParckAutomobileActivity"
+            android:name=".ui.Admin.Table_bord.HomeActivityAdmin"/>
+        <activity
+            android:name=".ui.Client.creationCompte.RegisterActivity"
             android:exported="false" />
 
 
         <activity
-            android:name=".ui.Admin.addCar.AddCarActivity"
->>>>>>> 456aea0 (supprimer EmailSender)
+            android:name=".ui.Admin.addeditCar.AddEditVehicleActivity"/>
+
+        <activity android:name=".ui.Admin.Parck_automobiles.AdminVehiclesActivity"
             android:exported="false" />
+
 
         <activity
-            android:name=".ui.Admin.Gestion_Users.UsersGestionActivity"
+            android:name=".ui.Admin.Gestion_Users.GestionUsersActivity"
             android:exported="false" />
 
-<<<<<<< HEAD
-=======
         <activity
             android:name=".ui.Admin.Gestion_Reservations.ReservationsActivity"
             android:exported="false" />
@@ -49,8 +40,7 @@
 
             android:name=".ui.Admin.Table_bord.adminActivity"
             android:exported="false" />
->>>>>>> 456aea0 (supprimer EmailSender)
-
+<activity android:name=".ui.Client.creationCompte.VerifyCodeActivity"/>
         <activity android:name=".ui.Client.accueil.AccueilActivity"
             android:exported="false"/>
         <activity

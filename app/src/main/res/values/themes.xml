@@ -1,18 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Drive_2_GO" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.Drive_2_Go" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Couleurs primaires -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
 
-        <!-- 1. CHANGE LA COULEUR DE LA BARRE DU HAUT ICI -->
-        <!-- Mets @color/emerald_900 si tu l'as défini, sinon mets le code Hex du vert foncé -->
-        <item name="android:statusBarColor">#0D2301</item>
+        <!-- Couleurs secondaires -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
 
-        <!-- 2. COULEUR DES ICONES (Heure, Batterie...) -->
-        <!-- false = Icônes Blanches (pour fond foncé) -->
-        <!-- true = Icônes Noires (pour fond clair) -->
-        <item name="android:windowLightStatusBar">false</item>
+        <!-- Attributs Material Design requis -->
+        <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.MaterialComponents.Button.OutlinedButton</item>
 
+        <!-- Status bar -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
+        <!-- Important : Ajoutez ces attributs -->
+        <item name="colorControlActivated">@color/purple_500</item>
+        <item name="colorControlHighlight">@color/purple_200</item>
+        <item name="colorControlNormal">@color/gray_500</item>
     </style>
-
-    <style name="Theme.Drive_2_GO" parent="Base.Theme.Drive_2_GO" />
 </resources>

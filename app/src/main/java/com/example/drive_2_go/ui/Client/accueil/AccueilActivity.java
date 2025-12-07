@@ -133,24 +133,4 @@ public class AccueilActivity extends AppCompatActivity {
         startActivity(new Intent(AccueilActivity.this, HistoryActivity.class));
     }
 
-    private List<Car> createCarData() {
-        List<Car> cars = new ArrayList<>();
-        cars.add(new Car(
-                1,
-                "Renault Captur",
-                "GH-391-AD",
-                "450 Dh",
-                R.drawable.img_renault_captur,
-                "essence",
-                "max 800 km",
-                2,
-                true,
-                "M",
-                5,
-                5,
-                true,
-                false
-        ));
-        return cars;
-    }
 }
