@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Header / Toolbar -->
+        <!-- Header / Toolbar (identique visuellement) -->
         <LinearLayout
             android:id="@+id/toolbar"
             android:orientation="horizontal"
@@ -274,6 +274,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
+                        <!-- Keep original SearchView but ensure background drawable exists -->
                         <androidx.appcompat.widget.SearchView
                             android:id="@+id/searchView"
                             android:layout_width="match_parent"
@@ -283,13 +284,15 @@
                             android:layout_marginBottom="12dp"
                             android:background="@drawable/bg_search"/>
 
+                        <!-- Corrected dropdowns: use MaterialComponents style + MaterialAutoCompleteTextView -->
                         <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Filtrer par rôle"
                             android:layout_marginBottom="12dp">
-                            <AutoCompleteTextView
+
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
                                 android:id="@+id/autoCompleteTxtRole"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -298,11 +301,11 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Filtrer par statut">
-                            <AutoCompleteTextView
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
                                 android:id="@+id/autoCompleteTxtStatus"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -334,7 +337,7 @@
             </LinearLayout>
         </ScrollView>
 
-        <!-- Barre de navigation fixe -->
+        <!-- Barre de navigation fixe (identique) -->
         <include
             layout="@layout/layout_navbar_admin"
             android:layout_width="320dp"

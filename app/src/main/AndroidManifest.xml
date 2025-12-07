@@ -16,7 +16,7 @@
         android:theme="@style/Theme.Drive_2_Go">
 
         <activity
-            android:name=".ui.Admin.Table_bord.HomeActivityAdmin"/>
+            android:name=".ui.Admin.Table_bord.adminActivity"/>
         <activity
             android:name=".ui.Client.creationCompte.RegisterActivity"
             android:exported="false" />
@@ -36,10 +36,7 @@
         <activity
             android:name=".ui.Admin.Gestion_Reservations.ReservationsActivity"
             android:exported="false" />
-        <activity
-
-            android:name=".ui.Admin.Table_bord.adminActivity"
-            android:exported="false" />
+        
 <activity android:name=".ui.Client.creationCompte.VerifyCodeActivity"/>
         <activity android:name=".ui.Client.accueil.AccueilActivity"
             android:exported="false"/>

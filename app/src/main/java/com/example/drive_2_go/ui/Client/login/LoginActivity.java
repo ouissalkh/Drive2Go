@@ -14,219 +14,235 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.drive_2_go.R;
-import com.example.drive_2_go.ui.Admin.Table_bord.HomeActivityAdmin;
+// IMPORTANT : Vérifiez ces imports vers VOS activités HomeActivityAdmin et AccueilActivity
 import com.example.drive_2_go.ui.Admin.Table_bord.adminActivity;
 import com.example.drive_2_go.ui.Client.accueil.AccueilActivity;
 import com.example.drive_2_go.ui.Client.creationCompte.RegisterActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
 
-    // 🔑 IDENTIFIANTS ADMIN PAR DÉFAUT
+    // 🔑 IDENTIFIANTS ADMIN PAR DÉFAUT (Hardcoded)
     private static final String ADMIN_EMAIL = "admin@drive2go.com";
     private static final String ADMIN_PASSWORD = "admin123";
 
+    // UI Elements
     private EditText inputEmail, inputPassword;
-    private TextView  btnGoToRegister;
-
     private Button btnLogin;
-
+    private TextView tvRegister, tvForgotPassword;
     private ProgressBar progressBar;
 
+    // Firebase
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login); // Vérifiez que votre layout s'appelle bien activity_login
 
-        // Initialiser Firebase avec la NOUVELLE base de données
+        // Initialisation Firebase
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Vérifier la connexion Firebase
-        Log.d(TAG, "📱 Firebase initialisé : " + db.getApp().getName());
-
-        // Récupérer les vues
-        inputEmail = findViewById(R.id.inputEmail);
+        // Liaison des vues
+        inputEmail = findViewById(R.id.inputEmail);       // Vérifiez les IDs dans votre XML
         inputPassword = findViewById(R.id.inputPassword);
         btnLogin = findViewById(R.id.btnLogin);
-        btnGoToRegister = findViewById(R.id.tvGoToRegister);
-
+        tvRegister = findViewById(R.id.tvGoToRegister);
         progressBar = findViewById(R.id.progressBar);
 
-        // Pré-remplir l'email si fourni (depuis VerifyCodeActivity)
-        String prefilledEmail = getIntent().getStringExtra("email");
-        if (prefilledEmail != null) {
-            inputEmail.setText(prefilledEmail);
-        }
-
-        // Bouton connexion
-        btnLogin.setOnClickListener(v -> loginUser());
-
-        // Bouton inscription
-        btnGoToRegister.setOnClickListener(v -> {
+        // Clic sur "S'inscrire"
+        tvRegister.setOnClickListener(v -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
 
+        // Clic sur "Se connecter"
+        btnLogin.setOnClickListener(v -> {
+            String email = inputEmail.getText().toString().trim();
+            String password = inputPassword.getText().toString().trim();
 
+            if (TextUtils.isEmpty(email)) {
+                inputEmail.setError("L'email est requis");
+                return;
+            }
+
+            if (TextUtils.isEmpty(password)) {
+                inputPassword.setError("Le mot de passe est requis");
+                return;
+            }
+
+            // Afficher le chargement
+            progressBar.setVisibility(View.VISIBLE);
+            btnLogin.setEnabled(false);
+
+            // 1. DÉTECTION SPÉCIALE ADMIN
+            if (email.equals(ADMIN_EMAIL) && password.equals(ADMIN_PASSWORD)) {
+                loginAdminHardcoded();
+            } else {
+                // 2. CONNEXION NORMALE (CLIENT)
+                loginUser(email, password);
+            }
+        });
     }
 
-    private void loginUser() {
-        String email = inputEmail.getText().toString().trim();
-        String password = inputPassword.getText().toString().trim();
+    // ----------------------------------------------------------------
+    //  PARTIE 1 : LOGIQUE ADMIN (Corrigée pour Firestore)
+    // ----------------------------------------------------------------
 
-        // Validation
-        if (TextUtils.isEmpty(email)) {
-            inputEmail.setError("L'email est requis");
-            return;
-        }
-
-        if (TextUtils.isEmpty(password)) {
-            inputPassword.setError("Le mot de passe est requis");
-            return;
-        }
-
-        progressBar.setVisibility(View.VISIBLE);
-        btnLogin.setEnabled(false);
-
-        Log.d(TAG, "🔐 Tentative de connexion pour : " + email);
-
-        //  VÉRIFICATION ADMIN EN PREMIER (sans Firebase Auth)
-        if (email.equalsIgnoreCase(ADMIN_EMAIL) && password.equals(ADMIN_PASSWORD)) {
-            Log.d(TAG, "✅ Admin détecté - Connexion directe");
-            progressBar.setVisibility(View.GONE);
-            btnLogin.setEnabled(true);
-
-            Toast.makeText(this, "✅ Bienvenue Administrateur", Toast.LENGTH_SHORT).show();
-
-            // Redirection vers l'interface admin
-            Intent intent = new Intent(LoginActivity.this, adminActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-            return;
-        }
-
-        // ✅ CONNEXION CLIENT via Firebase Authentication
-        Log.d(TAG, "👤 Tentative de connexion client via Firebase Auth");
-
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-
-                        if (firebaseUser != null) {
-                            String userId = firebaseUser.getUid();
-                            Log.d(TAG, "✅ Firebase Auth réussi, UID : " + userId);
-
-                            // Vérifier le rôle dans Firestore
-                            checkUserRoleInFirestore(userId);
-                        }
-                    } else {
-                        progressBar.setVisibility(View.GONE);
-                        btnLogin.setEnabled(true);
-
-                        String errorMessage = "❌ Email ou mot de passe incorrect";
-
-                        if (task.getException() != null) {
-                            String error = task.getException().getMessage();
-                            Log.e(TAG, "❌ Erreur Firebase Auth : " + error);
-
-                            if (error.contains("no user record")) {
-                                errorMessage = "❌ Aucun compte trouvé avec cet email";
-                            } else if (error.contains("password is invalid")) {
-                                errorMessage = "❌ Mot de passe incorrect";
-                            } else if (error.contains("network error")) {
-                                errorMessage = "❌ Erreur réseau. Vérifiez votre connexion";
-                            }
-                        }
-
-                        Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_LONG).show();
-                        Log.e(TAG, errorMessage);
-                    }
+    private void loginAdminHardcoded() {
+        // Tentative de connexion avec Auth
+        mAuth.signInWithEmailAndPassword(ADMIN_EMAIL, ADMIN_PASSWORD)
+                .addOnSuccessListener(authResult -> {
+                    Log.d(TAG, "✅ Connexion Admin réussie via Auth");
+                    // VÉRIFICATION CRUCIALE : Est-ce que le profil existe dans Firestore ?
+                    checkAndCreateAdminProfile(authResult.getUser());
                 })
                 .addOnFailureListener(e -> {
-                    progressBar.setVisibility(View.GONE);
-                    btnLogin.setEnabled(true);
-
-                    Log.e(TAG, "❌ Exception lors de la connexion : " + e.getMessage());
-                    Toast.makeText(this, "❌ Erreur : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.w(TAG, "⚠️ Compte admin inexistant dans Auth, création en cours...");
+                    // Si le compte n'existe pas du tout (premier lancement), on le crée
+                    createAdminAccount();
                 });
     }
 
-    private void checkUserRoleInFirestore(String userId) {
-        Log.d(TAG, "🔍 Vérification du rôle dans Firestore pour UID : " + userId);
-
-        // ✅ UTILISATION DE LA NOUVELLE BASE "LocationDeVoiture"
-        db.collection("users").document(userId)
-                .get()
-                .addOnCompleteListener(task -> {
+    private void createAdminAccount() {
+        mAuth.createUserWithEmailAndPassword(ADMIN_EMAIL, ADMIN_PASSWORD)
+                .addOnSuccessListener(authResult -> {
+                    Log.d(TAG, "✅ Compte Admin créé dans Auth");
+                    // Maintenant on crée le profil Firestore obligatoirement
+                    checkAndCreateAdminProfile(authResult.getUser());
+                })
+                .addOnFailureListener(e -> {
                     progressBar.setVisibility(View.GONE);
                     btnLogin.setEnabled(true);
+                    Toast.makeText(LoginActivity.this, "Erreur création Admin: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
 
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        DocumentSnapshot document = task.getResult();
+    /**
+     * Cette méthode vérifie si le document Admin existe dans 'users'.
+     * S'il n'existe pas, elle le crée. C'est ça qui résout votre problème de permission.
+     */
+    private void checkAndCreateAdminProfile(FirebaseUser firebaseUser) {
+        if (firebaseUser == null) return;
 
-                        if (document.exists()) {
-                            String role = document.getString("role");
-                            String nom = document.getString("nom");
-                            String prenom = document.getString("prenom");
+        String uid = firebaseUser.getUid();
 
-                            Log.d(TAG, "✅ Utilisateur trouvé : " + prenom + " " + nom + ", Rôle : " + role);
-
-                            Toast.makeText(this, "✅ Bienvenue " + prenom + " !", Toast.LENGTH_SHORT).show();
-
-                            // Redirection selon le rôle
-                            if ("admin".equalsIgnoreCase(role)) {
-                                Intent intent = new Intent(LoginActivity.this, adminActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                            } else {
-                                Intent intent = new Intent(LoginActivity.this, AccueilActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                            }
-                            finish();
-                        } else {
-                            Log.e(TAG, "❌ Document utilisateur introuvable dans Firestore");
-                            Toast.makeText(this,
-                                    "❌ Profil utilisateur incomplet. Contactez le support",
-                                    Toast.LENGTH_LONG).show();
-                            mAuth.signOut();
-                        }
+        db.collection("users").document(uid).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Tout est bon, le profil existe
+                        Log.d(TAG, "✅ Profil Admin existant. Redirection...");
+                        goToAdminHome();
                     } else {
-                        Log.e(TAG, "❌ Erreur lors de la récupération des données Firestore");
-                        Toast.makeText(this,
-                                "❌ Erreur de connexion. Réessayez",
-                                Toast.LENGTH_SHORT).show();
+                        // LE PROFIL MANQUE : ON LE CRÉE
+                        Log.d(TAG, "⚡ Profil Admin manquant dans Firestore. Création...");
+
+                        Map<String, Object> adminData = new HashMap<>();
+                        adminData.put("id", uid);
+                        adminData.put("email", ADMIN_EMAIL);
+                        adminData.put("nom", "Administrateur");
+                        adminData.put("prenom", "Principal");
+                        adminData.put("favoriteCarIds", "null");
+                        adminData.put("role", "admin"); // Champ essentiel pour vos règles de sécurité
+                        adminData.put("telephone", "0000000000");
+
+                        db.collection("users").document(uid)
+                                .set(adminData)
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d(TAG, "✅ Profil Admin sauvegardé dans Firestore !");
+                                    goToAdminHome();
+                                })
+                                .addOnFailureListener(e -> {
+                                    progressBar.setVisibility(View.GONE);
+                                    btnLogin.setEnabled(true);
+                                    Toast.makeText(this, "Erreur sauvegarde Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
                     }
                 })
                 .addOnFailureListener(e -> {
                     progressBar.setVisibility(View.GONE);
                     btnLogin.setEnabled(true);
+                    Toast.makeText(this, "Erreur lecture Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
 
-                    Log.e(TAG, "❌ Exception Firestore : " + e.getMessage());
-                    Toast.makeText(this, "❌ Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+    private void goToAdminHome() {
+        progressBar.setVisibility(View.GONE);
+        // Redirection vers l'interface Admin
+        Intent intent = new Intent(LoginActivity.this, adminActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    // ----------------------------------------------------------------
+    //  PARTIE 2 : LOGIQUE CLIENT (Classique)
+    // ----------------------------------------------------------------
+
+    private void loginUser(String email, String password) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener(authResult -> {
+                    // Connexion réussie, maintenant on vérifie le rôle dans Firestore
+                    checkUserRoleInFirestore(authResult.getUser().getUid());
+                })
+                .addOnFailureListener(e -> {
+                    progressBar.setVisibility(View.GONE);
+                    btnLogin.setEnabled(true);
+                    Toast.makeText(LoginActivity.this, "Erreur de connexion : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+
+    private void checkUserRoleInFirestore(String uid) {
+        db.collection("users").document(uid).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    progressBar.setVisibility(View.GONE);
+
+                    if (documentSnapshot.exists()) {
+                        // Récupérer le rôle (si vous avez un champ "role")
+                        String role = documentSnapshot.getString("role");
+
+                        if ("admin".equals(role)) {
+                            // C'est un admin connecté via le formulaire standard
+                            Intent intent = new Intent(LoginActivity.this, adminActivity.class);
+                            startActivity(intent);
+                        } else {
+                            // C'est un client
+                            Intent intent = new Intent(LoginActivity.this, AccueilActivity.class);
+                            startActivity(intent);
+                        }
+                        finish();
+                    } else {
+                        // Cas rare : Utilisateur dans Auth mais pas dans Firestore
+                        Toast.makeText(this, "Erreur: Profil introuvable", Toast.LENGTH_SHORT).show();
+                        mAuth.signOut();
+                        btnLogin.setEnabled(true);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    progressBar.setVisibility(View.GONE);
+                    btnLogin.setEnabled(true);
+                    Toast.makeText(this, "Erreur vérification rôle: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        // Vérifier si un utilisateur est déjà connecté
+        // Si l'utilisateur est déjà connecté, on peut le rediriger directement
+        // (Optionnel : vous pouvez décommenter si vous voulez la reconnexion auto)
+        /*
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Log.d(TAG, "👤 Utilisateur déjà connecté : " + currentUser.getEmail());
-            // Optionnel : rediriger automatiquement
-            // checkUserRoleInFirestore(currentUser.getUid());
+             // checkUserRoleInFirestore(currentUser.getUid());
         }
+        */
     }
 }
