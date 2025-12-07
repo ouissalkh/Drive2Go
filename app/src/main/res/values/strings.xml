@@ -4,5 +4,17 @@
     <string name="filter">Filter ˅</string>
     <string name="search">Search</string>
     <string name="notifications">Notifications</string>
+    <string name="preview_image_desc">Aperçu image</string>
+    <string name="choose_photo">Choisir une photo</string>
+    <string name="car_name_hint">Nom de la voiture *</string>
+    <string name="license_plate_hint">Immatriculation (License Plate)</string>
+    <string name="price_hint">Prix (DH/jour) *</string>
+    <string name="max_km_hint">Max KM (Ex: 800)</string>
+    <string name="people_hint">Places (People)</string>
+    <string name="doors_hint">Portes (Doors)</string>
+    <string name="bags_hint">Valises (Bags)</string>
+    <string name="has_ac_text">Possède Climatisation (AC)</string>
+    <string name="is_checked_text">Statut vérifié (Is Checked)</string>
+    <string name="save_button">Enregistrer</string>
 
 </resources>

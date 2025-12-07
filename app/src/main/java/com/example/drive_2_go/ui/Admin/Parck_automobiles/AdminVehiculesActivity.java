@@ -7,7 +7,6 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +22,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminVehiclesActivity extends AppCompatActivity {
+public class AdminVehiculesActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewCars;
     private CarAdapter carAdapter;
@@ -61,7 +60,7 @@ public class AdminVehiclesActivity extends AppCompatActivity {
 
         // 3. Bouton Ajouter Voiture (Ouvre l'activité vide)
         fabAddCar.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminVehiclesActivity.this, AddEditVehicleActivity.class);
+            Intent intent = new Intent(AdminVehiculesActivity.this, AddEditVehicleActivity.class);
             startActivity(intent);
         });
 
@@ -104,10 +103,10 @@ public class AdminVehiclesActivity extends AppCompatActivity {
                         carAdapter.notifyDataSetChanged();
 
                         if (carList.isEmpty()) {
-                            Toast.makeText(AdminVehiclesActivity.this, "Aucun véhicule. Ajoutez-en un !", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AdminVehiculesActivity.this, "Aucun véhicule. Ajoutez-en un !", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(AdminVehiclesActivity.this, "Erreur de chargement", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AdminVehiculesActivity.this, "Erreur de chargement", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

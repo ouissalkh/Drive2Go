@@ -3,6 +3,7 @@
     <color name="black">#000000</color>
 
     <color name ="emerald_900">#0D2301</color>
+    <color name ="emerald_700">#047857</color>
     <color name ="blue">#0565F2</color>
     <color name ="move">#A424BD</color>
     <color name ="orange">#F57B05</color>
@@ -18,7 +19,6 @@
     <color name="white">#FFFFFF</color>
     <color name="teal_700">#00796B</color>
     <color name="rouge">#EF2C2C</color>
-    <color name="green">#4CAF50</color> <!-- Exemple de vert -->
-    <color name="gris">#808080</color>  <!-- Exemple de gris -->
-
+    <color name="green">#2E7D32</color>
+    <color name="gris">#5B5B5C</color>
 </resources>
