@@ -90,35 +90,21 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
 
         // --- 4. Image ---
         String imagePath = car.getImageUrl();
-
-        Glide.with(context)
-                .load(imagePath) // Utilise directement le chemin (local ou URL)
-                .placeholder(R.drawable.car) // Image affichée pendant le chargement
-
-                // Si .load(imagePath) échoue (chemin cassé/fichier inexistant/URL non valide),
-                // cette image de secours sera affichée.
-                .error(R.drawable.car)
-
-                .centerCrop()
-                .into(holder.imgCar);
-
-
-        /* --- 5. Favori ---
-        if (car.isFavorite()) {
-            holder.btnFavorite.setImageResource(R.drawable.ic_favorite_true);
+        if (imagePath != null && !imagePath.isEmpty()) {
+            File imgFile = new File(imagePath);
+            if (imgFile.exists()) {
+                Glide.with(context)
+                        .load(imgFile)
+                        .placeholder(R.drawable.car)
+                        .centerCrop()
+                        .into(holder.imgCar);
+            } else {
+                holder.imgCar.setImageResource(R.drawable.car);
+            }
         } else {
-            holder.btnFavorite.setImageResource(R.drawable.ic_favorite);
+            holder.imgCar.setImageResource(R.drawable.car);
         }
 
-        holder.btnFavorite.setOnClickListener(v -> {
-            boolean newState = !car.isFavorite();
-            car.setFavorite(newState);
-            notifyItemChanged(position); // Rafraîchissement visuel immédiat
-
-            FirebaseFirestore.getInstance().collection("cars")
-                    .document(car.getId())
-                    .update("favorite", newState);
-        }); */
 
         // --- 6. Boutons Admin (Modifier / Supprimer) ---
         if (isAdmin) {
@@ -182,8 +168,8 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
 
             tvPrice = itemView.findViewById(R.id.tv_price);
             tvAvailability = itemView.findViewById(R.id.tv_availability);
-            tvCarName = itemView.findViewById(R.id.tv_brand_model_year);
-            tvLicensePlate = itemView.findViewById(R.id.tv_license_plate_detail);
+            tvCarName = itemView.findViewById(R.id.tv_car_name);
+            tvLicensePlate = itemView.findViewById(R.id.tv_license_plate);
             tvFuelType = itemView.findViewById(R.id.tv_fuel_type);
             tvMaxKm = itemView.findViewById(R.id.tv_max_km);
 
@@ -201,6 +187,4 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
             btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }
-
-
 }

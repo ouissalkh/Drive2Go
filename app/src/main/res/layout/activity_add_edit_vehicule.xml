@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5">
@@ -19,6 +18,7 @@
             android:orientation="vertical"
             android:paddingBottom="24dp">
 
+            <!-- EN-TÊTE AVEC IMAGE -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="250dp">
@@ -28,6 +28,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
+                    android:src="@drawable/car"
                     android:background="#E0E0E0" />
 
                 <View
@@ -72,6 +73,7 @@
                     app:elevation="6dp" />
             </RelativeLayout>
 
+            <!-- CONTENU DU FORMULAIRE -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,6 +81,7 @@
                 android:paddingHorizontal="16dp"
                 android:paddingTop="32dp">
 
+                <!-- CARTE : INFORMATIONS PRINCIPALES -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -93,18 +96,20 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:text="Informations Principales"
                             android:textStyle="bold"
                             android:textSize="16sp"
                             android:textColor="#333"
-                            android:layout_marginBottom="12dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_marginBottom="12dp"/>
 
+                        <!-- Nom du véhicule -->
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
                             android:hint="Titre de l'annonce (ex: Renault Clio 4)">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -114,47 +119,51 @@
                                 android:inputType="textCapSentences" />
                         </com.google.android.material.textfield.TextInputLayout>
 
+                        <!-- Marque + Modèle -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginTop="8dp">
+                            android:layout_marginBottom="8dp">
 
+                            <!-- MARQUE (Dropdown) -->
                             <com.google.android.material.textfield.TextInputLayout
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="8dp"
                                 android:hint="Marque">
 
-                                <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/etBrand"
+                                <AutoCompleteTextView
+                                    android:id="@+id/getBrand"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"
+                                    android:inputType="none" />
                             </com.google.android.material.textfield.TextInputLayout>
 
+                            <!-- MODÈLE -->
                             <com.google.android.material.textfield.TextInputLayout
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
                                 android:hint="Modèle">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etModel"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"
+                                    android:inputType="textCapWords" />
                             </com.google.android.material.textfield.TextInputLayout>
                         </LinearLayout>
 
+                        <!-- Prix + Disponibilité -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginTop="8dp">
+                            android:gravity="center_vertical">
 
                             <com.google.android.material.textfield.TextInputLayout
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -181,6 +190,7 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- CARTE : DÉTAILS TECHNIQUES -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -195,18 +205,20 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:text="Détails Techniques"
                             android:textStyle="bold"
                             android:textSize="16sp"
                             android:textColor="#333"
-                            android:layout_marginBottom="12dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_marginBottom="12dp"/>
 
+                        <!-- Carburant + Boîte -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="8dp">
 
                             <com.google.android.material.textfield.TextInputLayout
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -220,8 +232,7 @@
                                     android:id="@+id/spinnerFuelType"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:inputType="none"
-                                    android:text="Diesel" />
+                                    android:inputType="none" />
                             </com.google.android.material.textfield.TextInputLayout>
 
                             <com.google.android.material.textfield.TextInputLayout
@@ -229,23 +240,22 @@
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
                                 android:hint="Boîte">
 
                                 <AutoCompleteTextView
                                     android:id="@+id/spinnerGearType"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:inputType="none"
-                                    android:text="Manuelle" />
+                                    android:inputType="none" />
                             </com.google.android.material.textfield.TextInputLayout>
                         </LinearLayout>
 
+                        <!-- Matricule + Max Km -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginTop="8dp">
+                            android:layout_marginBottom="8dp">
 
                             <com.google.android.material.textfield.TextInputLayout
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -254,10 +264,12 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="8dp"
                                 android:hint="Matricule">
+
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etLicensePlate"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"
+                                    android:inputType="textCapCharacters" />
                             </com.google.android.material.textfield.TextInputLayout>
 
                             <com.google.android.material.textfield.TextInputLayout
@@ -265,8 +277,8 @@
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
                                 android:hint="Max Km">
+
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etMaxKm"
                                     android:layout_width="match_parent"
@@ -275,11 +287,11 @@
                             </com.google.android.material.textfield.TextInputLayout>
                         </LinearLayout>
 
+                        <!-- Année + Couleur -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="8dp">
+                            android:orientation="horizontal">
 
                             <com.google.android.material.textfield.TextInputLayout
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -288,6 +300,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="8dp"
                                 android:hint="Année">
+
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etYear"
                                     android:layout_width="match_parent"
@@ -300,18 +313,19 @@
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
                                 android:hint="Couleur">
+
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etColor"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"
+                                    android:inputType="textCapWords" />
                             </com.google.android.material.textfield.TextInputLayout>
                         </LinearLayout>
-
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- CARTE : COMPTEURS -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -325,26 +339,29 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+                        <!-- Portes -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:layout_marginBottom="8dp">
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
                                 android:text="Portes"
                                 android:textSize="16sp"/>
+
                             <ImageView
                                 android:id="@+id/btnDecreaseDoors"
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
                                 android:src="@drawable/ic_revome"
                                 android:background="@drawable/bg_circle_button"
-                                android:padding="4dp"
-                                />
+                                android:padding="4dp" />
+
                             <TextView
                                 android:id="@+id/tvDoorCount"
                                 android:layout_width="40dp"
@@ -353,6 +370,7 @@
                                 android:text="4"
                                 android:textSize="18sp"
                                 android:textStyle="bold"/>
+
                             <ImageView
                                 android:id="@+id/btnIncreaseDoors"
                                 android:layout_width="32dp"
@@ -363,26 +381,29 @@
                                 app:tint="#59BD5E"/>
                         </LinearLayout>
 
+                        <!-- Passagers -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:layout_marginBottom="8dp">
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
                                 android:text="Passagers"
                                 android:textSize="16sp"/>
+
                             <ImageView
                                 android:id="@+id/btnDecreasePeople"
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
                                 android:src="@drawable/ic_revome"
                                 android:background="@drawable/bg_circle_button"
-                                android:padding="4dp"
-                                />
+                                android:padding="4dp" />
+
                             <TextView
                                 android:id="@+id/tvPeopleCount"
                                 android:layout_width="40dp"
@@ -391,6 +412,7 @@
                                 android:text="5"
                                 android:textSize="18sp"
                                 android:textStyle="bold"/>
+
                             <ImageView
                                 android:id="@+id/btnIncreasePeople"
                                 android:layout_width="32dp"
@@ -401,26 +423,29 @@
                                 app:tint="#59BD5E"/>
                         </LinearLayout>
 
+                        <!-- Bagages -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:layout_marginBottom="16dp">
+
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
                                 android:text="Bagages"
                                 android:textSize="16sp"/>
+
                             <ImageView
                                 android:id="@+id/btnDecreaseBaggage"
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
                                 android:src="@drawable/ic_revome"
                                 android:background="@drawable/bg_circle_button"
-                                android:padding="4dp"
-                                />
+                                android:padding="4dp" />
+
                             <TextView
                                 android:id="@+id/tvBaggageCount"
                                 android:layout_width="40dp"
@@ -429,6 +454,7 @@
                                 android:text="2"
                                 android:textSize="18sp"
                                 android:textStyle="bold"/>
+
                             <ImageView
                                 android:id="@+id/btnIncreaseBaggage"
                                 android:layout_width="32dp"
@@ -445,6 +471,7 @@
                             android:background="#EEE"
                             android:layout_marginBottom="8dp"/>
 
+                        <!-- Switches -->
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/switchAC"
                             android:layout_width="match_parent"
@@ -456,10 +483,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Véhicule vérifié (Badge)" />
-
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- CARTE : DESCRIPTION -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -468,47 +495,40 @@
                     app:cardElevation="2dp"
                     app:contentPadding="16dp">
 
-                    <LinearLayout
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:hint="Description détaillée">
 
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:hint="Description détaillée">
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etDescription"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="textMultiLine"
-                                android:minLines="3"
-                                android:gravity="top|start"/>
-                        </com.google.android.material.textfield.TextInputLayout>
-                    </LinearLayout>
+                            android:inputType="textMultiLine"
+                            android:minLines="3"
+                            android:gravity="top|start"/>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
+    <!-- BOUTON ENREGISTRER (Fixe en bas) -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSaveCar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/gris"
+        android:backgroundTint="@color/green"
         android:text="Enregistrer le véhicule"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold"
         app:cornerRadius="30dp"
         app:elevation="8dp"
-        app:icon="@drawable/ic_check"
         app:iconGravity="textStart" />
 
 </RelativeLayout>

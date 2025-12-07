@@ -39,8 +39,7 @@ public class Car implements Serializable {
     // Constructeur complet
     public Car(String id, String name, String licensePlate, int price, String imageUrl,
                String fuelType, String maxKm, int baggageCount, boolean hasAC,
-               String gearType, int doorCount, int peopleCount, boolean isChecked,
-               boolean isFavorite, String description, String brand, String model,
+               String gearType, int doorCount, int peopleCount, boolean isChecked, String description, String brand, String model,
                String year, String color, String location, boolean isAvailable) {
         this.id = id;
         this.name = name;
@@ -55,7 +54,6 @@ public class Car implements Serializable {
         this.doorCount = doorCount;
         this.peopleCount = peopleCount;
         this.isChecked = isChecked;
-        //this.isFavorite = isFavorite;
         this.description = description;
         this.brand = brand;
         this.model = model;
@@ -106,8 +104,6 @@ public class Car implements Serializable {
     public boolean isChecked() { return isChecked; }
     public void setChecked(boolean checked) { isChecked = checked; }
 
-    // public boolean isFavorite() { return isFavorite; }
-    // public void setFavorite(boolean favorite) { isFavorite = favorite; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
