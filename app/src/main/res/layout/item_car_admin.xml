@@ -76,7 +76,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tv_car_name"
+                android:id="@+id/tv_brand_model_year"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Renault Captur"
@@ -87,7 +87,7 @@
                 android:ellipsize="end"/>
 
             <TextView
-                android:id="@+id/tv_license_plate"
+                android:id="@+id/tv_license_plate_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="GH-391-AD"

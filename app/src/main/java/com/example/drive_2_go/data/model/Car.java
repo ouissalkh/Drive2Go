@@ -7,10 +7,13 @@ import java.io.Serializable;
  * Implémente Serializable pour pouvoir passer l'objet entre les activités
  */
 public class Car implements Serializable {
+
+    // IMPORTANT : Un serialVersionUID est recommandé
+    private static final long serialVersionUID = 1L;
     private String id; // ID Firebase
     private String name;
     private String licensePlate;
-    private String price; // Prix par jour
+    private int price; // Prix par jour
     private String imageUrl; // URL de l'image dans Firebase Storage
     private String fuelType; // Essence, Diesel, Électrique, Hybride
     private String maxKm; // Kilométrage maximum
@@ -20,7 +23,6 @@ public class Car implements Serializable {
     private int doorCount;
     private int peopleCount;
     private boolean isChecked;
-    //private boolean isFavorite;
     private String description; // Description détaillée de la voiture
     private String brand; // Marque (Renault, Peugeot, etc.)
     private String model; // Modèle (Captur, 208, etc.)
@@ -35,7 +37,7 @@ public class Car implements Serializable {
     }
 
     // Constructeur complet
-    public Car(String id, String name, String licensePlate, String price, String imageUrl,
+    public Car(String id, String name, String licensePlate, int price, String imageUrl,
                String fuelType, String maxKm, int baggageCount, boolean hasAC,
                String gearType, int doorCount, int peopleCount, boolean isChecked,
                boolean isFavorite, String description, String brand, String model,
@@ -74,8 +76,8 @@ public class Car implements Serializable {
     public String getLicensePlate() { return licensePlate; }
     public void setLicensePlate(String licensePlate) { this.licensePlate = licensePlate; }
 
-    public String getPrice() { return price; }
-    public void setPrice(String price) { this.price = price; }
+    public int getPrice() { return price; }
+    public void setPrice(int price) { this.price = price; }
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
@@ -130,4 +132,5 @@ public class Car implements Serializable {
 
     public long getTimestamp() { return timestamp; }
     public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+
 }

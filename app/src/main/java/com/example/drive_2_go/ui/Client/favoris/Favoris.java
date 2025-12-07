@@ -1,5 +1,7 @@
 package com.example.drive_2_go.ui.Client.favoris;
 
+import com.example.drive_2_go.ui.Client.login.LoginActivity;
+import com.example.drive_2_go.ui.adapter.FavoritesAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,12 +23,23 @@ import com.example.drive_2_go.ui.Client.profil.Profil;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.drive_2_go.data.model.User;
+import com.example.drive_2_go.ui.Client.description.DescriptionCarActivity; // Pour l'intention de clic
+import com.example.drive_2_go.ui.adapter.FavoritesAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 public class Favoris extends AppCompatActivity{
 
     private ImageButton buttonProfil;
     private ImageButton buttonHome;
     private ImageButton buttonFavoris;
     private ImageButton buttonHistory;
+    private FirebaseAuth auth;
+    private FirebaseFirestore db;
+    private User currentUser;
     RecyclerView rvFavorites;
     ImageView ivEmptyImage;
 
@@ -37,6 +50,10 @@ public class Favoris extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favoris);
+
+        // Initialisation Firebase
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         rvFavorites = findViewById(R.id.rv_favorites);
         ivEmptyImage = findViewById(R.id.iv_empty_image);
@@ -72,20 +89,91 @@ public class Favoris extends AppCompatActivity{
         startActivity(new Intent(Favoris.this, HistoryActivity.class));
     }
 
+
+    // Dans Favoris.java
+
+    private void loadFavoritesData() {
+        FirebaseUser fUser = auth.getCurrentUser();
+
+        if (fUser == null) {
+            Toast.makeText(this, "Veuillez vous connecter.", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
+        // 1. Récupérer l'objet User pour obtenir les favoriteCarIds
+        db.collection("users").document(fUser.getUid())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        currentUser = documentSnapshot.toObject(User.class);
+                        if (currentUser != null && !currentUser.getFavoriteCarIds().isEmpty()) {
+                            // 2. Si des IDs sont trouvés, charger les voitures
+                            fetchFavoriteCars(currentUser.getFavoriteCarIds());
+                        } else {
+                            // Pas de favoris
+                            favoriteCars.clear();
+                            checkEmptyState();
+                        }
+                    } else {
+                        Toast.makeText(this, "Erreur: Profil utilisateur introuvable.", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Erreur de chargement des favoris: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    checkEmptyState(); // Afficher l'état vide en cas d'erreur
+                });
+    }
+
+    private void fetchFavoriteCars(List<String> favoriteIds) {
+        // 3. Charger les voitures correspondant aux IDs
+        db.collection("cars") // 💡 Assurez-vous que le nom de votre collection de voitures est "cars"
+                .whereIn("id", favoriteIds) // Filtrer les voitures par leurs IDs
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    favoriteCars.clear();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Car car = document.toObject(Car.class);
+                        favoriteCars.add(car);
+                    }
+
+                    // 4. Mettre à jour l'affichage
+                    setupRecyclerView(favoriteCars);
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Erreur de récupération des voitures: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    favoriteCars.clear();
+                    checkEmptyState();
+                });
+    }
+
+    private void setupRecyclerView(List<Car> cars) {
+        // 5. Créer et définir l'adaptateur, en passant la méthode onCarClick en tant que listener
+        FavoritesAdapter adapter = new FavoritesAdapter(cars, this::onCarClick);
+        rvFavorites.setAdapter(adapter);
+        checkEmptyState(); // Vérifier et afficher le RecyclerView
+    }
+
+    // 6. Méthode de gestion du clic (implémentation de CarClickListener)
+    public void onCarClick(Car car) {
+        // Importez DescriptionCarActivity si ce n'est pas déjà fait
+        // import com.example.drive_2_go.ui.Client.description.DescriptionCarActivity;
+
+        Intent intent = new Intent(Favoris.this, DescriptionCarActivity.class);
+        // Passer l'objet Car. Assurez-vous que Car implémente Serializable ou Parcelable.
+        intent.putExtra(DescriptionCarActivity.EXTRA_CAR, car);
+        startActivity(intent);
+    }
+
+    // Mettre à jour checkEmptyState pour utiliser la liste remplie
     private void checkEmptyState() {
-        // En supposant que 'favoriteCars' contient la liste actuelle des voitures favorites
         if (favoriteCars.isEmpty()) {
-            // Liste vide : afficher le message et l'image
             rvFavorites.setVisibility(View.GONE);
             ivEmptyImage.setVisibility(View.VISIBLE);
         } else {
-            // Liste non vide : afficher la liste et masquer le message/image
             rvFavorites.setVisibility(View.VISIBLE);
             ivEmptyImage.setVisibility(View.GONE);
-
-            // N'oubliez pas d'initialiser et de définir l'adaptateur ici
-            // Example: FavoritesAdapter adapter = new FavoritesAdapter(favoriteCars);
-            // rvFavorites.setAdapter(adapter);
         }
     }
 

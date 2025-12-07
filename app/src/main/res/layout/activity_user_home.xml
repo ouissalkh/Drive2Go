@@ -149,8 +149,8 @@
                 android:paddingBottom="3dp">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
                     android:layout_marginEnd="8dp"
                     android:src="@drawable/phone" />
 
@@ -170,8 +170,8 @@
                 android:paddingBottom="3dp">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
                     android:layout_marginEnd="8dp"
                     android:src="@drawable/email" />
 
@@ -190,8 +190,8 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_localisation" />
 

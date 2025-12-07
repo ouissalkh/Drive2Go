@@ -1,5 +1,8 @@
 package com.example.drive_2_go.data.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
     private String id;
     private String nom;
@@ -10,6 +13,7 @@ public class User {
     private boolean isVerified;
     private String verificationCode;
     private Long dateInscription;
+    private List<String> favoriteCarIds; // Nouveau champ : Liste des IDs de voitures favorites
 
     public User() {
         // Constructeur vide nécessaire pour Firestore
@@ -25,6 +29,7 @@ public class User {
         this.role = role;
         this.isVerified = isVerified;
         this.dateInscription = dateInscription;
+        this.favoriteCarIds = new ArrayList<>(); // Initialisez la liste
     }
 
     // Getters
@@ -48,4 +53,13 @@ public class User {
     public void setVerified(boolean verified) { isVerified = verified; }
     public void setVerificationCode(String verificationCode) { this.verificationCode = verificationCode; }
     public void setDateInscription(Long dateInscription) { this.dateInscription = dateInscription; }
+    public List<String> getFavoriteCarIds() {
+        if (favoriteCarIds == null) {
+            favoriteCarIds = new ArrayList<>(); // Assurez-vous qu'elle n'est jamais null
+        }
+        return favoriteCarIds;
+    }
+    public void setFavoriteCarIds(List<String> favoriteCarIds) {
+        this.favoriteCarIds = favoriteCarIds;
+    }
 }

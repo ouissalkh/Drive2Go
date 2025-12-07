@@ -7,13 +7,18 @@ android {
     namespace = "com.example.drive_2_go"
     compileSdk = 34
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
-        applicationId = "com.example.locationvoiture"
+        applicationId = "com.example.drive_2_go"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
@@ -37,6 +42,8 @@ android {
             excludes += "META-INF/LICENSE.md"
         }
     }
+
+
 }
 
 dependencies {
@@ -57,9 +64,6 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
 
-    // Email
-    implementation("com.sun.mail:android-mail:1.6.7")
-    implementation("com.sun.mail:android-activation:1.6.7")
 
     // Tests
     testImplementation("junit:junit:4.13.2")

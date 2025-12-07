@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.ArrayList;
 
 public class VerifyCodeActivity extends AppCompatActivity {
 
@@ -201,9 +202,13 @@ public class VerifyCodeActivity extends AppCompatActivity {
         user.put("isVerified", true);
         user.put("dateInscription", System.currentTimeMillis());
 
+        // ⭐️ AJOUT DE L'ATTRIBUT favoriteCarIds (Liste vide pour les nouveaux utilisateurs)
+        user.put("favoriteCarIds", new ArrayList<String>());
+
         db.collection("users").document(userId)
                 .set(user)
                 .addOnSuccessListener(unused -> {
+                    // ... (le reste du code, y compris la suppression du document temporaire et la redirection)
                     Log.d(TAG, "✅ Utilisateur sauvegardé dans Firestore");
 
                     // Supprimer l'utilisateur temporaire
@@ -296,4 +301,5 @@ public class VerifyCodeActivity extends AppCompatActivity {
         int code = 100000 + random.nextInt(900000);
         return String.valueOf(code);
     }
+
 }

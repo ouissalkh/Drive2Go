@@ -18,10 +18,11 @@
         <item name="itemHorizontalTranslationEnabled">false</item>
     </style>
 
-   <style name="WhiteOutlineTextInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="boxStrokeColor">@android:color/white</item>
-        <item name="hintTextColor">@color/white</item>
-        <item name="android:textColor">@color/white</item>
+    <style name="WhiteOutlineTextInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="hintTextColor">#FFFFFF</item>
+        <item name="boxStrokeColor">#FFFFFF</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="android:textColorHint">#FFFFFF</item>
     </style>
 
 

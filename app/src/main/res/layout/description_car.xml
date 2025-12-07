@@ -11,7 +11,7 @@
     <!-- Header -->
 
     <ImageView
-        android:id="@+id/headerImage"
+        android:id="@+id/img_header_car"
         android:layout_width="413dp"
         android:layout_height="348dp"
         android:layout_marginTop="76dp"
@@ -44,7 +44,7 @@
 
             <!-- Bouton retour -->
             <ImageButton
-                android:id="@+id/backbtn"
+                android:id="@+id/btn_back"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@drawable/circle_background"
@@ -59,13 +59,13 @@
                 android:id="@+id/layout_car_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/favbtn"
-                android:layout_toEndOf="@+id/backbtn"
+                android:layout_toStartOf="@+id/btn_fav"
+                android:layout_toEndOf="@+id/btn_back"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_car_name"
+                    android:id="@+id/tv_car_name_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Renault Captur"
@@ -74,7 +74,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_license_plate"
+                    android:id="@+id/tv_license_plate_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="GH-391-AD"
@@ -84,7 +84,7 @@
 
             <!-- Bouton favori -->
             <ImageButton
-                android:id="@+id/favbtn"
+                android:id="@+id/btn_fav"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
@@ -92,7 +92,7 @@
                 android:contentDescription="Favori"
                 android:padding="8dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/selector_favorite"
+                android:src="@drawable/favoris"
                 app:tint="@android:color/white" />
         </RelativeLayout>
     </LinearLayout>
@@ -103,164 +103,171 @@
         android:layout_width="0dp"
         android:layout_height="404dp"
         android:background="@drawable/background_midle"
-        android:padding="16dp"
+        android:padding="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- Car name -->
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Description"
-            android:textColor="#FFF"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="85dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Description -->
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:gravity="start"
-            android:text="La Renault Captur portant la plaque GH-391-AD est un modèle  à essence proposé à 45 € par jour. Elle offre une autonomie  maximale de 800 km et peut accueillir jusqu’à 5 passagers avec  ses 5 portes. Son coffre permet de transporter 2 bagages, ce qui  la rend idéale pour les déplacements en famille ou entre amis.  Dotée d’une boîte manuelle et de la climatisation, elle garantit  un confort optimal et une conduite agréable."
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView2"  />
-
-        <!-- Overview title -->
-
-        <!-- Cards: Capacity / Transmission / Speed -->
-        <LinearLayout
-            android:id="@+id/linearLayout3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:weightSum="3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4">
-
-            <!-- Capacity -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/circle_background"
-                android:clipToOutline="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_seat_24"
-                    android:tint="@color/white" />
+                android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_brand_model_year"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Capacity"
-                    android:textColor="#FFF"
+                    android:textColor="#000000"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    tools:text="Renault Captur - 2022" />
+
+                <TextView
+                    android:id="@+id/tv_description_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Description :"
+                    android:textColor="#000000"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_description"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="5"
-                    android:textColor="#FFF" />
-            </LinearLayout>
-
-            <!-- Transmission -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/circle_background"
-                android:clipToOutline="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp"
-                tools:layout_marginEnd="5dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_car" />
+                    android:layout_marginTop="4dp"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    tools:text="Ceci est une description détaillée de la voiture pour le locataire. Elle pourrait être assez longue pour tester le scroll." />
 
                 <TextView
+                    android:id="@+id/tv_specs_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Transmission"
-                    android:textColor="#FFF"
+                    android:layout_marginTop="16dp"
+                    android:text="Spécifications :"
+                    android:textColor="#000000"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <GridLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Manuelle"
-                    android:textColor="#FFF" />
+                    android:layout_marginTop="8dp"
+                    android:columnCount="2"
+                    android:rowOrderPreserved="false"
+                    android:useDefaultMargins="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Couleur :"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_color"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        tools:text="Rouge" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Type de Carburant :"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_fuel_type_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        tools:text="Essence" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Transmission :"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_gear_type_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        tools:text="Manuelle (M)" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Max KM :"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_max_km_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="800 km" android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Places :"
+                        android:textStyle="bold" android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tv_people_count_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="5 personnes" android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bagages :"
+                        android:textStyle="bold" android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tv_baggage_count_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="2" android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Climatisation (AC) :"
+                        android:textStyle="bold" android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tv_has_ac_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Oui" android:textColor="@color/black" />
+
+                </GridLayout>
+
             </LinearLayout>
-
-            <!-- Top speed -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/circle_background"
-                android:clipToOutline="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_speed"
-                    android:tint="@color/white" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Top speed"
-                    android:textColor="#FFF"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="158 mph"
-                    android:textColor="#FFF" />
-            </LinearLayout>
-        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <!-- Price layout -->
         <LinearLayout
             android:id="@+id/priceLayout"
             android:layout_width="0dp"
-            android:layout_height="90dp"
+            android:layout_height="75dp"
             android:layout_marginBottom="10dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -278,7 +285,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/tv_price_detail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

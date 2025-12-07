@@ -44,7 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nom"
-                android:inputType="textPersonName"/>
+                android:inputType="textPersonName"
+                android:textColor="#FFFFFF"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Prénom -->
@@ -59,7 +60,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Prénom"
-                android:inputType="textPersonName"/>
+                android:inputType="textPersonName"
+                android:textColor="#FFFFFF"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Téléphone -->
@@ -74,7 +76,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Téléphone"
-                android:inputType="phone"/>
+                android:inputType="phone"
+                android:textColor="#FFFFFF"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Email -->
@@ -89,7 +92,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
-                android:inputType="textEmailAddress"/>
+                android:inputType="textEmailAddress"
+                android:textColor="#FFFFFF"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Mot de passe -->
@@ -105,7 +109,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Mot de passe"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword"
+                android:textColor="#FFFFFF"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Confirmation mot de passe -->
@@ -121,7 +126,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Confirmer le mot de passe"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword"
+                android:textColor="#FFFFFF"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- ProgressBar -->

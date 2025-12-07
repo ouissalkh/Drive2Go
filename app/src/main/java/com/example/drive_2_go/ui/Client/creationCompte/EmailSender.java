@@ -18,7 +18,7 @@ public class EmailSender {
     private static final String TAG = "EmailSender";
 
     //  BREVO API Configuration
-    private static final String BREVO_API_KEY = "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";
+    private static final String BREVO_API_KEY = "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";
     private static final String BREVO_URL = "https://api.brevo.com/v3/smtp/email";
     private static final String FROM_EMAIL = "drive2go.verify@gmail.com";
     private static final String FROM_NAME = "Drive2Go";
@@ -51,7 +51,7 @@ public class EmailSender {
                 "</head>" +
                 "<body>" +
                 "<div class='container'>" +
-                "<h1 class='header'>🚗 Drive2Go</h1>" +
+                "<h1 class='header'>Drive2Go</h1>" +
                 "<h2>Bonjour " + userName + ",</h2>" +
                 "<p>Merci de vous être inscrit sur <strong>Drive2Go</strong> !</p>" +
                 "<p>Pour activer votre compte, veuillez utiliser le code de vérification ci-dessous :</p>" +

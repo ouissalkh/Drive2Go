@@ -2,10 +2,14 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="8dp"
     android:layout_marginHorizontal="16dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
@@ -30,7 +34,7 @@
             android:layout_height="60dp"
             android:background="@drawable/bg_prix"
             android:gravity="center"
-            android:text="450 Dh"
+            tools:text="450 Dh"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -60,13 +64,14 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginEnd="8dp"
-                    android:src="@drawable/ic_fuel" />
+                    android:src="@drawable/ic_fuel"
+                    android:contentDescription="Type de carburant" />
 
                 <TextView
                     android:id="@+id/tv_fuel_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="essence"
+                    tools:text="Essence"
                     android:textColor="#000000"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -82,13 +87,14 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginEnd="8dp"
-                    android:src="@drawable/ic_mileage" />
+                    android:src="@drawable/ic_mileage"
+                    android:contentDescription="Kilométrage maximum" />
 
                 <TextView
                     android:id="@+id/tv_max_km"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="max 800 km"
+                    tools:text="max 800 km"
                     android:textColor="#000000"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -118,10 +124,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/disponibilite"
+                android:id="@+id/tv_availability"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Disponible"
+                tools:text="Disponible"
                 android:textColor="#0CE729"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -131,16 +137,16 @@
                 android:id="@+id/tv_car_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Renault Captur"
+                tools:text="Renault Captur"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tv_license_plate"
+                android:id="@+id/tv_license_plate_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="GH-391-AD"
+                tools:text="GH-391-AD"
                 android:textColor="#000000"
                 android:textSize="14sp" />
 
@@ -152,16 +158,18 @@
             android:layout_height="100dp"
             android:layout_marginTop="6dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/img_renault_captur"
+            tools:src="@drawable/img_renault_captur"
+            android:contentDescription="Image de la voiture"
             app:layout_constraintEnd_toStartOf="@+id/layout_details_vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_car_info" />
 
         <LinearLayout
             android:id="@+id/layout_icons_bottom"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center"
             android:paddingStart="12dp"
             android:paddingTop="4dp"
             android:paddingBottom="12dp"
@@ -181,13 +189,14 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_baggage" />
+                    android:src="@drawable/ic_baggage"
+                    android:contentDescription="Icône bagages" />
 
                 <TextView
                     android:id="@+id/tv_baggage_count"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:text="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="2"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -196,14 +205,16 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginEnd="6dp"
-                android:src="@drawable/ic_snowflake" />
+                tools:src="@drawable/ic_snowflake"
+                android:contentDescription="Statut de la climatisation" />
 
             <ImageView
                 android:id="@+id/img_check_status"
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_check" />
+                tools:src="@drawable/ic_check"
+                android:contentDescription="Statut de vérification" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -217,13 +228,14 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_gears" />
+                    android:src="@drawable/ic_gears"
+                    android:contentDescription="Icône de transmission" />
 
                 <TextView
                     android:id="@+id/tv_gear_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="M"
+                    tools:text="M"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -239,13 +251,14 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_car_door" />
+                    android:src="@drawable/ic_car_door"
+                    android:contentDescription="Icône de portes" />
 
                 <TextView
                     android:id="@+id/tv_door_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5"
+                    tools:text="5"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -260,13 +273,14 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_people" />
+                    android:src="@drawable/ic_people"
+                    android:contentDescription="Icône de personnes" />
 
                 <TextView
                     android:id="@+id/tv_people_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5"
+                    tools:text="5"
                     android:textSize="14sp" />
             </LinearLayout>
 

@@ -10,9 +10,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.example.drive_2_go" />
-                  <option name="mobileSdkAppId" value="1:116681870635:android:88e8b3c188f8a6f547c96e" />
-                  <option name="projectId" value="drive2go-cf914" />
-                  <option name="projectNumber" value="116681870635" />
+                  <option name="mobileSdkAppId" value="1:984715216794:android:8c326a1f98a8c349e8dc23" />
+                  <option name="projectId" value="locationvoitureapp" />
+                  <option name="projectNumber" value="984715216794" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

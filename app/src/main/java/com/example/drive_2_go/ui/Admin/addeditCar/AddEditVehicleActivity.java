@@ -150,7 +150,9 @@ public class AddEditVehicleActivity extends AppCompatActivity {
         etLicensePlate.setText(car.getLicensePlate());
         etYear.setText(car.getYear());
         etColor.setText(car.getColor());
-        etPrice.setText(car.getPrice());
+        // --- CORRECTION : Afficher la valeur double du prix en tant que String ---
+        // La méthode statique String.valueOf(double) convertit le nombre en texte pour l'EditText.
+        etPrice.setText(String.valueOf(car.getPrice()));
         etMaxKm.setText(car.getMaxKm());
         etLocation.setText(car.getLocation());
         etDescription.setText(car.getDescription());
@@ -181,10 +183,19 @@ public class AddEditVehicleActivity extends AppCompatActivity {
 
     private void validateAndSave() {
         String name = etName.getText().toString().trim();
-        String price = etPrice.getText().toString().trim();
+        String priceString = etPrice.getText().toString().trim(); // Utiliser un nouveau nom de variable
 
-        if (name.isEmpty() || price.isEmpty()) {
+        if (name.isEmpty() || priceString.isEmpty()) {
             Toast.makeText(this, "Veuillez remplir le nom et le prix", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // --- NOUVEAU : Conversion de la String en double et validation ---
+        int priceInt;
+        try {
+            priceInt = Integer.parseInt(priceString);
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Veuillez entrer un prix valide (nombre)", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -211,10 +222,10 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             finalImagePath = carToEdit.getImageUrl();
         }
 
-        saveToFirestore(finalImagePath, pd);
+        saveToFirestore(finalImagePath, priceInt, pd);
     }
 
-    private void saveToFirestore(String imagePath, ProgressDialog pd) {
+    private void saveToFirestore(String imagePath, int priceDouble, ProgressDialog pd) {
         String carId = (carToEdit != null) ? carToEdit.getId() : db.collection("cars").document().getId();
         String gearShort = spinnerGearType.getText().toString().equals("Automatique") ? "A" : "M";
 
@@ -223,7 +234,7 @@ public class AddEditVehicleActivity extends AppCompatActivity {
                 carId,
                 etName.getText().toString(),
                 etLicensePlate.getText().toString(),
-                etPrice.getText().toString(),
+                priceDouble,
                 imagePath,
                 spinnerFuelType.getText().toString(),
                 etMaxKm.getText().toString(),

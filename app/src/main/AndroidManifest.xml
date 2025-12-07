@@ -31,7 +31,15 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.Client.creationCompte.VerifyCodeActivity"
+            android:exported="false" />
+
+
+        <activity
             android:name=".ui.Admin.Gestion_Reservations.ReservationsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.reservation.ReservationFormActivity"
             android:exported="false" />
         <activity
 
@@ -51,6 +59,9 @@
             android:exported="false" />
         <activity
             android:name=".ui.Client.history.HistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.Client.creationCompte.RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".ui.Client.login.LoginActivity"
