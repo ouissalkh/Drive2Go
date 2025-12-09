@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="black">#000000</color>
 
     <color name ="emerald_900">#0D2301</color>
@@ -18,7 +18,15 @@
     <color name="white">#FFFFFF</color>
     <color name="teal_700">#00796B</color>
     <color name="rouge">#EF2C2C</color>
-    <color name="green">#4CAF50</color> <!-- Exemple de vert -->
-    <color name="gris">#808080</color>  <!-- Exemple de gris -->
+    <color name="green">#2E7D32</color>
+    <color name="gris">#5B5B5C</color>
+    <color name="emerald_700">#047857</color>
+        <color name="purple_200">#FFBB86FC</color>
+        <color name="purple_500">#FF6200EE</color>
+        <color name="purple_700">#FF3700B3</color>
+        <color name="teal_200">#FF03DAC5</color>
+        <color name="red_500">#FFF44336</color>
+    <color name="gray_500">@color/gris</color>
+
 
 </resources>

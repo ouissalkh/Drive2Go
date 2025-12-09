@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,28 +13,36 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Drive_2_GO">
+        android:theme="@style/Theme.Drive_2_Go">
+
         <activity
-            android:name=".ui.Admin.Parck_automobiles.AdminVehiculesActivity"
-            android:exported="false" />
+            android:name=".ui.Admin.Table_bord.adminActivity"/>
         <activity
-            android:name=".ui.Admin.Parck_automobiles.ParckAutomobileActivity"
+            android:name=".ui.Client.creationCompte.RegisterActivity"
             android:exported="false" />
+
+
         <activity
-            android:name=".ui.Admin.Gestion_Users.UsersGestionActivity"
+            android:name=".ui.Admin.addeditCar.AddEditVehicleActivity"/>
+
+        <activity android:name=".ui.Admin.Parck_automobiles.AdminVehiculesActivity"
             android:exported="false" />
+
+
+        <activity
+            android:name=".ui.Admin.Gestion_Users.GestionUsersActivity"
+            android:exported="false" />
+
         <activity
             android:name=".ui.Admin.Gestion_Reservations.ReservationsActivity"
             android:exported="false" />
-        <activity
-            android:name=".ui.Admin.Table_bord.adminActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.Client.accueil.AccueilActivity"
-            android:exported="false" />
+        
+<activity android:name=".ui.Client.creationCompte.VerifyCodeActivity"/>
+        <activity android:name=".ui.Client.accueil.AccueilActivity"
+            android:exported="false"/>
         <activity
             android:name=".ui.Client.favoris.Favoris"
-            android:exported="false" />
+            android:exported="false"/>
         <activity
             android:name=".ui.Client.profil.Profil"
             android:exported="false" />

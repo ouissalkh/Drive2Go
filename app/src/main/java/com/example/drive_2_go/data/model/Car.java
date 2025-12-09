@@ -7,28 +7,28 @@ import java.io.Serializable;
  * Implémente Serializable pour pouvoir passer l'objet entre les activités
  */
 public class Car implements Serializable {
-    private String id; // ID Firebase
+    private String id;
     private String name;
     private String licensePlate;
-    private String price; // Prix par jour
-    private String imageUrl; // URL de l'image dans Firebase Storage
-    private String fuelType; // Essence, Diesel, Électrique, Hybride
-    private String maxKm; // Kilométrage maximum
+    private String price;
+    private String imageUrl;
+    private String fuelType;
+    private String maxKm;
     private int baggageCount;
-    private boolean hasAC; // Climatisation
+    private boolean hasAC;
     private String gearType; // M (Manuelle) ou A (Automatique)
     private int doorCount;
     private int peopleCount;
     private boolean isChecked;
-    //private boolean isFavorite;
-    private String description; // Description détaillée de la voiture
-    private String brand; // Marque (Renault, Peugeot, etc.)
-    private String model; // Modèle (Captur, 208, etc.)
-    private String year; // Année de fabrication
-    private String color; // Couleur
-    private String location; // Localisation de la voiture
-    private boolean isAvailable; // Disponibilité
-    private long timestamp; // Date d'ajout
+    private boolean isFavorite;
+    private String description;
+    private String brand;
+    private String model;
+    private String year;
+    private String color;
+    private String location;
+    private boolean isAvailable;
+    private long timestamp;
 
     // Constructeur vide requis pour Firebase
     public Car() {
@@ -53,7 +53,7 @@ public class Car implements Serializable {
         this.doorCount = doorCount;
         this.peopleCount = peopleCount;
         this.isChecked = isChecked;
-        //this.isFavorite = isFavorite;
+        this.isFavorite = isFavorite; // Initialisé dans le constructeur
         this.description = description;
         this.brand = brand;
         this.model = model;
@@ -104,8 +104,9 @@ public class Car implements Serializable {
     public boolean isChecked() { return isChecked; }
     public void setChecked(boolean checked) { isChecked = checked; }
 
-    // public boolean isFavorite() { return isFavorite; }
-    // public void setFavorite(boolean favorite) { isFavorite = favorite; }
+    // ✅ Getters et Setters pour isFavorite
+    public boolean isFavorite() { return isFavorite; }
+    public void setFavorite(boolean favorite) { isFavorite = favorite; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
