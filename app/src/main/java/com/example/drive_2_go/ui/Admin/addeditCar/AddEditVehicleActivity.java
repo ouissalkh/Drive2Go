@@ -166,11 +166,11 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             config.put("cloud_name", "datr9fmfp");
 
             // 2. Clé API
-            config.put("api_key", "953344295627375");
+            config.put("api_key", "");
 
             // 3. 🛑 AJOUT TEMPORAIRE DU SECRET POUR LE DÉPANNAGE 🛑
             // Remplacez 'VOTRE_SECRET_API_COMPLET' par la valeur trouvée sur votre tableau de bord
-            config.put("api_secret", "jPnIjBzEtR8Z2H6jLVbwNqCrhjc");
+            config.put("api_secret", "");
 
             // Initialiser le MediaManager avec la configuration complète
             MediaManager.init(this, config);
