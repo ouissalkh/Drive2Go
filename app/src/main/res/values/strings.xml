@@ -16,5 +16,7 @@
     <string name="has_ac_text">Possède Climatisation (AC)</string>
     <string name="is_checked_text">Statut vérifié (Is Checked)</string>
     <string name="save_button">Enregistrer</string>
+    <string name="cloudinary_cloud_name">datr9fmfp</string>
+    <string name="cloudinary_api_key">953344295627375</string>
 
 </resources>

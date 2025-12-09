@@ -28,6 +28,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddEditVehicleActivity extends AppCompatActivity {
 
@@ -51,7 +57,6 @@ public class AddEditVehicleActivity extends AppCompatActivity {
     private Uri selectedImageUri;
     private Car carToEdit;
     private FirebaseFirestore db;
-    private FirebaseStorage storage;
     private ActivityResultLauncher<String> imagePickerLauncher;
 
     // ✅ MARQUES DISPONIBLES (utilisées pour le filtrage client)
@@ -75,8 +80,9 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             setContentView(R.layout.activity_add_edit_vehicule);
 
             db = FirebaseFirestore.getInstance();
-            storage = FirebaseStorage.getInstance();
             Log.d(TAG, "✅ Activity créée, Firebase initialisé");
+
+            initCloudinary();
 
             initViews();
             setupSpinners();
@@ -105,6 +111,7 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             finish();
         }
     }
+
 
     private void initViews() {
         try {
@@ -149,6 +156,32 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             throw e;
         }
     }
+
+    private void initCloudinary() {
+        try {
+            // Initialisation MANUELLE explicite de la configuration
+            Map config = new HashMap();
+
+            // 1. Nom du Cloud
+            config.put("cloud_name", "datr9fmfp");
+
+            // 2. Clé API
+            config.put("api_key", "953344295627375");
+
+            // 3. 🛑 AJOUT TEMPORAIRE DU SECRET POUR LE DÉPANNAGE 🛑
+            // Remplacez 'VOTRE_SECRET_API_COMPLET' par la valeur trouvée sur votre tableau de bord
+            config.put("api_secret", "jPnIjBzEtR8Z2H6jLVbwNqCrhjc");
+
+            // Initialiser le MediaManager avec la configuration complète
+            MediaManager.init(this, config);
+            Log.d(TAG, "✅ Cloudinary initialisé (TEST AVEC SECRET OK).");
+
+        } catch (Exception e) {
+            Log.e(TAG, "❌ Erreur initialisation Cloudinary : " + e.getMessage(), e);
+            Toast.makeText(this, "Erreur Cloudinary: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
 
     private void setupSpinners() {
         try {
@@ -365,48 +398,53 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             saveToFirestore(null, pd);
         }
     }
-    /**
-     * Gère l'upload de l'image sélectionnée vers Firebase Storage.
-     * Une fois l'upload réussi, récupère l'URL publique et appelle saveToFirestore.
-     */
+    // 💡 Assurez-vous d'avoir initialisé Cloudinary (section 2)
     private void uploadImageAndSaveCar(ProgressDialog pd) {
         if (selectedImageUri == null) {
-            // Ce cas ne devrait pas arriver ici, mais par sécurité
             saveToFirestore(null, pd);
             return;
         }
 
-        // 1. Créer un nom de fichier unique (utilisant un timestamp par exemple)
-        String uniqueName = System.currentTimeMillis() + "_" + selectedImageUri.getLastPathSegment();
-        StorageReference storageRef = storage.getReference().child("car_images/" + uniqueName);
+        // 1. Démarrer l'upload vers Cloudinary
+        MediaManager.get().upload(selectedImageUri)
+                .option("folder", "car_images") // Optionnel: définir un dossier dans Cloudinary
+                .option("upload_preset", "drive_2_go_unsigned")
+                .callback(new UploadCallback() {
+                    @Override
+                    public void onStart(String requestId) {
+                        Log.d(TAG, "Upload Cloudinary démarré: " + requestId);
+                    }
 
-        // 2. Démarrer l'upload du fichier (Uri)
-        storageRef.putFile(selectedImageUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    // 3. Upload réussi : Récupérer l'URL de téléchargement publique
-                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        String downloadUrl = uri.toString();
+                    @Override
+                    public void onProgress(String requestId, long bytes, long totalBytes) {
+                        double progress = (100.0 * bytes) / totalBytes;
+                        pd.setMessage("Chargement image: " + (int) progress + "%");
+                    }
 
-                        Log.d(TAG, "✅ Image uploadée. URL: " + downloadUrl);
+                    @Override
+                    public void onSuccess(String requestId, Map resultData) {
+                        pd.setMessage("Finalisation...");
+                        // 2. Upload réussi : Récupérer l'URL publique
+                        String secureUrl = (String) resultData.get("secure_url");
+                        Log.d(TAG, "✅ Image uploadée. URL: " + secureUrl);
 
-                        // 4. Sauvegarder l'URL (HTTP) dans Firestore
-                        saveToFirestore(downloadUrl, pd);
 
-                    }).addOnFailureListener(e -> {
+                        // 3. Sauvegarder l'URL (HTTPS) dans Firestore
+                        saveToFirestore(secureUrl, pd);
+                    }
+
+                    @Override
+                    public void onError(String requestId, ErrorInfo error) {
                         pd.dismiss();
-                        Toast.makeText(this, "❌ Erreur URL de téléchargement : " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    });
-                })
-                .addOnFailureListener(e -> {
-                    pd.dismiss();
-                    Log.e(TAG, "❌ Erreur Upload vers Storage : " + e.getMessage(), e);
-                    Toast.makeText(this, "❌ Erreur Upload : " + e.getMessage(), Toast.LENGTH_LONG).show();
-                })
-                .addOnProgressListener(snapshot -> {
-                    // Optionnel : Afficher la progression dans le loader
-                    double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-                    pd.setMessage("Chargement image: " + (int) progress + "%");
-                });
+                        Log.e(TAG, "❌ Erreur Upload Cloudinary : " + error.getDescription());
+                        Toast.makeText(AddEditVehicleActivity.this, "❌ Erreur Upload : " + error.getDescription(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onReschedule(String requestId, ErrorInfo error) {
+                        // Gérer la remise en file d'attente si nécessaire
+                    }
+                }).dispatch(); // Lancer l'opération d'upload
     }
 
     private void saveToFirestore(String imagePath, ProgressDialog pd) {
@@ -492,4 +530,13 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             Toast.makeText(this, "❌ Erreur : " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
+    // Dans AddEditVehicleActivity
+
+    /**
+     * Supprime l'objet Car de Firebase Firestore.
+     */
+
+
+
+
 }

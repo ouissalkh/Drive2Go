@@ -89,19 +89,28 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
         }
 
         // --- 4. Image ---
-        String imagePath = car.getImageUrl();
-        if (imagePath != null && !imagePath.isEmpty()) {
-            File imgFile = new File(imagePath);
-            if (imgFile.exists()) {
+        String imageUrl = car.getImageUrl(); // Ceci est maintenant l'URL Cloud pour les nouvelles voitures
+
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            // 1. Vérifie si c'est une URL HTTP (Firebase Storage)
+            if (imageUrl.startsWith("http")) {
                 Glide.with(context)
-                        .load(imgFile)
-                        .placeholder(R.drawable.car)
+                        .load(imageUrl) // 👈 Charge l'URL cloud
+                        .placeholder(R.drawable.car) // Affiché pendant le chargement
                         .centerCrop()
                         .into(holder.imgCar);
             } else {
-                holder.imgCar.setImageResource(R.drawable.car);
+                // 2. Traitement d'un ancien chemin de fichier local (pour les voitures créées AVANT la mise à jour)
+                File imgFile = new File(imageUrl);
+                if (imgFile.exists()) {
+                    Glide.with(context).load(imgFile).into(holder.imgCar);
+                } else {
+                    // Afficher l'image par défaut si l'image est introuvable (ancien chemin non fonctionnel)
+                    holder.imgCar.setImageResource(R.drawable.car);
+                }
             }
         } else {
+            // Le chemin/URL est vide ou null dans la base de données.
             holder.imgCar.setImageResource(R.drawable.car);
         }
 
@@ -137,7 +146,6 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
                 .document(car.getId())
                 .delete()
                 .addOnSuccessListener(aVoid -> {
-                    ImageUtils.deleteImage(car.getImageUrl());
                     carList.remove(position);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, carList.size());

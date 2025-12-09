@@ -39,6 +39,7 @@ public class AdminVehiclesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_vehicules);
 
+
         db = FirebaseFirestore.getInstance();
 
         // 1. Initialiser les vues

@@ -75,29 +75,33 @@ public class ClientCarAdapter extends RecyclerView.Adapter<ClientCarAdapter.Clie
         // Statut vérifié
         holder.imgCheckStatus.setVisibility(car.isChecked() ? View.VISIBLE : View.GONE);
 
+
         // --- 4. Image ---
-        String imagePath = car.getImageUrl();
+        String imageUrl = car.getImageUrl(); // Ceci est maintenant l'URL Cloud pour les nouvelles voitures
 
-        if (imagePath != null && !imagePath.isEmpty()) {
-            // Tenter de créer un objet File à partir du chemin local sauvegardé
-            File imgFile = new File(imagePath);
-
-            // Vérifier si le fichier existe réellement sur le système de fichiers
-            if (imgFile.exists()) {
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            // 1. Vérifie si c'est une URL HTTP (Firebase Storage)
+            if (imageUrl.startsWith("http")) {
                 Glide.with(context)
-                        .load(imgFile) // 👈 Charge l'objet File (chemin local)
+                        .load(imageUrl) // 👈 Charge l'URL cloud
                         .placeholder(R.drawable.car) // Affiché pendant le chargement
-                        .centerCrop() // Optionnel : ajuste l'image pour remplir la ImageView
+                        .centerCrop()
                         .into(holder.imgCar);
             } else {
-                // Le chemin existe dans la DB, mais le fichier n'est pas trouvé sur l'appareil
-                // (ex: l'utilisateur a supprimé l'image).
-                holder.imgCar.setImageResource(R.drawable.car);
+                // 2. Traitement d'un ancien chemin de fichier local (pour les voitures créées AVANT la mise à jour)
+                File imgFile = new File(imageUrl);
+                if (imgFile.exists()) {
+                    Glide.with(context).load(imgFile).into(holder.imgCar);
+                } else {
+                    // Afficher l'image par défaut si l'image est introuvable (ancien chemin non fonctionnel)
+                    holder.imgCar.setImageResource(R.drawable.car);
+                }
             }
         } else {
-            // Le chemin (imagePath) est vide ou null dans la base de données.
+            // Le chemin/URL est vide ou null dans la base de données.
             holder.imgCar.setImageResource(R.drawable.car);
         }
+// ...
 
 
 
