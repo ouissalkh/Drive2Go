@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.drive_2_go.R;
+import com.example.drive_2_go.ui.Admin.ComposantCommunAdmin.BaseAdminActivity;
 import com.example.drive_2_go.ui.Admin.addeditCar.AddEditVehicleActivity;
 import com.example.drive_2_go.ui.adapter.CarAdapter;
 import com.example.drive_2_go.data.model.Car;
@@ -23,7 +24,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminVehiclesActivity extends AppCompatActivity {
+public class AdminVehiclesActivity  extends BaseAdminActivity {
 
     private static final String TAG = "AdminVehicles";
 
@@ -67,14 +68,14 @@ public class AdminVehiclesActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        // ✅ CONFIGURATION POUR GRANDES CARTES
+        //  CONFIGURATION POUR GRANDES CARTES
         recyclerViewCars.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewCars.setHasFixedSize(true);
 
         carList = new ArrayList<>();
         carListFiltered = new ArrayList<>();
 
-        // ✅ Mode Admin = true (affiche boutons modifier/supprimer)
+        // Mode Admin = true (affiche boutons modifier/supprimer)
         carAdapter = new CarAdapter(this, carListFiltered, true);
         recyclerViewCars.setAdapter(carAdapter);
 
@@ -118,53 +119,37 @@ public class AdminVehiclesActivity extends AppCompatActivity {
 
     private void loadCars() {
         progressBar.setVisibility(View.VISIBLE);
-        Log.d(TAG, "🔄 Chargement des voitures depuis Firestore...");
+        Log.d(TAG, "Début du chargement des voitures..."); // Log de début
 
-        db.collection("cars")
+        db.collection("cars") // Vérifiez ce nom
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (isFinishing() || isDestroyed()) {
-                        Log.w(TAG, "⚠️ Activity fermée, annulation du chargement");
-                        return;
-                    }
-
                     progressBar.setVisibility(View.GONE);
 
                     if (task.isSuccessful() && task.getResult() != null) {
                         carList.clear();
                         carListFiltered.clear();
 
+                        Log.d(TAG, "Documents trouvés : " + task.getResult().size()); // Combien de docs ?
+
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             try {
+                                Log.d(TAG, "Traitement du doc : " + document.getId()); // On essaie quel doc ?
                                 Car car = document.toObject(Car.class);
                                 car.setId(document.getId());
                                 carList.add(car);
-
-                                Log.d(TAG, "✅ Voiture chargée : " + car.getName() +
-                                        " (Marque: " + car.getBrand() + ")");
                             } catch (Exception e) {
-                                Log.e(TAG, "❌ Erreur conversion document : " + e.getMessage());
+                                // C'est ICI que l'erreur s'affiche
+                                Log.e(TAG, "ERREUR CONVERSION sur " + document.getId() + " : " + e.getMessage());
                             }
                         }
 
                         carListFiltered.addAll(carList);
                         carAdapter.notifyDataSetChanged();
 
-                        Log.d(TAG, "✅ " + carList.size() + " voiture(s) chargée(s)");
-
-                        if (carList.isEmpty()) {
-                            Toast.makeText(this, "Aucun véhicule. Ajoutez-en un !",
-                                    Toast.LENGTH_SHORT).show();
-                        }
                     } else {
-                        Log.e(TAG, "❌ Erreur chargement Firestore");
-                        Toast.makeText(this, "Erreur de chargement", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Erreur connexion Firestore", task.getException());
                     }
-                })
-                .addOnFailureListener(e -> {
-                    progressBar.setVisibility(View.GONE);
-                    Log.e(TAG, "❌ Exception Firestore : " + e.getMessage(), e);
-                    Toast.makeText(this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 

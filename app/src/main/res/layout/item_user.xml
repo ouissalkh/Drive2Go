@@ -28,7 +28,7 @@
                 android:id="@+id/tvAvatar"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:background="@drawable/bg_avatar_circle"
+                android:background="@drawable/backgoundte"
                 android:gravity="center"
                 android:text="AB"
                 android:textColor="@android:color/white"

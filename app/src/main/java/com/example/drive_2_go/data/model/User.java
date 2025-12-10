@@ -9,7 +9,7 @@ public class User {
     private String role; // "client" ou "admin"
     private boolean isVerified;
     private String verificationCode;
-    private Long dateInscription;
+    private Number dateInscription;
 
     public User() {
         // Constructeur vide nécessaire pour Firestore
@@ -36,7 +36,7 @@ public class User {
     public String getRole() { return role; }
     public boolean isVerified() { return isVerified; }
     public String getVerificationCode() { return verificationCode; }
-    public Long getDateInscription() { return dateInscription; }
+    public Long getDateInscription() { return dateInscription.longValue(); }
 
     // Setters
     public void setId(String id) { this.id = id; }

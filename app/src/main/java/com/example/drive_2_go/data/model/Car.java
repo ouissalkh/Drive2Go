@@ -2,10 +2,6 @@ package com.example.drive_2_go.data.model;
 
 import java.io.Serializable;
 
-/**
- * Modèle de données pour une voiture
- * Implémente Serializable pour pouvoir passer l'objet entre les activités
- */
 public class Car implements Serializable {
     private String id;
     private String name;
