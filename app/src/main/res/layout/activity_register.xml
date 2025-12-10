@@ -1,159 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@drawable/create_compte_photo">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:background="@drawable/create_compte_photo">
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:padding="24dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_cadre_transparent" android:elevation="10dp" android:padding="24dp" android:gravity="center_horizontal">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Drive2Go" android:textSize="32sp" android:textStyle="bold" android:textColor="#2E7D32" android:layout_marginBottom="10dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Créer un compte" android:textSize="20sp" android:textColor="#333333" android:layout_marginBottom="24dp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp"
-        android:gravity="center_horizontal">
-
-        <!-- Logo ou titre -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Drive2Go"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            android:textColor="#2E7D32"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="10dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Créer un compte"
-            android:textSize="20sp"
-            android:textColor="#666666"
-            android:layout_marginBottom="30dp"/>
-
-        <!-- Nom -->
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            style="@style/WhiteOutlineTextInput">
+            android:layout_marginBottom="12dp"
+            android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/inputNom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nom"
-                android:inputType="textPersonName"/>
+                android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Prénom -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            style="@style/WhiteOutlineTextInput">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputPrenom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Prénom"
-                android:inputType="textPersonName"/>
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/inputPrenom" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Prénom" android:inputType="textPersonName"/>
         </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Téléphone -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            style="@style/WhiteOutlineTextInput">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputTelephone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Téléphone"
-                android:inputType="phone"/>
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/inputTelephone" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Téléphone" android:inputType="phone"/>
         </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Email -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            style="@style/WhiteOutlineTextInput">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                android:inputType="textEmailAddress"/>
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/inputEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Email" android:inputType="textEmailAddress"/>
         </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Mot de passe -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            style="@style/WhiteOutlineTextInput"
-            app:endIconMode="password_toggle">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Mot de passe"
-                android:inputType="textPassword"/>
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" app:endIconMode="password_toggle">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/inputPassword" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Mot de passe" android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Confirmation mot de passe -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            style="@style/WhiteOutlineTextInput"
-            app:endIconMode="password_toggle">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputConfirmPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Confirmer le mot de passe"
-                android:inputType="textPassword"/>
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" app:endIconMode="password_toggle">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/inputConfirmPassword" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Confirmer MDP" android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- ProgressBar -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Bouton S'inscrire -->
-        <Button
-            android:id="@+id/btnRegister"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="Créer un compte"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:backgroundTint="#2E7D32"
-            android:textColor="#FFFFFF"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Bouton Aller à la connexion -->
-        <Button
-            android:id="@+id/btnGoToLogin"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="J'ai déjà un compte"
-            android:textSize="14sp"
-            android:backgroundTint="#EEEEEE"
-            android:textColor="#666666"
-            style="@style/WhiteOutlineTextInput"/>
-
+        <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" android:layout_marginBottom="16dp"/>
+        <Button android:id="@+id/btnRegister" android:layout_width="match_parent" android:layout_height="56dp" android:text="Créer un compte" android:textSize="16sp" android:textStyle="bold" android:backgroundTint="#2E7D32" android:textColor="#FFFFFF"/>
+        <TextView android:id="@+id/btnGoToLogin" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="J'ai déjà un compte" android:textSize="16sp" android:textStyle="bold" android:textColor="#2E7D32" android:layout_marginTop="16dp" android:padding="8dp" android:clickable="true" android:focusable="true"/>
     </LinearLayout>
-</ScrollView>
+</LinearLayout>
+    </ScrollView>
