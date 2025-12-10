@@ -43,6 +43,8 @@ public class DescriptionCarActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth auth;
 
+
+
     // Ajouter une nouvelle méthode pour charger l'utilisateur
     private void loadCurrentUser() {
         FirebaseUser fUser = auth.getCurrentUser(); // Récupère l'utilisateur de Firebase Auth
@@ -70,8 +72,10 @@ public class DescriptionCarActivity extends AppCompatActivity {
                             isFavorite = currentUser.getFavoriteCarIds().contains(mCar.getId());
                             updateFavoriteIcon(); // Mettre à jour l'icône
 
-                            // 5. Configurer les écouteurs des boutons Fav et Order
-                            setupListeners(); // Nouvelle méthode pour configurer les clics
+                            // 5. Configurer l'écouteur du bouton Fav
+                            setupFavButtonListener(); // Séparer l'écouteur Fav
+                            // 6. Vérifier le statut de réservation et configurer le bouton Order
+                            checkReservationStatus(); // ⭐️ NOUVEL APPEL ⭐️
                         } else {
                             Toast.makeText(this, "Erreur de chargement des données de voiture ou utilisateur.", Toast.LENGTH_LONG).show();
                             finish();
@@ -89,19 +93,88 @@ public class DescriptionCarActivity extends AppCompatActivity {
                 });
     }
 
+
+    /**
+     * Vérifie si la voiture actuelle a déjà une réservation en attente de validation.
+     */
+    private void checkReservationStatus() {
+        if (mCar == null) {
+            // Ne peut pas vérifier si la voiture n'est pas chargée
+            updateOrderButton(false, "Voiture non chargée", "#AAAAAA"); // Grisé par défaut
+            return;
+        }
+
+        // Requête : Chercher dans la collection 'reservations'
+        db.collection("reservations")
+                .whereEqualTo("carId", mCar.getId()) // 1. Pour la voiture actuelle
+                .whereEqualTo("status", "En attente de validation") // 2. Et qui est en attente
+                .limit(1) // On a besoin de savoir s'il y en a au moins une
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        // Une réservation en attente existe pour cette voiture
+                        Log.d("RESERVATION", "Réservation en attente trouvée pour la voiture: " + mCar.getName());
+
+                        // ⭐️ Mettre à jour le bouton pour indiquer "En attente" et le désactiver
+                        updateOrderButton(false, "En attente", "#8A9D80"); // Couleur demandée
+
+                    } else {
+                        // Aucune réservation en attente, le bouton doit être actif
+                        Log.d("RESERVATION", "Aucune réservation en attente pour la voiture: " + mCar.getName());
+
+                        // ⭐️ Mettre à jour le bouton pour indiquer "Louer maintenant" et l'activer
+                        updateOrderButton(true, "Louer maintenant", "#4D7836"); // Couleur verte active (supposée)
+
+                        // Reconfigurer l'écouteur de clic (car il peut avoir été désactivé)
+                        setupOrderButtonListener();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("RESERVATION", "Erreur lors de la vérification du statut de réservation: " + e.getMessage());
+                    Toast.makeText(this, "Erreur de connexion : impossible de vérifier le statut.", Toast.LENGTH_SHORT).show();
+                    // En cas d'échec de la vérification, nous laissons le bouton désactivé par sécurité.
+                    updateOrderButton(false, "Erreur", "#AAAAAA");
+                });
+    }
+
+
+    /**
+     * Méthode utilitaire pour mettre à jour l'état du bouton de commande.
+     */
+    private void updateOrderButton(boolean enabled, String text, String colorHex) {
+        orderBtn.setEnabled(enabled);
+        orderBtn.setText(text);
+        // Convertir la chaîne hexadécimale en couleur entière (int)
+        try {
+            int color = android.graphics.Color.parseColor(colorHex);
+            orderBtn.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color));
+        } catch (IllegalArgumentException e) {
+            Log.e("COLOR", "Couleur hexadécimale invalide: " + colorHex);
+            // Utiliser une couleur par défaut si l'hex est invalide
+            orderBtn.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.GRAY));
+        }
+    }
+
+
     // Nouvelle méthode pour centraliser la configuration des listeners après le chargement
-    private void setupListeners() {
+
+
+    // Listener de retour et de favori
+    private void setupFavButtonListener() {
         btnBack.setOnClickListener(v -> finish());
-
-        // Le listener de favori a besoin de currentUser pour fonctionner
         btnFav.setOnClickListener(v -> toggleFavorite());
+    }
 
-        // Le listener de commande peut rester le même, mais il est maintenant configuré après le chargement
+    // Listener de commande (appelé si la voiture est disponible)
+    private void setupOrderButtonListener() {
         orderBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(DescriptionCarActivity.this, ReservationFormActivity.class);
-            // intent.putExtra(ReservationFormActivity.EXTRA_CAR, mCar); // Optionnel si vous passez la voiture
-            startActivity(intent);
-            finish();
+            if (mCar != null) {
+                Intent intent = new Intent(DescriptionCarActivity.this, ReservationFormActivity.class);
+                intent.putExtra(ReservationFormActivity.EXTRA_CAR_DATA, mCar);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Erreur: Données de voiture manquantes.", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -119,12 +192,16 @@ public class DescriptionCarActivity extends AppCompatActivity {
         // 2. Récupérer l'objet Car
         mCar = getIncomingIntentData();
 
+        // ⭐️ IMPORTANT : Appel initial pour configurer les écouteurs simples (Fav et Back)
+        setupFavButtonListener();
+
         // 3. Charger l'utilisateur connecté (ASYNCHRONE)
         // Le reste de l'initialisation (vérification des favoris et listeners)
         // sera effectué DANS la méthode loadCurrentUser() après succès.
         loadCurrentUser();
 
     }
+
 
     private void initViews() {
         // En-tête

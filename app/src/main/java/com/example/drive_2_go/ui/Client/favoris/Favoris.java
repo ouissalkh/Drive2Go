@@ -42,6 +42,8 @@ public class Favoris extends AppCompatActivity{
     private User currentUser;
     RecyclerView rvFavorites;
     ImageView ivEmptyImage;
+    TextView tvEmpty;
+    private ImageView btnBack;
 
     List<Car> allCars = new ArrayList<>();
     List<Car> favoriteCars = new ArrayList<>();
@@ -57,9 +59,13 @@ public class Favoris extends AppCompatActivity{
 
         rvFavorites = findViewById(R.id.rv_favorites);
         ivEmptyImage = findViewById(R.id.iv_empty_image);
+        tvEmpty = findViewById(R.id.tv_empty);
 
         rvFavorites.setLayoutManager(new LinearLayoutManager(this));
-        checkEmptyState();
+
+        // Initialisation et listener pour le bouton de retour
+        btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> finish());
 
         buttonProfil = findViewById(R.id.buttonProfil);
         buttonHome = findViewById(R.id.buttonHome);
@@ -73,6 +79,12 @@ public class Favoris extends AppCompatActivity{
         selectButton(buttonFavoris); // si tu es dans Favoris
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // ⭐️ Recharger les données des favoris à chaque fois que l'activité est affichée
+        loadFavoritesData();
+    }
 
     private void selectButton(ImageButton button) {
         button.setSelected(true);
@@ -108,21 +120,28 @@ public class Favoris extends AppCompatActivity{
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         currentUser = documentSnapshot.toObject(User.class);
-                        if (currentUser != null && !currentUser.getFavoriteCarIds().isEmpty()) {
+                        // ⭐️ Assurez-vous que la liste n'est pas null si elle est vide
+                        List<String> favoriteIds = (currentUser != null) ? currentUser.getFavoriteCarIds() : new ArrayList<>();
+
+                        if (!favoriteIds.isEmpty()) {
                             // 2. Si des IDs sont trouvés, charger les voitures
-                            fetchFavoriteCars(currentUser.getFavoriteCarIds());
+                            fetchFavoriteCars(favoriteIds);
                         } else {
                             // Pas de favoris
-                            favoriteCars.clear();
-                            checkEmptyState();
+                            favoriteCars.clear(); // Vider l'ancienne liste
+                            setupRecyclerView(favoriteCars); // Mettre à jour l'adaptateur
+                            checkEmptyState(); // ⭐️ Afficher l'état vide
                         }
                     } else {
                         Toast.makeText(this, "Erreur: Profil utilisateur introuvable.", Toast.LENGTH_LONG).show();
+                        favoriteCars.clear();
+                        checkEmptyState();
                     }
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Erreur de chargement des favoris: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    checkEmptyState(); // Afficher l'état vide en cas d'erreur
+                    favoriteCars.clear();
+                    checkEmptyState();
                 });
     }
 
@@ -167,13 +186,17 @@ public class Favoris extends AppCompatActivity{
     }
 
     // Mettre à jour checkEmptyState pour utiliser la liste remplie
+    // Dans Favoris.java
     private void checkEmptyState() {
         if (favoriteCars.isEmpty()) {
             rvFavorites.setVisibility(View.GONE);
             ivEmptyImage.setVisibility(View.VISIBLE);
+            tvEmpty.setVisibility(View.VISIBLE); // ⭐️ Afficher le texte
+            tvEmpty.setText("Aucune voiture favorite trouvée."); // Texte à afficher
         } else {
             rvFavorites.setVisibility(View.VISIBLE);
             ivEmptyImage.setVisibility(View.GONE);
+            tvEmpty.setVisibility(View.GONE); // ⭐️ Masquer le texte
         }
     }
 

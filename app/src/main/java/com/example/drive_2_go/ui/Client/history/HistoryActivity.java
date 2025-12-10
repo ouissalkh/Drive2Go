@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ public class HistoryActivity extends AppCompatActivity {
     private ImageButton buttonHome;
     private ImageButton buttonFavoris;
     private ImageButton buttonHistory;
+    private ImageView btnBack;
 
     // TODO: Remplacez ceci par un appel API/BDD
     private static final boolean IS_CAR_AVAILABLE_SIMULATION = false;
@@ -49,6 +51,10 @@ public class HistoryActivity extends AppCompatActivity {
         buttonHome = findViewById(R.id.buttonHome);
         buttonFavoris = findViewById(R.id.buttonFavoris);
         buttonHistory = findViewById(R.id.buttonHistory);
+
+        // Initialisation et listener pour le bouton de retour
+        btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> finish());
 
         buttonProfil.setOnClickListener(v -> openProfil());
         buttonFavoris.setOnClickListener(v -> openFavoris());

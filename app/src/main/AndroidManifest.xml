@@ -22,6 +22,7 @@
             android:name=".ui.Admin.addeditCar.AddEditVehicleActivity"
             android:exported="false" />
 
+
             <activity
             android:name=".ui.Admin.Parck_automobiles.AdminVehiclesActivity"
             android:exported="false" />
@@ -33,6 +34,9 @@
 
         <activity
             android:name=".ui.Client.creationCompte.VerifyCodeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.Client.profil.Settings"
             android:exported="false" />
 
 

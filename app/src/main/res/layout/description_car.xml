@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_dynamic_neutral70">
+    android:background="@color/white">
 
     <!-- Background Image -->
 
@@ -103,7 +103,7 @@
         android:layout_width="0dp"
         android:layout_height="404dp"
         android:background="@drawable/background_midle"
-        android:padding="30dp"
+        android:padding="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -112,9 +112,10 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="85dp"
+            android:layout_marginBottom="90dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="30dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -136,7 +137,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="Description :"
-                    android:textColor="#000000"
+                    android:textColor="#0D2301"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -155,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="Spécifications :"
-                    android:textColor="#000000"
+                    android:textColor="#0D2301"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -220,43 +221,50 @@
                         android:id="@+id/tv_max_km_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="800 km" android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        tools:text="800 km" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Places :"
-                        android:textStyle="bold" android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_people_count_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="5 personnes" android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        tools:text="5 personnes" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Bagages :"
-                        android:textStyle="bold" android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_baggage_count_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="2" android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        tools:text="2" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Climatisation (AC) :"
-                        android:textStyle="bold" android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_has_ac_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Oui" android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        tools:text="Oui" />
 
                 </GridLayout>
 

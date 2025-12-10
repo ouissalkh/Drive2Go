@@ -18,8 +18,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.drive_2_go.R;
+import com.example.drive_2_go.data.model.Car; // Importez votre classe Car
 import com.example.drive_2_go.ui.Client.accueil.AccueilActivity;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth; // Importez FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -34,6 +36,7 @@ import java.util.Map;
 public class ReservationFormActivity extends AppCompatActivity {
 
     private static final String TAG = "ReservationForm";
+    public static final String EXTRA_CAR_DATA = "extra_car_data";
 
     // UI Elements
     private TextView tvCarModel, tvStartDate, tvEndDate, tvTotalPrice;
@@ -44,11 +47,12 @@ public class ReservationFormActivity extends AppCompatActivity {
 
     // Firebase Instance
     private FirebaseFirestore db;
+    private FirebaseAuth auth;
 
-    // Constantes et SimuLation (À remplacer par la logique réelle de session)
-    private static final int CAR_DAILY_PRICE = 200; // Prix de la voiture par défaut (DH/jr)
-    private String currentCarId = "CAR_MERCEDES_A"; // ID de la voiture sélectionnée
-    private String currentUserId = "USER_001"; // ID de l'utilisateur connecté
+    // Variables de Données
+    private Car currentCar;
+    private String currentUserId;
+    private int carDailyPrice = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class ReservationFormActivity extends AppCompatActivity {
 
         // Initialisation de Firebase
         db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         // 1. Initialisation des Vues (liées au fichier XML)
         tvCarModel = findViewById(R.id.tv_car_model);
@@ -70,15 +75,21 @@ public class ReservationFormActivity extends AppCompatActivity {
         etName = findViewById(R.id.et_client_name);
         etPhone = findViewById(R.id.et_client_phone);
 
-        // Mise à jour initiale des textes
-        tvCarModel.setText("Mercedes A-Class (" + CAR_DAILY_PRICE + " DH / jr)");
+        // 2. Récupérer les données de la voiture et de l'utilisateur
+        if (!retrieveCarDataAndUser()) {
+            Toast.makeText(this, "Erreur de chargement de la réservation (voiture ou utilisateur).", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        // Mise à jour des textes avec les données de la voiture
+        tvCarModel.setText(currentCar.getName() + " (" + carDailyPrice + " DH / jr)");
         tvTotalPrice.setText("Total : 0 DH");
 
-        // 2. Charger les informations client depuis Firebase
+        // 3. Charger les informations client depuis Firebase
         loadUserDataFromFirebase();
 
-        // 3. Configuration des sélecteurs de date (MINI-CALENDRIER)
-        // Lorsqu'on clique sur l'icône, on appelle la fonction d'affichage du calendrier
+        // 4. Configuration des sélecteurs de date
         btnSelectStartDate.setOnClickListener(v -> showDatePicker(tvStartDate));
         btnSelectEndDate.setOnClickListener(v -> showDatePicker(tvEndDate));
 
@@ -86,8 +97,36 @@ public class ReservationFormActivity extends AppCompatActivity {
         tvStartDate.addTextChangedListener(new PriceUpdateWatcher());
         tvEndDate.addTextChangedListener(new PriceUpdateWatcher());
 
-        // 4. Gestion du bouton Confirmer
+        // 5. Gestion du bouton Confirmer
         btnConfirm.setOnClickListener(this::handleConfirmation);
+    }
+
+    /**
+     * Récupère l'objet Car de l'Intent et l'ID utilisateur de FirebaseAuth.
+     * @return true si les données minimales sont chargées, false sinon.
+     */
+    private boolean retrieveCarDataAndUser() {
+        if (getIntent().hasExtra(EXTRA_CAR_DATA)) {
+            currentCar = (Car) getIntent().getSerializableExtra(EXTRA_CAR_DATA);
+            if (currentCar != null) {
+                carDailyPrice = currentCar.getPrice();
+            } else {
+                Log.e(TAG, "Objet Car récupéré est null.");
+                return false;
+            }
+        } else {
+            Log.e(TAG, "Pas d'extra EXTRA_CAR_DATA trouvé dans l'Intent.");
+            return false;
+        }
+
+        if (auth.getCurrentUser() != null) {
+            currentUserId = auth.getCurrentUser().getUid();
+        } else {
+            Log.e(TAG, "Utilisateur Firebase non connecté.");
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -99,54 +138,68 @@ public class ReservationFormActivity extends AppCompatActivity {
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-        // 1. Création du DatePickerDialog
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    // 2. Mise à jour du TextView avec la date sélectionnée
                     String date = String.format(Locale.getDefault(), "%02d/%02d/%d",
                             selectedDay, selectedMonth + 1, selectedYear);
                     dateTextView.setText(date);
                 }, year, month, day);
 
-        // Assurez-vous que l'utilisateur ne peut pas sélectionner de date passée
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-
         datePickerDialog.show();
     }
 
     /**
      * Tente de charger le nom et le téléphone de l'utilisateur connecté depuis Firestore.
+     * Utilise les clés nom, prenom et telephone.
      */
     private void loadUserDataFromFirebase() {
-        // En vrai, l'ID utilisateur doit venir de Firebase Auth (FirebaseAuth.getInstance().getCurrentUser().getUid())
-        if (currentUserId.isEmpty()) {
-            Toast.makeText(this, "Utilisateur non connecté.", Toast.LENGTH_SHORT).show();
+        if (currentUserId == null || currentUserId.isEmpty()) {
+            Toast.makeText(this, "Erreur: ID utilisateur manquant.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Supposons une collection 'users'
         db.collection("users").document(currentUserId)
                 .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            String name = document.getString("name");
-                            String phone = document.getString("phone");
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String firstName = documentSnapshot.getString("prenom");
+                        String lastName = documentSnapshot.getString("nom");
+                        String phone = documentSnapshot.getString("telephone");
 
-                            // Mettre à jour les champs en lecture seule
-                            if (name != null) etName.setText(name);
-                            if (phone != null) etPhone.setText(phone);
-
-                        } else {
-                            Log.w(TAG, "Document utilisateur non trouvé. Utilisation des valeurs par défaut.");
-                            etName.setText("Nom Prénom (Simulé)");
-                            etPhone.setText("00 00 00 00 00");
+                        String fullName = "";
+                        if (firstName != null) {
+                            fullName += firstName;
                         }
+                        if (lastName != null) {
+                            if (!fullName.isEmpty()) {
+                                fullName += " ";
+                            }
+                            fullName += lastName;
+                        }
+
+                        // Remplissage des EditText
+                        if (!fullName.isEmpty()) {
+                            etName.setText(fullName);
+                        } else {
+                            etName.setText("Nom complet manquant");
+                        }
+
+                        if (phone != null) {
+                            etPhone.setText(phone);
+                        } else {
+                            etPhone.setText("Téléphone manquant");
+                        }
+
                     } else {
-                        Log.e(TAG, "Erreur de connexion Firestore : ", task.getException());
-                        Toast.makeText(this, "Erreur de chargement des données client.", Toast.LENGTH_SHORT).show();
+                        Log.w(TAG, "Document utilisateur non trouvé pour ID: " + currentUserId);
+                        etName.setText("Profil Inconnu");
+                        etPhone.setText("Non disponible");
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Erreur de connexion Firestore : ", e);
+                    Toast.makeText(this, "Erreur de chargement des données client.", Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -162,6 +215,11 @@ public class ReservationFormActivity extends AppCompatActivity {
             return;
         }
 
+        if (carDailyPrice <= 0) {
+            tvTotalPrice.setText("Total : Prix Inconnu");
+            return;
+        }
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         try {
             Date startDate = sdf.parse(startDateStr);
@@ -172,11 +230,10 @@ public class ReservationFormActivity extends AppCompatActivity {
                 return;
             }
 
-            // Calcul de la différence en jours (+1 pour inclure le jour de fin)
             long diff = endDate.getTime() - startDate.getTime();
             int days = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
 
-            int totalPrice = days * CAR_DAILY_PRICE;
+            int totalPrice = days * carDailyPrice;
             tvTotalPrice.setText("Total : " + totalPrice + " DH");
 
         } catch (ParseException e) {
@@ -184,22 +241,20 @@ public class ReservationFormActivity extends AppCompatActivity {
         }
     }
 
+
     /**
-     * Enregistre la réservation dans Firebase et déclenche l'écoute Admin.
+     * Enregistre la réservation dans Firebase avec les nouveaux champs de temps et de statut.
      */
     private void handleConfirmation(View view) {
         String startDate = tvStartDate.getText().toString();
         String endDate = tvEndDate.getText().toString();
-
-        // Récupérer le prix total et s'assurer qu'il est valide
         String totalPriceStr = tvTotalPrice.getText().toString().replace("Total : ", "").replace(" DH", "");
 
-        if (startDate.isEmpty() || endDate.isEmpty() || totalPriceStr.contains("Erreur") || currentUserId.isEmpty()) {
+        if (startDate.isEmpty() || endDate.isEmpty() || totalPriceStr.contains("Erreur") || currentUserId == null || currentCar == null) {
             Toast.makeText(this, "Veuillez vérifier les dates et l'état du formulaire.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Récupérer la méthode de paiement sélectionnée
         int selectedId = rgPaymentMethod.getCheckedRadioButtonId();
         RadioButton selectedRadioButton = findViewById(selectedId);
         String paymentMethod = selectedRadioButton.getText().toString();
@@ -207,27 +262,38 @@ public class ReservationFormActivity extends AppCompatActivity {
         // Création de l'objet de réservation pour Firestore
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("userId", currentUserId);
-        reservation.put("carId", currentCarId);
+
+        // Données de la voiture
+        reservation.put("carId", currentCar.getId());
+        reservation.put("carName", currentCar.getName());
+        reservation.put("carLicensePlate", currentCar.getLicensePlate());
+        reservation.put("carDailyPrice", currentCar.getPrice());
+
+        // Données utilisateur et location
         reservation.put("userName", etName.getText().toString());
         reservation.put("startDate", startDate);
         reservation.put("endDate", endDate);
         reservation.put("totalPrice", Integer.parseInt(totalPriceStr));
         reservation.put("paymentMethod", paymentMethod);
-        reservation.put("status", "En attente de validation"); // Statut initial
-        reservation.put("timestamp", Timestamp.now()); // Date de la demande
+
+        // ⭐️ NOUVEAUX CHAMPS DE STATUT ET DE TEMPS ⭐️
+
+        // 1. Statut (par défaut 'En attente de validation')
+        reservation.put("status", "En attente de validation");
+
+        // 2. Temps d'envoi de la réservation par le client (curentTime)
+        reservation.put("timeReservationClient", Timestamp.now());
+
+        // 3. Temps de confirmation par l'Admin (par défaut null)
+        // La valeur 'null' sera envoyée à Firestore si l'objet n'est pas un type primitif.
+        reservation.put("timeConfirmationAdmin", null);
 
         // Enregistrement dans la collection 'reservations'
         db.collection("reservations")
                 .add(reservation)
                 .addOnSuccessListener(documentReference -> {
                     Log.d(TAG, "Réservation enregistrée avec ID: " + documentReference.getId());
-
-                    // Le simple fait d'ajouter ce document déclenche la notification côté Admin
-                    // (s'ils ont un listener actif sur cette collection).
-
                     Toast.makeText(this, "Demande envoyée ! En attente de validation de l'Administrateur.", Toast.LENGTH_LONG).show();
-
-                    // Redirection vers l'accueil ou l'historique
                     Intent intent = new Intent(ReservationFormActivity.this, AccueilActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);

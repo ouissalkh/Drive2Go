@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -27,8 +28,9 @@ public class Profil extends AppCompatActivity {
     private ShapeableImageView profileImage;
     private ImageButton buttonCamera;
     private Uri imageUri;
-    private ImageButton buttonBack;
-    private ImageButton btn_notification;
+    private ImageView buttonBack;
+    private ImageView btn_notification;
+    private ImageView btn_settings;
     private ImageButton buttonFavoris;
     private ImageButton buttonHome;
     private ImageButton buttonHistory;
@@ -68,7 +70,7 @@ public class Profil extends AppCompatActivity {
         buttonProfil.setOnClickListener(v -> Toast.makeText(this,"Déjà ici", Toast.LENGTH_SHORT).show());
         selectButton(buttonProfil);
         //bouton retour
-        buttonBack = findViewById(R.id.buttonBack);
+        buttonBack = findViewById(R.id.btnBack);
 
         buttonBack.setOnClickListener(v -> {
             Intent intent = new Intent(Profil.this, AccueilActivity.class);
@@ -81,7 +83,16 @@ public class Profil extends AppCompatActivity {
             Intent intent = new Intent(Profil.this, NotificationClientActivity.class);
             startActivity(intent);
             finish();
-        });    }
+        });
+
+        btn_settings = findViewById(R.id.btn_settings);
+
+        btn_settings.setOnClickListener(v -> {
+            Intent intent = new Intent(Profil.this, Settings.class);
+            startActivity(intent);
+            finish();
+        });
+    }
 
     private void selectButton(ImageButton button) {
         button.setSelected(true);

@@ -9,6 +9,7 @@ public class User {
     private String prenom;
     private String email;
     private String telephone;
+    private String photoUrl;
     private String role; // "client" ou "admin"
     private boolean isVerified;
     private String verificationCode;
@@ -30,6 +31,7 @@ public class User {
         this.isVerified = isVerified;
         this.dateInscription = dateInscription;
         this.favoriteCarIds = new ArrayList<>(); // Initialisez la liste
+        this.photoUrl = null;
     }
 
     // Getters
@@ -42,6 +44,9 @@ public class User {
     public boolean isVerified() { return isVerified; }
     public String getVerificationCode() { return verificationCode; }
     public Long getDateInscription() { return dateInscription; }
+
+    // Getter pour photoUrl
+    public String getPhotoUrl() { return photoUrl; }
 
     // Setters
     public void setId(String id) { this.id = id; }
@@ -62,4 +67,6 @@ public class User {
     public void setFavoriteCarIds(List<String> favoriteCarIds) {
         this.favoriteCarIds = favoriteCarIds;
     }
+    // Setter pour photoUrl
+    public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
 }

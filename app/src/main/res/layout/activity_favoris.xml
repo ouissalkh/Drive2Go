@@ -1,50 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_dynamic_neutral80"
+    android:background="@color/white"
     tools:context=".ui.Client.favoris.Favoris">
 
 
-    <!-- Image si aucun favori -->
 
-    <!-- Liste des favoris -->
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintTop_toTopOf="parent"   app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <ImageView
-        android:id="@+id/iv_empty_image"
-        android:layout_width="254dp"
-        android:layout_height="284dp"
-        android:layout_marginTop="220dp"
-        android:contentDescription="Pas de favoris"
-        android:src="@drawable/ic_empty_favorites"
-        app:layout_constraintBottom_toTopOf="@+id/tv_empty"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"/>
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:contentDescription="Bouton de retour"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@drawable/ic_retour"
+            app:tint="@android:color/black" />
+
+        <TextView
+            android:id="@+id/tv_title_favoris"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Vos Favoris"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@+id/header_layout"  app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_favorites"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/bottomBar"
-        app:layout_constraintStart_toStartOf="parent"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/separator"        app:layout_constraintBottom_toTopOf="@+id/bottomBar"      app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_empty_image"
+        android:layout_width="254dp"
+        android:layout_height="284dp"
+        android:layout_marginTop="64dp"
+        android:contentDescription="Pas de favoris"
+        android:src="@drawable/ic_empty_favorites"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/tv_empty"
         app:layout_constraintEnd_toEndOf="parent"
-        android:padding="8dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/separator"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Aucune voiture favorite trouvée."
+        android:textColor="#565555"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/iv_empty_image"
+        app:layout_constraintStart_toStartOf="@+id/iv_empty_image"
+        app:layout_constraintTop_toBottomOf="@+id/iv_empty_image"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar" />
+
 
     <include
+        android:id="@+id/bottomBar"
         layout="@layout/bottom_navigation_bar"
         android:layout_width="320dp"
         android:layout_height="38dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="20dp"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
