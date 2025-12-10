@@ -100,7 +100,7 @@
     <!-- Bottom container -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomContainer"
-        android:layout_width="0dp"
+        android:layout_width="926dp"
         android:layout_height="404dp"
         android:background="@drawable/background_midle"
         android:padding="16dp"
@@ -135,7 +135,7 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView2"  />
+            app:layout_constraintTop_toBottomOf="@id/textView2" />
 
         <!-- Overview title -->
 

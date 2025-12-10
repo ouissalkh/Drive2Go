@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.drive_2_go.R;
+import com.example.drive_2_go.ui.Admin.ComposantCommunAdmin.BaseAdminActivity;
 import com.example.drive_2_go.ui.Admin.addeditCar.AddEditVehicleActivity;
 import com.example.drive_2_go.ui.adapter.CarAdapter;
 import com.example.drive_2_go.data.model.Car;
@@ -23,7 +24,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminVehiculesActivity extends AppCompatActivity {
+public class AdminVehiculesActivity extends BaseAdminActivity {
 
     private RecyclerView recyclerViewCars;
     private CarAdapter carAdapter;
@@ -38,6 +39,9 @@ public class AdminVehiculesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_vehicules);
+
+        // Configuration de la navigation
+        setupNavigation();
 
         db = FirebaseFirestore.getInstance();
 

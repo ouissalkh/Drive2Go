@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5">
 
-    <!-- En-tête -->
     <LinearLayout
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
@@ -34,7 +33,6 @@
             android:textColor="#666666"/>
     </LinearLayout>
 
-    <!-- Barre de recherche -->
     <SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
@@ -45,7 +43,6 @@
         android:iconifiedByDefault="false"
         app:layout_constraintTop_toBottomOf="@id/headerLayout"/>
 
-    <!-- ProgressBar -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
@@ -56,7 +53,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCars"
         android:layout_width="match_parent"
@@ -64,9 +60,15 @@
         android:padding="8dp"
         android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/searchView"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@id/navBarBottom"/> <include
+    android:id="@+id/navBarBottom"
+    layout="@layout/layout_navbar_admin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- FAB Ajouter -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddCar"
         android:layout_width="wrap_content"
@@ -76,7 +78,6 @@
         android:contentDescription="Ajouter un véhicule"
         app:backgroundTint="#2E7D32"
         app:tint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@id/navBarBottom" app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -108,6 +108,7 @@
                                 android:textStyle="bold"
                                 android:textSize="18sp"/>
                             <TextView
+                                android:id="@+id/vehiculedispo"
                                 android:text="24/34"
                                 android:textSize="20sp"
                                 android:layout_width="wrap_content"
@@ -159,6 +160,7 @@
                                 android:textStyle="bold"
                                 android:textSize="18sp"/>
                             <TextView
+                                android:id="@+id/reservationactives"
                                 android:text="18"
                                 android:textSize="20sp"
                                 android:layout_width="wrap_content"
@@ -210,6 +212,7 @@
                                 android:textStyle="bold"
                                 android:textSize="18sp"/>
                             <TextView
+                                android:id="@+id/users"
                                 android:text="156"
                                 android:textSize="20sp"
                                 android:layout_width="wrap_content"
@@ -261,6 +264,7 @@
                                 android:textStyle="bold"
                                 android:textSize="18sp"/>
                             <TextView
+                                android:id="@+id/revenuemensulle"
                                 android:text="12 450 $"
                                 android:textSize="20sp"
                                 android:layout_width="wrap_content"

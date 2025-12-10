@@ -116,6 +116,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
                             <TextView
+
                                 android:text="Confirmées"
                                 android:textColor="@android:color/black"
                                 android:layout_width="wrap_content"
@@ -123,6 +124,7 @@
                                 android:textStyle="bold"
                                 android:textSize="18sp"/>
                             <TextView
+                                android:id="@+id/tv_confirmed_count"
                                 android:text="18"
                                 android:textSize="20sp"
                                 android:layout_width="wrap_content"
@@ -173,7 +175,8 @@
                                 android:textStyle="bold"
                                 android:textSize="18sp"/>
                             <TextView
-                                android:text="1"
+                                android:id="@+id/tv_pending_count"
+                                android:text="0"
                                 android:textSize="20sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -223,6 +226,7 @@
                                 android:textStyle="bold"
                                 android:textSize="18sp"/>
                             <TextView
+                                android:id="@+id/tv_cancelled_count"
                                 android:text="0"
                                 android:textSize="20sp"
                                 android:layout_width="wrap_content"
@@ -288,6 +292,25 @@
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
+
+                <!-- Titre liste -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="👥 Liste des reservations"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- RecyclerView -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewReservations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:clipToPadding="false"/>
 
                 <View
                     android:layout_width="match_parent"
