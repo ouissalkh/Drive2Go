@@ -24,8 +24,16 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddEditVehicleActivity extends AppCompatActivity {
 
@@ -51,7 +59,7 @@ public class AddEditVehicleActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private ActivityResultLauncher<String> imagePickerLauncher;
 
-    // ✅ MARQUES DISPONIBLES (utilisées pour le filtrage client)
+    // MARQUES DISPONIBLES (utilisées pour le filtrage client)
     private static final String[] BRANDS = {
             "BMW",
             "Ford",
@@ -73,6 +81,8 @@ public class AddEditVehicleActivity extends AppCompatActivity {
 
             db = FirebaseFirestore.getInstance();
             Log.d(TAG, "✅ Activity créée, Firebase initialisé");
+
+            initCloudinary();
 
             initViews();
             setupSpinners();
@@ -101,6 +111,7 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             finish();
         }
     }
+
 
     private void initViews() {
         try {
@@ -145,6 +156,19 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             throw e;
         }
     }
+
+    private void initCloudinary() {
+        try {
+            // Initialisation MANUELLE explicite de la configuration
+
+            MediaManager.get();
+            Log.d(TAG, "✅ Cloudinary initialisé");
+        } catch (Exception e) {
+            Log.e(TAG, "❌ Erreur initialisation Cloudinary : " + e.getMessage(), e);
+            Toast.makeText(this, "Erreur Cloudinary: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
 
     private void setupSpinners() {
         try {
@@ -260,7 +284,7 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             etLicensePlate.setText(car.getLicensePlate());
             etYear.setText(car.getYear());
             etColor.setText(car.getColor());
-            etPrice.setText(car.getPrice());
+            etPrice.setText(String.valueOf(car.getPrice()));
             etMaxKm.setText(car.getMaxKm());
             etDescription.setText(car.getDescription());
 
@@ -280,10 +304,24 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             switchAvailable.setChecked(car.isAvailable());
 
             // Affichage image existante
-            if (car.getImageUrl() != null && !car.getImageUrl().isEmpty()) {
-                File imgFile = new File(car.getImageUrl());
-                if (imgFile.exists()) {
-                    Glide.with(this).load(imgFile).into(ivCarImage);
+            String imageUrl = car.getImageUrl();
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                // Vérifie si le chemin est une URL (commence par http) ou un ancien chemin local
+                if (imageUrl.startsWith("http")) {
+                    // ✅ CHARGEMENT D'URL (Firebase Storage)
+                    Glide.with(this)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.car) // Optionnel
+                            .into(ivCarImage);
+                } else {
+                    // CHARGEMENT D'ANCIEN CHEMIN LOCAL (Pour la rétrocompatibilité si vous avez d'anciennes données)
+                    File imgFile = new File(imageUrl);
+                    if (imgFile.exists()) {
+                        Glide.with(this).load(imgFile).into(ivCarImage);
+                    } else {
+                        // Afficher l'icône par défaut si ni URL, ni fichier local
+                        ivCarImage.setImageResource(R.drawable.car);
+                    }
                 }
             }
 
@@ -336,21 +374,64 @@ public class AddEditVehicleActivity extends AppCompatActivity {
         pd.setCancelable(false);
         pd.show();
 
-        String finalImagePath = "";
-
-        // Gestion image
         if (selectedImageUri != null) {
-            String uniqueName = ImageUtils.createUniqueFileName();
-            finalImagePath = ImageUtils.copyImageToInternalStorage(this, selectedImageUri, uniqueName);
-
-            if (carToEdit != null && carToEdit.getImageUrl() != null) {
-                ImageUtils.deleteImage(carToEdit.getImageUrl());
-            }
+            //  Nouvelle image sélectionnée : UPLOAD vers le cloud
+            uploadImageAndSaveCar(pd);
         } else if (carToEdit != null) {
-            finalImagePath = carToEdit.getImageUrl();
+            // Pas de nouvelle image, mode édition : on garde l'URL/Chemin existant
+            saveToFirestore(carToEdit.getImageUrl(), pd);
+        } else {
+            // Nouvelle voiture sans image sélectionnée
+            saveToFirestore(null, pd);
+        }
+    }
+    //   initialisé Cloudinary (section 2)
+    private void uploadImageAndSaveCar(ProgressDialog pd) {
+        if (selectedImageUri == null) {
+            saveToFirestore(null, pd);
+            return;
         }
 
-        saveToFirestore(finalImagePath, pd);
+        // 1. Démarrer l'upload vers Cloudinary
+        MediaManager.get().upload(selectedImageUri)
+                .option("folder", "car_images") //  définir un dossier dans Cloudinary
+                .option("upload_preset", "drive_2_go_unsigned")
+                .callback(new UploadCallback() {
+                    @Override
+                    public void onStart(String requestId) {
+                        Log.d(TAG, "Upload Cloudinary démarré: " + requestId);
+                    }
+
+                    @Override
+                    public void onProgress(String requestId, long bytes, long totalBytes) {
+                        double progress = (100.0 * bytes) / totalBytes;
+                        pd.setMessage("Chargement image: " + (int) progress + "%");
+                    }
+
+                    @Override
+                    public void onSuccess(String requestId, Map resultData) {
+                        pd.setMessage("Finalisation...");
+                        // 2. Upload réussi : Récupérer l'URL publique
+                        String secureUrl = (String) resultData.get("secure_url");
+                        Log.d(TAG, "✅ Image uploadée. URL: " + secureUrl);
+
+
+                        // 3. Sauvegarder l'URL (HTTPS) dans Firestore
+                        saveToFirestore(secureUrl, pd);
+                    }
+
+                    @Override
+                    public void onError(String requestId, ErrorInfo error) {
+                        pd.dismiss();
+                        Log.e(TAG, "❌ Erreur Upload Cloudinary : " + error.getDescription());
+                        Toast.makeText(AddEditVehicleActivity.this, "❌ Erreur Upload : " + error.getDescription(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onReschedule(String requestId, ErrorInfo error) {
+                        // Gérer la remise en file d'attente si nécessaire
+                    }
+                }).dispatch(); // Lancer l'opération d'upload
     }
 
     private void saveToFirestore(String imagePath, ProgressDialog pd) {
@@ -366,6 +447,21 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             String maxKm = etMaxKm.getText().toString().trim();
             String color = etColor.getText().toString().trim();
             String description = etDescription.getText().toString().trim();
+            String priceString = etPrice.getText().toString().trim();
+
+            // Conversion du prix en INT (avec gestion d'erreur)
+            int priceInt;
+            try {
+                // Tenter la conversion du String en Int
+                priceInt = Integer.parseInt(priceString);
+            } catch (NumberFormatException e) {
+                // Gérer le cas où l'entrée n'est pas un nombre valide
+                pd.dismiss();
+                Log.e(TAG, "❌ Le prix n'est pas un nombre valide : " + priceString, e);
+                Toast.makeText(this, "❌ Erreur : Le prix doit être un nombre entier valide.", Toast.LENGTH_LONG).show();
+                // Assurez-vous que l'activité ne se termine pas si la conversion échoue
+                return;
+            }
 
             // Valeurs par défaut
             if (year.isEmpty()) year = "2024";
@@ -373,15 +469,14 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             if (color.isEmpty()) color = "Non spécifié";
             if (description.isEmpty()) description = "Aucune description";
 
-            // Gestion isFavorite
-            boolean isFavorite = (carToEdit != null) ? carToEdit.isFavorite() : false;
+
 
             // Création objet Car
             Car car = new Car(
                     carId,
                     etName.getText().toString().trim(),
                     etLicensePlate.getText().toString().trim(),
-                    etPrice.getText().toString().trim(),
+                    priceInt,
                     imagePath,
                     spinnerFuelType.getText().toString(),
                     maxKm,
@@ -391,9 +486,8 @@ public class AddEditVehicleActivity extends AppCompatActivity {
                     doorCount,
                     peopleCount,
                     switchChecked.isChecked(),
-                    isFavorite,
                     description,
-                    spinnerBrand.getText().toString(), // ✅ MARQUE pour filtrage
+                    spinnerBrand.getText().toString(), //  MARQUE pour filtrage
                     etModel.getText().toString().trim(),
                     year,
                     color,
@@ -404,11 +498,15 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             Log.d(TAG, "📝 Sauvegarde voiture : " + car.getName() + " (Marque: " + car.getBrand() + ")");
 
             // Sauvegarde Firestore
+
             db.collection("cars").document(carId).set(car)
                     .addOnSuccessListener(unused -> {
                         pd.dismiss();
                         Log.d(TAG, "✅ Véhicule enregistré avec succès");
                         Toast.makeText(this, "✅ Véhicule enregistré !", Toast.LENGTH_SHORT).show();
+                        if (carToEdit == null) {
+                            createGlobalNewCarAlert(car);
+                        }
                         finish();
                     })
                     .addOnFailureListener(e -> {
@@ -417,10 +515,53 @@ public class AddEditVehicleActivity extends AppCompatActivity {
                         Toast.makeText(this, "❌ Erreur : " + e.getMessage(), Toast.LENGTH_LONG).show();
                     });
 
+
+
         } catch (Exception e) {
             pd.dismiss();
             Log.e(TAG, "❌ Exception saveToFirestore : " + e.getMessage(), e);
             Toast.makeText(this, "❌ Erreur : " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    /**
+     * Crée un document dans la collection 'global_alerts' pour signaler l'ajout
+     * d'une nouvelle voiture à tous les utilisateurs.
+     * @param newCar L'objet Car qui vient d'être sauvegardé.
+     */
+    private void createGlobalNewCarAlert(Car newCar) {
+        if (newCar == null) {
+            Log.w(TAG, "Tentative de créer une alerte globale sans objet Car valide.");
+            return;
+        }
+
+        // 1. Préparer les données pour l'alerte
+        Map<String, Object> alert = new HashMap<>();
+        alert.put("type", "New_Car_Added"); // Clé utilisée par NotificationClientActivity
+        alert.put("title", "Nouvelle Voiture Ajoutée !");
+
+        // Le message doit inclure le nom de la voiture pour que l'Adapter puisse le rendre cliquable.
+        alert.put("message", "Une nouvelle voiture a été ajoutée : " + newCar.getName() + ". Découvrez ses détails !");
+
+        alert.put("carId", newCar.getId()); // ID de la voiture (pour le clic)
+        alert.put("carName", newCar.getName()); // Nom de la voiture
+        alert.put("timestamp", com.google.firebase.Timestamp.now());
+
+        // Note : Pas besoin d'isRead ici, car c'est une alerte globale lue par tous.
+
+        // 2. Sauvegarder dans la collection global_alerts
+        db.collection("global_alerts")
+                // Utiliser add() pour laisser Firestore générer un nouvel ID pour l'alerte
+                .add(alert)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d(TAG, "Alerte globale 'Nouvelle Voiture' créée: " + documentReference.getId());
+                    // À ce stade, une Cloud Function pourrait être déclenchée
+                    // pour envoyer la notification Heads-up à tous les utilisateurs.
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Échec de la création de l'alerte globale : " + e.getMessage(), e);
+                });
+
+
     }
 }

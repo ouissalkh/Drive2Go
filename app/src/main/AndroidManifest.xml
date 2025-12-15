@@ -4,8 +4,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-
+    <queries>
+        <package android:name="com.google.android.gms" />
+    </queries>
     <application
+        android:name=".ui.Admin.addeditCar.MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

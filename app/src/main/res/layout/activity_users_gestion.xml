@@ -2,351 +2,330 @@
 <androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F7FA"> <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:orientation="horizontal"
+        android:background="@color/emerald_900"
+        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Header / Toolbar (identique visuellement) -->
+        <ImageView
+            android:id="@+id/logo"
+            android:src="@drawable/ic_car"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:tint="@android:color/white"/>
+
+        <TextView
+            android:id="@+id/appTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Drive2Go Admin"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginStart="12dp"/>
+
+        <ImageView
+            android:id="@+id/menuIcon"
+            android:src="@drawable/ic_menu"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            app:tint="@android:color/white"/>
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#F5F7FA"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
         <LinearLayout
-            android:id="@+id/toolbar"
-            android:orientation="horizontal"
-            android:background="@color/emerald_900"
-            android:padding="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <ImageView
-                android:id="@+id/logo"
-                android:src="@drawable/ic_car"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                app:tint="@android:color/white"/>
-
-            <TextView
-                android:id="@+id/appTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Drive2go Users"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:layout_marginStart="8dp"
-                android:textStyle="bold"/>
-        </LinearLayout>
-
-        <!-- Contenu principal -->
-        <ScrollView
+            android:orientation="vertical"
+            android:paddingBottom="80dp"> <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:paddingBottom="100dp"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp">
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
 
-                <!-- Titre -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Total"
+                            android:textSize="12sp"
+                            android:textColor="#64748B"/>
+
+                        <TextView
+                            android:id="@+id/tvTotalUsers"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="#1E293B"/> </LinearLayout>
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:background="#94A3B8"/>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Clients"
+                            android:textSize="12sp"
+                            android:textColor="#64748B"/>
+
+                        <TextView
+                            android:id="@+id/tvTotalClients"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="#F59E0B"/> </LinearLayout>
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:background="#F59E0B"/>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Admins"
+                            android:textSize="12sp"
+                            android:textColor="#64748B"/>
+
+                        <TextView
+                            android:id="@+id/tvTotalAdmins"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="#3B82F6"/> </LinearLayout>
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:background="#3B82F6"/>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Actifs"
+                            android:textSize="12sp"
+                            android:textColor="#64748B"/>
+
+                        <TextView
+                            android:id="@+id/tvTotalActifs"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="#10B981"/> </LinearLayout>
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:background="#10B981"/>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="24dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Gestion des utilisateurs"
                     android:textStyle="bold"
-                    android:textSize="24sp"
-                    android:textColor="@color/black"
-                    android:layout_marginBottom="16dp"/>
+                    android:textSize="20sp"
+                    android:textColor="#1E293B"/>
 
-                <!-- Carte 1 : Total utilisateurs -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp">
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:padding="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:strokeColor="#E2E8F0"
+                    app:strokeWidth="1dp"
+                    android:layout_marginTop="12dp">
+
+                    <androidx.appcompat.widget.SearchView
+                        android:id="@+id/searchView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1">
-                            <TextView
-                                android:text="Total utilisateurs"
-                                android:textColor="@android:color/black"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:textSize="16sp"/>
-                            <TextView
-                                android:id="@+id/tvTotalUsers"
-                                android:text="0"
-                                android:textSize="24sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/emerald_700"
-                                android:textStyle="bold"/>
-                        </LinearLayout>
-                        <FrameLayout
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:background="@drawable/circle_bg2">
-                            <ImageView
-                                android:src="@drawable/ic_users"
-                                android:layout_width="28dp"
-                                android:layout_height="28dp"
-                                android:layout_gravity="center"/>
-                        </FrameLayout>
-                    </LinearLayout>
+                        app:iconifiedByDefault="false"
+                        app:queryHint="Rechercher (nom, email...)"
+                        android:background="@android:color/transparent"/>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Ligne : Clients + Admins -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginTop="8dp">
 
-                    <!-- Carte Clients -->
-                    <androidx.cardview.widget.CardView
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="6dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp">
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:padding="16dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        app:boxStrokeColor="@color/emerald_700"
+                        app:hintTextColor="@color/emerald_700">
+                        <AutoCompleteTextView
+                            android:id="@+id/autoCompleteRole"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center">
-                            <FrameLayout
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:background="@drawable/circle_bg3"
-                                android:layout_marginBottom="8dp">
-                                <ImageView
-                                    android:src="@drawable/ic_clients"
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_gravity="center"/>
-                            </FrameLayout>
-                            <TextView
-                                android:text="Clients"
-                                android:textColor="@android:color/black"
-                                android:textSize="13sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
-                            <TextView
-                                android:id="@+id/tvTotalClients"
-                                android:text="0"
-                                android:textSize="20sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/emerald_700"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
+                            android:hint="Rôle"
+                            android:inputType="none"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Carte Admins -->
-                    <androidx.cardview.widget.CardView
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp">
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:padding="16dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        app:boxStrokeColor="@color/emerald_700"
+                        app:hintTextColor="@color/emerald_700">
+                        <AutoCompleteTextView
+                            android:id="@+id/autoCompleteStatus"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center">
-                            <FrameLayout
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:background="@drawable/circle_bg4"
-                                android:layout_marginBottom="8dp">
-                                <ImageView
-                                    android:src="@drawable/ic_admin"
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_gravity="center"/>
-                            </FrameLayout>
-                            <TextView
-                                android:text="Admins"
-                                android:textColor="@android:color/black"
-                                android:textSize="13sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
-                            <TextView
-                                android:id="@+id/tvTotalAdmins"
-                                android:text="0"
-                                android:textSize="20sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/emerald_700"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
+                            android:hint="Statut"
+                            android:inputType="none"/>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
-
-                <!-- Carte Actifs -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp">
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:padding="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1">
-                            <TextView
-                                android:text="Utilisateurs actifs"
-                                android:textColor="@android:color/black"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:textSize="16sp"/>
-                            <TextView
-                                android:id="@+id/tvTotalActifs"
-                                android:text="0"
-                                android:textSize="24sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/emerald_700"
-                                android:textStyle="bold"/>
-                        </LinearLayout>
-                        <FrameLayout
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:background="@drawable/circle_bg">
-                            <ImageView
-                                android:src="@drawable/ic_actif"
-                                android:layout_width="28dp"
-                                android:layout_height="28dp"
-                                android:layout_gravity="center"/>
-                        </FrameLayout>
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Carte Filtres -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp">
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:text="🔍 Rechercher et filtrer"
-                            android:textStyle="bold"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"
-                            android:layout_marginBottom="12dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                        <!-- Keep original SearchView but ensure background drawable exists -->
-                        <androidx.appcompat.widget.SearchView
-                            android:id="@+id/searchView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:queryHint="Rechercher par nom, prénom ou email..."
-                            app:iconifiedByDefault="false"
-                            android:layout_marginBottom="12dp"
-                            android:background="@drawable/bg_search"/>
-
-                        <!-- Corrected dropdowns: use MaterialComponents style + MaterialAutoCompleteTextView -->
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Filtrer par rôle"
-                            android:layout_marginBottom="12dp">
-
-                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                                android:id="@+id/autoCompleteTxtRole"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="none"
-                                android:textColor="@color/black" />
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Filtrer par statut">
-                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                                android:id="@+id/autoCompleteTxtStatus"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="none"
-                                android:textColor="@color/black" />
-                        </com.google.android.material.textfield.TextInputLayout>
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Titre liste -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="👥 Liste des utilisateurs"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="12dp"/>
-
-                <!-- RecyclerView -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewUsers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:clipToPadding="false"/>
-
             </LinearLayout>
-        </ScrollView>
 
-        <!-- Barre de navigation fixe (identique) -->
-        <include
-            layout="@layout/layout_navbar_admin"
-            android:layout_width="320dp"
-            android:layout_height="38dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="20dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewUsers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_user"
+                tools:itemCount="3"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include
+        layout="@layout/layout_navbar_admin"
+        android:layout_width="320dp"
+        android:layout_height="38dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="20dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

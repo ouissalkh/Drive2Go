@@ -84,8 +84,8 @@ public class GestionUsersActivity extends BaseAdminActivity {
         tvTotalActifs = findViewById(R.id.tvTotalActifs);
 
         // Filtres
-        autoCompleteRole = findViewById(R.id.autoCompleteTxtRole);
-        autoCompleteStatus = findViewById(R.id.autoCompleteTxtStatus);
+        autoCompleteRole = findViewById(R.id.autoCompleteRole);
+        autoCompleteStatus = findViewById(R.id.autoCompleteStatus);
         searchView = findViewById(R.id.searchView);
     }
 

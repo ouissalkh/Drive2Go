@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +24,8 @@ import java.util.Random;
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText inputNom, inputPrenom, inputTelephone, inputEmail, inputPassword, inputConfirmPassword;
-    private Button btnRegister, btnGoToLogin;
+    private TextView  btnGoToLogin;
+    private Button btnRegister;
     private ProgressBar progressBar;
 
     private FirebaseAuth mAuth;

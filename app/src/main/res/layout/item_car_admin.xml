@@ -160,10 +160,10 @@
         <!-- IMAGE DE LA VOITURE -->
         <ImageView
             android:id="@+id/img_car"
-            android:layout_width="0dp"
-            android:layout_height="130dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="250dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="6dp"
             android:scaleType="fitCenter"
             android:src="@drawable/car"
             app:layout_constraintEnd_toStartOf="@+id/layout_details_vertical"
@@ -220,8 +220,19 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginEnd="8dp"
+                app:tint="#4CAF50"
                 android:src="@drawable/ic_check"
-                app:tint="#4CAF50"/>
+                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/img_not_check_status"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginEnd="8dp"
+                app:tint="#4CAF50"
+                android:src="@drawable/ic_not_check"
+                android:visibility="gone"/>
+
+
 
             <!-- Boite de vitesse -->
             <LinearLayout

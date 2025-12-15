@@ -2,39 +2,47 @@ package com.example.drive_2_go.data.model;
 
 import java.io.Serializable;
 
+/**
+ * Modèle de données pour une voiture
+ * Implémente Serializable pour pouvoir passer l'objet entre les activités
+ */
 public class Car implements Serializable {
-    private String id;
+
+    // IMPORTANT : Un serialVersionUID est recommandé
+    private static final long serialVersionUID = 1L;
+    private String id; // ID Firebase
     private String name;
     private String licensePlate;
-    private String price;
-    private String imageUrl;
-    private String fuelType;
-    private String maxKm;
+    private Number price; // Prix par jour
+    private String imageUrl; // URL de l'image dans Firebase Storage
+    private String fuelType; // Essence, Diesel, Électrique, Hybride
+    private String maxKm; // Kilométrage maximum
     private int baggageCount;
-    private boolean hasAC;
+    private boolean hasAC; // Climatisation
     private String gearType; // M (Manuelle) ou A (Automatique)
     private int doorCount;
     private int peopleCount;
     private boolean isChecked;
-    private boolean isFavorite;
-    private String description;
-    private String brand;
-    private String model;
-    private String year;
-    private String color;
-    private String location;
-    private boolean isAvailable;
-    private long timestamp;
+    private String description; // Description détaillée de la voiture
+    private String brand; // Marque (Renault, Peugeot, etc.)
+    private String model; // Modèle (Captur, 208, etc.)
+    private String year; // Année de fabrication
+    private String color; // Couleur
+    private String location; // Localisation de la voiture
+    private boolean isAvailable; // Disponibilité
+    private long timestamp; // Date d'ajout
+    private boolean isFavorite= false; // Favoris
+
+
 
     // Constructeur vide requis pour Firebase
     public Car() {
     }
 
     // Constructeur complet
-    public Car(String id, String name, String licensePlate, String price, String imageUrl,
+    public Car(String id, String name, String licensePlate, int price, String imageUrl,
                String fuelType, String maxKm, int baggageCount, boolean hasAC,
-               String gearType, int doorCount, int peopleCount, boolean isChecked,
-               boolean isFavorite, String description, String brand, String model,
+               String gearType, int doorCount, int peopleCount, boolean isChecked, String description, String brand, String model,
                String year, String color, String location, boolean isAvailable) {
         this.id = id;
         this.name = name;
@@ -49,7 +57,6 @@ public class Car implements Serializable {
         this.doorCount = doorCount;
         this.peopleCount = peopleCount;
         this.isChecked = isChecked;
-        this.isFavorite = isFavorite; // Initialisé dans le constructeur
         this.description = description;
         this.brand = brand;
         this.model = model;
@@ -70,8 +77,8 @@ public class Car implements Serializable {
     public String getLicensePlate() { return licensePlate; }
     public void setLicensePlate(String licensePlate) { this.licensePlate = licensePlate; }
 
-    public String getPrice() { return price; }
-    public void setPrice(String price) { this.price = price; }
+    public Number getPrice() { return price; }
+    public void setPrice(int price) { this.price = price; }
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
@@ -100,9 +107,6 @@ public class Car implements Serializable {
     public boolean isChecked() { return isChecked; }
     public void setChecked(boolean checked) { isChecked = checked; }
 
-    // ✅ Getters et Setters pour isFavorite
-    public boolean isFavorite() { return isFavorite; }
-    public void setFavorite(boolean favorite) { isFavorite = favorite; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
@@ -119,12 +123,24 @@ public class Car implements Serializable {
     public String getColor() { return color; }
     public void setColor(String color) { this.color = color; }
 
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
-
     public boolean isAvailable() { return isAvailable; }
-    public void setAvailable(boolean available) { isAvailable = available; }
+    /*public String getAvailable(boolean available) { isAvailable = available;
+        return null;
+    }*/
+    public void setAvailable(boolean available) {
+        this.isAvailable = available;
+    }
 
     public long getTimestamp() { return timestamp; }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
     public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+
 }

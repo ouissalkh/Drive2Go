@@ -83,7 +83,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             holder.badgeStatus.setBackgroundResource(R.drawable.bg_badge_green);
         } else {
             holder.badgeStatus.setText("En attente");
-            holder.badgeStatus.setBackgroundResource(R.drawable.bg_badge_green);
+            holder.badgeStatus.setBackgroundResource(R.drawable.bg_badge_jaune);
         }
 
         // Email

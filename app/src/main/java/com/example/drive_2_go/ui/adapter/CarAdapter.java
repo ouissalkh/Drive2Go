@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,30 +17,31 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.drive_2_go.R;
-import com.example.drive_2_go.ui.Admin.addeditCar.AddEditVehicleActivity;
 import com.example.drive_2_go.data.model.Car;
-import com.example.drive_2_go.utils.ImageUtils;
+import com.example.drive_2_go.ui.Admin.addeditCar.AddEditVehicleActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.File;
 import java.util.List;
 
 public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
 
     private Context context;
     private List<Car> carList;
-    private boolean isAdmin;
+    private boolean isAdmin; // Pour savoir si on affiche les boutons Modifier/Supprimer
+    private FirebaseFirestore db;
 
+    // Constructeur
     public CarAdapter(Context context, List<Car> carList, boolean isAdmin) {
         this.context = context;
         this.carList = carList;
         this.isAdmin = isAdmin;
+        this.db = FirebaseFirestore.getInstance();
     }
 
     @NonNull
     @Override
     public CarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Utilise le NOUVEAU layout XML complexe
+        // Liaison avec le nouveau fichier XML item_car_admin
         View view = LayoutInflater.from(context).inflate(R.layout.item_car_admin, parent, false);
         return new CarViewHolder(view);
     }
@@ -48,117 +50,81 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
     public void onBindViewHolder(@NonNull CarViewHolder holder, int position) {
         Car car = carList.get(position);
 
-        // --- 1. Textes Principaux ---
-        holder.tvCarName.setText(car.getName());
-        holder.tvLicensePlate.setText(car.getLicensePlate());
-        holder.tvPrice.setText(car.getPrice() + " Dh"); // Format "450 Dh"
-        holder.tvFuelType.setText(car.getFuelType());
-        holder.tvMaxKm.setText("Max " + car.getMaxKm() + " km");
+        // --- 1. Remplissage des Textes ---
+        // Marque + Modèle (ex: "Renault Clio")
+        String fullName = (car.getBrand() != null ? car.getBrand() : "") + " " +
+                (car.getModel() != null ? car.getModel() : "");
+        holder.tvCarName.setText(fullName.trim());
 
-        // --- 2. Détails techniques (Icônes du bas) ---
-        holder.tvBaggageCount.setText(String.valueOf(car.getBaggageCount()));
+        holder.tvLicensePlate.setText(car.getLicensePlate());
+        holder.tvPrice.setText(car.getPrice() + " DH/jour");
+
+        holder.tvFuelType.setText(car.getFuelType());
+        holder.tvMaxKm.setText(car.getMaxKm() + " km");
+        holder.tvGearType.setText(car.getGearType()); // "Manuelle" ou "Automatique"
         holder.tvDoorCount.setText(String.valueOf(car.getDoorCount()));
         holder.tvPeopleCount.setText(String.valueOf(car.getPeopleCount()));
 
-        // Boîte de vitesse (M ou A)
-        String gearShort = "A".equals(car.getGearType()) ? "A" : "M";
-        holder.tvGearType.setText(gearShort);
-
-        // Climatisation (Afficher/Cacher ou colorer)
-        if (car.isHasAC()) {
-            holder.imgAcStatus.setVisibility(View.VISIBLE);
-            holder.imgAcStatus.setAlpha(1.0f); // Opaque
-        } else {
-            holder.imgAcStatus.setVisibility(View.GONE); // Ou setAlpha(0.3f) pour griser
-        }
-
-        // Vérifié (Badge Check)
-        if (car.isChecked()) {
-            holder.imgCheckStatus.setVisibility(View.VISIBLE);
-        } else {
-            holder.imgCheckStatus.setVisibility(View.GONE);
-        }
-
-        // --- 3. Barre de Disponibilité (Nouveau) ---
+        // --- 2. Gestion Disponibilité (Couleur et Texte) ---
         if (car.isAvailable()) {
             holder.tvAvailability.setText("Disponible");
-            holder.tvAvailability.setBackgroundColor(Color.parseColor("#4CAF50")); // Vert
+            holder.tvAvailability.setTextColor(Color.parseColor("#FFFFFF"));
         } else {
-            holder.tvAvailability.setText("Loué");
-            holder.tvAvailability.setBackgroundColor(Color.parseColor("#F44336")); // Rouge
+            holder.tvAvailability.setText("Louée/Indispo");
+            holder.tvAvailability.setTextColor(Color.parseColor("#EEEEEE"));
+        }
+        // 1. On définit l'image du flocon (toujours la même)
+        // Assurez-vous d'avoir l'image ic_snowflake dans vos drawables, sinon utilisez une autre image
+        if (holder.imgAcStatus != null) {
+            holder.imgAcStatus.setImageResource(R.drawable.ic_snowflake);
         }
 
-        // --- 4. Image ---
-        String imagePath = car.getImageUrl();
-        if (imagePath != null && !imagePath.isEmpty()) {
-            File imgFile = new File(imagePath);
-            if (imgFile.exists()) {
-                Glide.with(context)
-                        .load(imgFile)
-                        .placeholder(R.drawable.car)
-                        .centerCrop()
-                        .into(holder.imgCar);
-            } else {
-                holder.imgCar.setImageResource(R.drawable.car);
-            }
+        // 2. On affiche le Check ou le Not Check selon le boolean hasAC
+        // Vérifiez dans votre modèle Car.java si le getter s'appelle isHasAC(), hasAC() ou getHasAC()
+        if (car.isHasAC()) { // Si le véhicule a une climatisation
+            holder.imgCheckStatus.setVisibility(View.VISIBLE);     // Affiche le V
+            holder.imgNotCheckStatus.setVisibility(View.GONE);     // Cache le X
         } else {
-            holder.imgCar.setImageResource(R.drawable.car);
+            holder.imgCheckStatus.setVisibility(View.GONE);        // Cache le V
+            holder.imgNotCheckStatus.setVisibility(View.VISIBLE);  // Affiche le X
         }
 
-        /* --- 5. Favori ---
-        if (car.isFavorite()) {
-            holder.btnFavorite.setImageResource(R.drawable.ic_favorite_true);
+        // --- 3. Chargement de l'Image (Glide) ---
+        if (car.getImageUrl() != null && !car.getImageUrl().isEmpty()) {
+            Glide.with(context)
+                    .load(car.getImageUrl())
+                    .placeholder(R.drawable.ic_car) // Image par défaut si chargement en cours
+                    .error(R.drawable.ic_car)       // Image par défaut si erreur
+                    .centerCrop()
+                    .into(holder.imgCar);
         } else {
-            holder.btnFavorite.setImageResource(R.drawable.ic_favorite);
+            holder.imgCar.setImageResource(R.drawable.ic_car);
         }
 
-        holder.btnFavorite.setOnClickListener(v -> {
-            boolean newState = !car.isFavorite();
-            car.setFavorite(newState);
-            notifyItemChanged(position); // Rafraîchissement visuel immédiat
-
-            FirebaseFirestore.getInstance().collection("cars")
-                    .document(car.getId())
-                    .update("favorite", newState);
-        }); */
-
-        // --- 6. Boutons Admin (Modifier / Supprimer) ---
+        // --- 4. Gestion Mode Admin (Boutons Modifier/Supprimer) ---
         if (isAdmin) {
             holder.btnEdit.setVisibility(View.VISIBLE);
             holder.btnDelete.setVisibility(View.VISIBLE);
 
+            // Clic sur MODIFIER
             holder.btnEdit.setOnClickListener(v -> {
                 Intent intent = new Intent(context, AddEditVehicleActivity.class);
+                intent.putExtra("CAR_ID", car.getId()); // On passe l'ID pour que l'activité sache quoi modifier
+                // On peut aussi passer l'objet entier si Car implémente Serializable
                 intent.putExtra("CAR_OBJECT", car);
                 context.startActivity(intent);
             });
 
+            // Clic sur SUPPRIMER
             holder.btnDelete.setOnClickListener(v -> {
-                new AlertDialog.Builder(context)
-                        .setTitle("Suppression")
-                        .setMessage("Supprimer " + car.getName() + " ?")
-                        .setPositiveButton("Oui", (dialog, which) -> deleteCar(car, position))
-                        .setNegativeButton("Non", null)
-                        .show();
+                showDeleteConfirmDialog(car);
             });
+
         } else {
-            // Si c'est l'interface client, on cache les outils d'édition
+            // Si c'est un utilisateur simple, on cache les boutons d'administration
             holder.btnEdit.setVisibility(View.GONE);
             holder.btnDelete.setVisibility(View.GONE);
         }
-    }
-
-    private void deleteCar(Car car, int position) {
-        FirebaseFirestore.getInstance().collection("cars")
-                .document(car.getId())
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    ImageUtils.deleteImage(car.getImageUrl());
-                    carList.remove(position);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, carList.size());
-                    Toast.makeText(context, "Supprimé", Toast.LENGTH_SHORT).show();
-                });
     }
 
     @Override
@@ -166,41 +132,74 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
         return carList.size();
     }
 
-    // --- ViewHolder : Liaison avec le XML complexe ---
+    // --- Logique de Suppression ---
+    private void showDeleteConfirmDialog(Car car) {
+        new AlertDialog.Builder(context)
+                .setTitle("Confirmation")
+                .setMessage("Voulez-vous vraiment supprimer " + car.getBrand() + " " + car.getModel() + " ?")
+                .setPositiveButton("Supprimer", (dialog, which) -> {
+                    deleteCarFromFirestore(car.getId());
+                })
+                .setNegativeButton("Annuler", null)
+                .show();
+    }
+
+    private void deleteCarFromFirestore(String carId) {
+        // Attention : Vérifiez bien le nom de la collection ("Vehicles" ou "cars" ?)
+        // D'après vos fichiers précédents, c'était parfois "Vehicles" et parfois "cars".
+        // Je mets "Vehicles" ici car c'était dans votre AdminVehiclesActivity.
+        // SI CA NE MARCHE PAS, REMPLACEZ "Vehicles" PAR "cars".
+        db.collection("Vehicles").document(carId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(context, "Véhicule supprimé avec succès", Toast.LENGTH_SHORT).show();
+                    // Pas besoin de supprimer de la liste manuellement ici,
+                    // le SnapshotListener de l'Activity le fera automatiquement.
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Erreur lors de la suppression", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+
+    // --- ViewHolder : Liaison avec les IDs du XML ---
     public static class CarViewHolder extends RecyclerView.ViewHolder {
 
-        // Textes
-        TextView tvPrice, tvAvailability, tvCarName, tvLicensePlate, tvFuelType, tvMaxKm;
-        TextView tvBaggageCount, tvGearType, tvDoorCount, tvPeopleCount;
+        public ImageView imgAcStatus;
+        public ImageView imgCheckStatus, imgNotCheckStatus;
 
-        // Images
-        ImageView imgCar, imgAcStatus, imgCheckStatus, btnFavorite;
-
-        // Boutons Admin
+        TextView tvCarName, tvLicensePlate, tvPrice, tvAvailability;
+        TextView tvFuelType, tvMaxKm, tvGearType, tvDoorCount, tvPeopleCount;
+        ImageView imgCar;
         ImageView btnEdit, btnDelete;
 
         public CarViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            tvPrice = itemView.findViewById(R.id.tv_price);
-            tvAvailability = itemView.findViewById(R.id.tv_availability);
+            // IDs venant de item_car_admin.xml
             tvCarName = itemView.findViewById(R.id.tv_car_name);
             tvLicensePlate = itemView.findViewById(R.id.tv_license_plate);
+            tvPrice = itemView.findViewById(R.id.tv_price);
+            tvAvailability = itemView.findViewById(R.id.tv_availability);
+
             tvFuelType = itemView.findViewById(R.id.tv_fuel_type);
             tvMaxKm = itemView.findViewById(R.id.tv_max_km);
-
-            tvBaggageCount = itemView.findViewById(R.id.tv_baggage_count);
             tvGearType = itemView.findViewById(R.id.tv_gear_type);
             tvDoorCount = itemView.findViewById(R.id.tv_door_count);
             tvPeopleCount = itemView.findViewById(R.id.tv_people_count);
 
             imgCar = itemView.findViewById(R.id.img_car);
+
+            // Climatisation
             imgAcStatus = itemView.findViewById(R.id.img_ac_status);
             imgCheckStatus = itemView.findViewById(R.id.img_check_status);
+            imgNotCheckStatus = itemView.findViewById(R.id.img_not_check_status);
 
-            //btnFavorite = itemView.findViewById(R.id.btnFavorite);
+            // Boutons d'action
             btnEdit = itemView.findViewById(R.id.btnEdit);
             btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }
 }
+
+

@@ -1,6 +1,9 @@
 package com.example.drive_2_go.data.model;
 
+import com.google.firebase.firestore.PropertyName;
+
 public class User {
+
     private String id;
     private String nom;
     private String prenom;
@@ -9,14 +12,25 @@ public class User {
     private String role; // "client" ou "admin"
     private boolean isVerified;
     private String verificationCode;
-    private Number dateInscription;
+    private Long dateInscription;
 
     public User() {
         // Constructeur vide nécessaire pour Firestore
     }
 
+    @PropertyName("isVerified")
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    @PropertyName("isVerified")
+    public void setVerified(boolean verified) {
+        this.isVerified = verified;
+    }
+
     public User(String id, String nom, String prenom, String email, String telephone,
                 String role, boolean isVerified, Long dateInscription) {
+
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -34,9 +48,8 @@ public class User {
     public String getEmail() { return email; }
     public String getTelephone() { return telephone; }
     public String getRole() { return role; }
-    public boolean isVerified() { return isVerified; }
     public String getVerificationCode() { return verificationCode; }
-    public Long getDateInscription() { return dateInscription.longValue(); }
+    public Long getDateInscription() { return dateInscription; }
 
     // Setters
     public void setId(String id) { this.id = id; }
@@ -45,7 +58,6 @@ public class User {
     public void setEmail(String email) { this.email = email; }
     public void setTelephone(String telephone) { this.telephone = telephone; }
     public void setRole(String role) { this.role = role; }
-    public void setVerified(boolean verified) { isVerified = verified; }
     public void setVerificationCode(String verificationCode) { this.verificationCode = verificationCode; }
     public void setDateInscription(Long dateInscription) { this.dateInscription = dateInscription; }
 }
