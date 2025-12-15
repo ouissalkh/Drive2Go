@@ -18,7 +18,7 @@ public class EmailSender {
     private static final String TAG = "EmailSender";
 
     //  BREVO API Configuration
-   // private static final String BREVO_API_KEY = ""; //Ajouter ici api
+   private static final String BREVO_API_KEY = ""; //Ajouter ici api
     private static final String BREVO_URL = "https://api.brevo.com/v3/smtp/email";
     private static final String FROM_EMAIL = "drive2go.verify@gmail.com";
     private static final String FROM_NAME = "Drive2Go";
@@ -80,7 +80,7 @@ public class EmailSender {
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("accept", "application/json");
-                // conn.setRequestProperty("api-key", BREVO_API_KEY);
+                conn.setRequestProperty("api-key", BREVO_API_KEY);
                 conn.setRequestProperty("content-type", "application/json");
                 conn.setDoOutput(true);
 
