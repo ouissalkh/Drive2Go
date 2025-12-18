@@ -10,8 +10,15 @@
         <!-- false = Icônes Blanches (pour fond foncé) -->
         <!-- true = Icônes Noires (pour fond clair) -->
         <item name="android:windowLightStatusBar">false</item>
+        parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/white</item>
+        <item name="hintTextColor">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
 
-
+    </style>
+    <!-- Ajoutez ceci dans res/values/themes.xml -->
+    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
+        <item name="cornerSize">50%</item>
     </style>
 
     <style name="Theme.Drive_2_GO" parent="Base.Theme.Drive_2_GO" />

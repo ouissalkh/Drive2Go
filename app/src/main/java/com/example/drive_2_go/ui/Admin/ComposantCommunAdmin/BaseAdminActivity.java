@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat;
 // Vérifie bien que le chemin (package) est correct pour chaque ligne
 import com.example.drive_2_go.R;
 import com.example.drive_2_go.ui.Admin.Table_bord.adminActivity;
-import com.example.drive_2_go.ui.Admin.Parck_automobiles.AdminVehiclesActivity; // Chemin à vérifier
+import com.example.drive_2_go.ui.Admin.Parck_automobiles.AdminVehiculesActivity; // Chemin à vérifier
 import com.example.drive_2_go.ui.Admin.Gestion_Reservations.ReservationsActivity;     // Chemin à vérifier
 import com.example.drive_2_go.ui.Admin.Gestion_Users.GestionUsersActivity;    // Chemin à vérifier
 import com.example.drive_2_go.ui.Client.login.LoginActivity;
@@ -36,7 +36,7 @@ public abstract class BaseAdminActivity extends AppCompatActivity {
         // Le code va comparer "this" (la page actuelle) avec la classe cible
 
         gererBouton(btnHome, adminActivity.class);
-        gererBouton(btnParck, AdminVehiclesActivity.class);
+        gererBouton(btnParck, AdminVehiculesActivity.class);
         gererBouton(btnResa, ReservationsActivity.class);
         gererBouton(btnUsers, GestionUsersActivity.class);
 

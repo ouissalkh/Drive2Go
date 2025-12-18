@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.drive_2_go"
-    compileSdk = 34
+    compileSdk = 36 // Gardez cette version ou la plus récente supportée par vos dépendances
 
     buildFeatures {
         buildConfig = true
@@ -14,16 +14,15 @@ android {
     defaultConfig {
         applicationId = "com.example.drive_2_go"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 34 // Gardez cette version ou la plus récente
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
         release {
-            minifyEnabled = false  // ⬅️ CORRIGÉ : 'm' minuscule au lieu de 'M' majuscule
+            minifyEnabled = false
             proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     "proguard-rules.pro"
@@ -42,8 +41,6 @@ android {
             excludes += "META-INF/LICENSE.md"
         }
     }
-
-
 }
 
 dependencies {
@@ -54,25 +51,58 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.cardview:cardview:1.0.0")
 
+    implementation("androidx.drawerlayout:drawerlayout:1.2.0")
+    implementation("androidx.core:core-ktx:1.12.0")
+
     // Glide
-    implementation("com.github.bumptech.glide:glide:4.15.1")
+    // Glide pour afficher les images
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+
+
+    // Cloudinary
+    implementation 'com.cloudinary:cloudinary-android:2.5.0'
+
+
+    //implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation libs.activity // Assurez-vous que ceci est bien défini dans libs.versions.toml
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 
-    // Firebase (BoM)
-    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-storage")
+    // Firebase (BoM) - TRÈS IMPORTANT : Utilisez la dernière version stable du BoM
+    // Vérifiez ici pour la dernière version : https://firebase.google.com/docs/android/setup#available-libraries
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0")) // <-- Version actuelle : 33.6.0. Mettez à jour si une plus récente est disponible
 
-    //cloudinary
+    // Dépendances Firebase sans spécifier la version (le BoM s'en chargera)
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore") // <-- CORRIGÉ : Sans version explicite
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-messaging") // <-- CORRIGÉ : Sans version explicite
+
+    // Analytics (le BoM gérera la version si défini correctement dans libs.versions.toml)
+    implementation(libs.firebase.analytics) // Assurez-vous que libs.firebase.analytics ne spécifie PAS de version
+
+    // Services Google Play (Auth) - Sa version est souvent indépendante du BoM Firebase,
+    // mais 20.7.0 est généralement compatible avec les versions récentes de Firebase.
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+    // Cloudinary
     implementation ("com.cloudinary:cloudinary-android:3.0.2")
 
+    // Email
+    implementation("com.sun.mail:android-mail:1.6.7")
+    implementation("com.sun.mail:android-activation:1.6.7")
 
     // Tests
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    // MPAndroidChart
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
-
+    // Les dépendances Firebase Admin SDK et Google Cloud Firestore Library for Java
+    // sont pour les environnements serveur (Java/Node.js/Python), pas pour Android.
+    // Elles sont correctement commentées ou absentes pour Android.
+    // //implementation 'com.google.firebase:firebase-admin:9.2.0'
+    // //implementation 'com.google.cloud:google-cloud-firestore:4.13.0'
 }

@@ -1,4 +1,4 @@
-/*package com.example.drive_2_go.ui.Admin.Parck_automobiles;
+package com.example.drive_2_go.ui.Admin.Parck_automobiles;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.drive_2_go.R;
+import com.example.drive_2_go.ui.Admin.ComposantCommunAdmin.BaseAdminActivity;
 import com.example.drive_2_go.ui.Admin.addeditCar.AddEditVehicleActivity;
 import com.example.drive_2_go.ui.adapter.CarAdapter;
 import com.example.drive_2_go.data.model.Car;
@@ -23,7 +24,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminVehiclesActivity extends AppCompatActivity {
+public class AdminVehiculesActivity extends BaseAdminActivity {
 
     private RecyclerView recyclerViewCars;
     private CarAdapter carAdapter;
@@ -38,7 +39,6 @@ public class AdminVehiclesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_vehicules);
-
 
         db = FirebaseFirestore.getInstance();
 
@@ -62,7 +62,7 @@ public class AdminVehiclesActivity extends AppCompatActivity {
 
         // 3. Bouton Ajouter Voiture (Ouvre l'activité vide)
         fabAddCar.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminVehiclesActivity.this, AddEditVehicleActivity.class);
+            Intent intent = new Intent(AdminVehiculesActivity.this, AddEditVehicleActivity.class);
             startActivity(intent);
         });
 
@@ -105,10 +105,10 @@ public class AdminVehiclesActivity extends AppCompatActivity {
                         carAdapter.notifyDataSetChanged();
 
                         if (carList.isEmpty()) {
-                            Toast.makeText(AdminVehiclesActivity.this, "Aucun véhicule. Ajoutez-en un !", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AdminVehiculesActivity.this, "Aucun véhicule. Ajoutez-en un !", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(AdminVehiclesActivity.this, "Erreur de chargement", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AdminVehiculesActivity.this, "Erreur de chargement", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -149,4 +149,4 @@ public class AdminVehiclesActivity extends AppCompatActivity {
         }
         carAdapter.notifyDataSetChanged();
     }
-}*/
+}
