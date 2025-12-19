@@ -166,11 +166,11 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             config.put("cloud_name", "datr9fmfp");
 
             // 2. Clé API
-            config.put("api_key", "");
+            config.put("api_key", "953344295627375");
 
             // 3. 🛑 AJOUT TEMPORAIRE DU SECRET POUR LE DÉPANNAGE 🛑
             // Remplacez 'VOTRE_SECRET_API_COMPLET' par la valeur trouvée sur votre tableau de bord
-            config.put("api_secret", "");
+            config.put("api_secret", "jPnIjBzEtR8Z2H6jLVbwNqCrhjc");
 
             // Initialiser le MediaManager avec la configuration complète
             MediaManager.init(this, config);
@@ -516,6 +516,9 @@ public class AddEditVehicleActivity extends AppCompatActivity {
                         pd.dismiss();
                         Log.d(TAG, "✅ Véhicule enregistré avec succès");
                         Toast.makeText(this, "✅ Véhicule enregistré !", Toast.LENGTH_SHORT).show();
+                        if (carToEdit == null) {
+                            createGlobalNewCarAlert(car);
+                        }
                         finish();
                     })
                     .addOnFailureListener(e -> {
@@ -530,11 +533,47 @@ public class AddEditVehicleActivity extends AppCompatActivity {
             Toast.makeText(this, "❌ Erreur : " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
-    // Dans AddEditVehicleActivity
+
+    // Dans AddEditVehicleActivity.java (après saveToFirestore)
 
     /**
-     * Supprime l'objet Car de Firebase Firestore.
+     * Crée un document dans la collection 'global_alerts' pour signaler l'ajout
+     * d'une nouvelle voiture à tous les utilisateurs.
+     * @param newCar L'objet Car qui vient d'être sauvegardé.
      */
+    private void createGlobalNewCarAlert(Car newCar) {
+        if (newCar == null) {
+            Log.w(TAG, "Tentative de créer une alerte globale sans objet Car valide.");
+            return;
+        }
+
+        // 1. Préparer les données pour l'alerte
+        Map<String, Object> alert = new HashMap<>();
+        alert.put("type", "New_Car_Added"); // Clé utilisée par NotificationClientActivity
+        alert.put("title", "Nouvelle Voiture Ajoutée !");
+
+        // Le message doit inclure le nom de la voiture pour que l'Adapter puisse le rendre cliquable.
+        alert.put("message", "Une nouvelle voiture a été ajoutée : " + newCar.getName() + ". Découvrez ses détails !");
+
+        alert.put("carId", newCar.getId()); // ID de la voiture (pour le clic)
+        alert.put("carName", newCar.getName()); // Nom de la voiture
+        alert.put("timestamp", com.google.firebase.Timestamp.now());
+
+        // Note : Pas besoin d'isRead ici, car c'est une alerte globale lue par tous.
+
+        // 2. Sauvegarder dans la collection global_alerts
+        db.collection("global_alerts")
+                // Utiliser add() pour laisser Firestore générer un nouvel ID pour l'alerte
+                .add(alert)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d(TAG, "Alerte globale 'Nouvelle Voiture' créée: " + documentReference.getId());
+                    // À ce stade, une Cloud Function pourrait être déclenchée
+                    // pour envoyer la notification Heads-up à tous les utilisateurs.
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Échec de la création de l'alerte globale : " + e.getMessage(), e);
+                });
+    }
 
 
 

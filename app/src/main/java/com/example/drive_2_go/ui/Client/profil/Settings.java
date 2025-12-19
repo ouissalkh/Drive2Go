@@ -29,6 +29,8 @@ import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.example.drive_2_go.R;
+import com.example.drive_2_go.ui.Client.login.LoginActivity;
+import com.example.drive_2_go.ui.Client.notification.NotificationClientActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -86,7 +88,8 @@ public class Settings extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             currentUserId = currentUser.getUid();
-            userRef = db.collection("Clients").document(currentUserId);
+            userRef = db.collection("users").document(currentUserId);
+            Log.i(TAG, "Utilisateur ID: " + currentUserId);
         } else {
             Toast.makeText(this, "Utilisateur non connecté.", Toast.LENGTH_SHORT).show();
             finish();
@@ -117,7 +120,7 @@ public class Settings extends AppCompatActivity {
         loadUserProfileData();
 
         // 5. Gestion des Clics
-        buttonCamera.setOnClickListener(v -> checkPermissionAndShowImageSourceDialog());
+        buttonCamera.setOnClickListener(v -> checkPermissionAndLaunchGallery());
 
         // Clic sur "Modifier vos infos" (Active/Désactive le mode édition)
         tvModifierProfil.setOnClickListener(v -> toggleEditMode());
@@ -125,10 +128,33 @@ public class Settings extends AppCompatActivity {
         // Clic sur "Sauvegarder"
         btnSaveProfile.setOnClickListener(v -> saveProfileChanges());
 
-        // Clic sur "Déconnexion"
-        if (tvDeconnexion != null) {
-            tvDeconnexion.setOnClickListener(v -> logoutUser());
-        }
+        tvDeconnexion.setOnClickListener(v -> {
+
+            AlertDialog dialog = new AlertDialog.Builder(Settings.this)
+                    .setTitle("Déconnexion")
+                    .setMessage("Êtes-vous sûr de vouloir vous déconnecter ?")
+                    .setCancelable(false)
+                    .setPositiveButton("Oui", (d, which) -> {
+                        FirebaseAuth.getInstance().signOut();
+
+                        Intent intent = new Intent(Settings.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    })
+                    .setNegativeButton("Annuler", (d, which) -> d.dismiss())
+                    .create();
+
+            dialog.show();
+
+            // 🎨 Changer les couleurs des boutons
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor(ContextCompat.getColor(this, R.color.green_700));
+
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                    .setTextColor(ContextCompat.getColor(this, R.color.red_500));
+        });
+
 
         // Bouton de retour
         findViewById(R.id.img_back_button).setOnClickListener(v -> finish());
@@ -285,51 +311,69 @@ public class Settings extends AppCompatActivity {
                 });
     }
 
-    // Dans Settings.java
-
     private void uploadProfilePhoto() {
         if (selectedImageUri == null) {
             Toast.makeText(this, "Sélectionnez d'abord une photo.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Le chemin d'upload est l'URI du fichier local
+        Log.i(TAG, "Début de l'upload pour User ID: " + currentUserId);
+        // 1. Définir le nom du dossier et le public_id (ID de l'utilisateur)
+        String folderName = "profile_images"; // Le dossier où stocker l'image
+        String filePublicId = currentUserId; // Nom du fichier dans le dossier (ID utilisateur)
+
+        // Lancement de l'upload avec les options folder et upload_preset
         MediaManager.get().upload(selectedImageUri)
-                .option("public_id", "profile_images/" + currentUserId) // Dossier/nom de l'image
-                .option("overwrite", true) // Écrase l'ancienne image pour cet utilisateur
+                .option("folder", folderName) // <-- AJOUTÉ: Spécifie le dossier
+                .option("public_id", filePublicId)
+                .option("overwrite", true)
+                .option("upload_preset", "drive_2_go_unsigned") // <-- AJOUTÉ: Upload non signé
                 .callback(new UploadCallback() {
+
                     @Override
                     public void onStart(String requestId) {
-                        Toast.makeText(Settings.this, "Début du téléchargement vers Cloudinary...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Settings.this, "Début du téléchargement...", Toast.LENGTH_SHORT).show();
                     }
-
-                    @Override
-                    public void onProgress(String requestId, long bytes, long totalBytes) {
-                        // Afficher la progression si nécessaire (facultatif)
-                    }
-
 
                     @Override
                     public void onSuccess(String requestId, Map resultData) {
-                        // 1. Récupération de l'URL de l'image depuis la réponse Cloudinary
-                        String photoUrl = (String) resultData.get("url");
+                        // 1. Récupération de l'URL de l'image
+                        String photoUrl = (String) resultData.get("secure_url");
 
-                        // 2. Mise à jour du document utilisateur dans Firestore
-                        userRef.update("photoUrl", photoUrl) // <-- CECI ENVOIE L'URL À FIREBASE/FIRESTORE
-                                .addOnCompleteListener(updateTask -> {
-                                    if (updateTask.isSuccessful()) {
-                                        Toast.makeText(Settings.this, "Photo de profil mise à jour.", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        // Gérer l'erreur de mise à jour Firestore
-                                        Log.e(TAG, "Erreur Firestore lors de la MAJ de photoUrl: " + updateTask.getException());
-                                    }
-                                });
+                        if (photoUrl == null || photoUrl.isEmpty()) {
+                            // Mesure de sécurité si secure_url n'est pas présent
+                            photoUrl = (String) resultData.get("url");
+                        }
+
+                        // <<< AJOUTER CE LOG POUR DEBUGGER >>>
+                        Log.d(TAG, "URL Cloudinary Récupérée: " + photoUrl);
+
+
+                        if (photoUrl != null && !photoUrl.isEmpty()) {
+                            // 2. Mise à jour du document utilisateur dans Firestore
+                            userRef.update("photoUrl", photoUrl)
+                                    .addOnCompleteListener(updateTask -> {
+                                        if (updateTask.isSuccessful()) {
+                                            Toast.makeText(Settings.this, "Photo de profil mise à jour.", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Log.e(TAG, "Erreur Firestore lors de la MAJ de photoUrl: " + updateTask.getException());
+                                        }
+                                    });
+                        } else {
+                            Log.e(TAG, "❌ photoUrl est null ou vide après l'upload Cloudinary.");
+                            Toast.makeText(Settings.this, "Échec: URL Cloudinary non trouvée.", Toast.LENGTH_LONG).show();
+                        }
                     }
 
                     @Override
                     public void onError(String requestId, ErrorInfo error) {
                         Toast.makeText(Settings.this, "Erreur Cloudinary: " + error.getDescription(), Toast.LENGTH_LONG).show();
                         Log.e(TAG, "Cloudinary Error: " + error.getDescription());
+                    }
+
+                    @Override
+                    public void onProgress(String requestId, long bytes, long totalBytes) {
+                        // Laisser vide ou implémenter une barre de progression
                     }
 
                     @Override
@@ -340,54 +384,59 @@ public class Settings extends AppCompatActivity {
     }
 
 
-    // Permissions et Dialogue Source Image (laissez ces méthodes si vous en avez besoin)
-    private void checkPermissionAndShowImageSourceDialog() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-            String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
-            requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-        } else {
-            showImageSourceDialog();
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                showImageSourceDialog();
+
+            // Vérifiez si au moins une permission a été accordée
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                // Lancer la galerie si la permission de lecture est accordée
+                launchGallery();
+
             } else {
-                Toast.makeText(this, "Permissions nécessaires pour la caméra et la galerie.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Permission de lecture nécessaire pour accéder à la galerie.", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void showImageSourceDialog() {
-        final CharSequence[] options = {"Prendre une photo", "Choisir depuis la galerie", "Annuler"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
-        builder.setTitle("Changer la photo de profil");
-        builder.setItems(options, (dialog, item) -> {
-            if (options[item].equals("Prendre une photo")) {
-                Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                cameraLauncher.launch(takePicture);
-            } else if (options[item].equals("Choisir depuis la galerie")) {
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                galleryLauncher.launch(pickPhoto);
-            } else if (options[item].equals("Annuler")) {
-                dialog.dismiss();
-            }
-        });
-        builder.show();
+
+    /**
+     * Lance l'intent de la galerie pour choisir une image.
+     */
+    private void launchGallery() {
+        // 1. Définir l'Intent pour choisir une image
+        Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        // 2. Lancer l'activité via le ActivityResultLauncher
+        galleryLauncher.launch(pickPhoto);
     }
 
-    private void logoutUser() {
-        mAuth.signOut();
-        Toast.makeText(this, "Déconnexion réussie. Redirection...", Toast.LENGTH_SHORT).show();
-        // Redirection vers l'activité de connexion
-        finish();
+    /**
+     * Vérifie la permission de lecture (Galerie) et lance la galerie si elle est accordée.
+     */
+    private void checkPermissionAndLaunchGallery() {
+        // Permission nécessaire pour la galerie (READ_EXTERNAL_STORAGE ou READ_MEDIA_IMAGES)
+        String permissionToAsk;
+
+        // Gérer les API récentes (Android 13+)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            permissionToAsk = Manifest.permission.READ_MEDIA_IMAGES;
+        } else {
+            permissionToAsk = Manifest.permission.READ_EXTERNAL_STORAGE;
+        }
+
+        if (ContextCompat.checkSelfPermission(this, permissionToAsk) != PackageManager.PERMISSION_GRANTED) {
+
+            // Demander la permission
+            requestPermissions(new String[]{permissionToAsk}, PERMISSION_REQUEST_CODE);
+
+        } else {
+            // La permission est déjà accordée, lancez la galerie
+            launchGallery();
+        }
     }
 }

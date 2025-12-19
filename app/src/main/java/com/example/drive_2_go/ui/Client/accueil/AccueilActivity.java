@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,12 +28,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 // Imports Firebase Firestore
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;import com.example.drive_2_go.ui.Client.description.DescriptionCarActivity;
+import java.util.List;
 
 public class AccueilActivity extends AppCompatActivity {
 
@@ -52,6 +58,7 @@ public class AccueilActivity extends AppCompatActivity {
     private ImageButton buttonHistory;
     private ImageButton btnMenu;
     private ImageButton btn_notifications;
+    private View notificationBadge;
     private Button btnFilter;
     private EditText etSearch;
     private androidx.cardview.widget.CardView contactInfoPanel;
@@ -61,7 +68,17 @@ public class AccueilActivity extends AppCompatActivity {
 
 
     // Instance de Firebase Firestore
+    private com.google.firebase.firestore.ListenerRegistration notificationListener;
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private String currentUserId = "";
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchUnreadNotificationCount();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +87,13 @@ public class AccueilActivity extends AppCompatActivity {
 
         // Initialisation de Firebase
         db = FirebaseFirestore.getInstance();
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            currentUserId = currentUser.getUid();
+        }
+
 
         // Initialisation des boutons de navigation et des vues
         buttonProfil = findViewById(R.id.buttonProfil);
@@ -81,6 +105,7 @@ public class AccueilActivity extends AppCompatActivity {
         btnFilter = findViewById(R.id.btn_filter);
         filterPanel = findViewById(R.id.filter_panel);
         btn_notifications = findViewById(R.id.btn_notifications);
+        notificationBadge = findViewById(R.id.notification_badge);
         //recherche
         etSearch = findViewById(R.id.et_search);
         //Initialisation des boutons de tri ---
@@ -90,7 +115,25 @@ public class AccueilActivity extends AppCompatActivity {
         // Configuration des écouteurs de la barre supérieure
         btnMenu.setOnClickListener(v -> toggleViewVisibility(contactInfoPanel));
         btnFilter.setOnClickListener(v -> toggleViewVisibility(filterPanel));
-        btn_notifications.setOnClickListener(v -> startActivity(new Intent(AccueilActivity.this, NotificationClientActivity.class)));
+        btn_notifications.setOnClickListener(v -> {
+            notificationBadge.setVisibility(View.GONE);
+
+            // Marquer les notifs privées dans Firestore
+            markNotificationsAsRead();
+
+            // Mettre à jour le timestamp local pour les alertes globales
+            long currentTime = System.currentTimeMillis() / 1000;
+            getSharedPreferences("AppPrefs", MODE_PRIVATE)
+                    .edit()
+                    .putLong("last_global_read_timestamp", currentTime)
+                    .apply();
+
+            // Redémarrer le listener pour qu'il prenne en compte le nouveau "lastRead"
+            if (notificationListener != null) notificationListener.remove();
+            startNotificationListener();
+
+            startActivity(new Intent(AccueilActivity.this, NotificationClientActivity.class));
+        });
 
         //filters
         btnMoinsPlus.setOnClickListener(v -> {
@@ -108,7 +151,7 @@ public class AccueilActivity extends AppCompatActivity {
         // Configuration de la barre de navigation inférieure
         buttonProfil.setOnClickListener(v -> openProfil());
         buttonFavoris.setOnClickListener(v -> openFavoris());
-        buttonHome.setOnClickListener(v -> Toast.makeText(this,"Déjà ici", Toast.LENGTH_SHORT).show());
+        buttonHome.setOnClickListener(v -> openAccueil());
         buttonHistory.setOnClickListener(v -> openHistory());
         selectButton(buttonHome);
 
@@ -119,11 +162,11 @@ public class AccueilActivity extends AppCompatActivity {
 
         List<Integer> icons = Arrays.asList(
                 R.drawable.audi_br, R.drawable.bmw_br, R.drawable.ford_br,
-                R.drawable.mercedes_br, R.drawable.volkswagen
+                R.drawable.mercedes_br, R.drawable.volkswagen, R.drawable.ic_renault, R.drawable.ic_peugeot, R.drawable.ic_toyota, R.drawable.ic_tesla
         );
 
         // Initialisation des noms de marques (doit correspondre à l'ordre des icônes!)
-        List<String> brandNames = Arrays.asList("Audi", "BMW", "Ford", "Mercedes", "Volkswagen");
+        List<String> brandNames = Arrays.asList("Audi", "BMW", "Ford", "Mercedes", "Volkswagen", "Renault", "Peugeot", "Toyota", "Tesla");
 
         // Assurez-vous que votre BrandAdapter est mis à jour pour prendre 'int position' si possible.
         // Si vous utilisez la version actuelle qui prend 'brandResId', vous devez le modifier.
@@ -179,6 +222,48 @@ public class AccueilActivity extends AppCompatActivity {
                 filterCars(editable.toString());
             }
         });
+
+        // Dans onCreate, après l'initialisation des autres vues :
+
+        LinearLayout idPhone = findViewById(R.id.id_phone);
+        LinearLayout idEmail = findViewById(R.id.id_email);
+        LinearLayout idAdresse = findViewById(R.id.id_adresse);
+
+        // Click pour l'appel
+        idPhone.setOnClickListener(v -> {
+            String phoneNumber = "0636707122"; // Le numéro affiché
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(android.net.Uri.parse("tel:" + phoneNumber));
+            startActivity(intent);
+        });
+
+        // Click pour l'email
+        idEmail.setOnClickListener(v -> {
+            String email = "admin@drive2go.com"; // Remplacez par le vrai mail
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(android.net.Uri.parse("mailto:" + email));
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Demande d'information - Drive2Go");
+            try {
+                startActivity(Intent.createChooser(intent, "Envoyer un e-mail..."));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(this, "Aucune application de messagerie installée.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Click pour l'adresse (Google Maps)
+        idAdresse.setOnClickListener(v -> {
+            String address = "Maison Drive2Go"; // Remplacez par l'adresse réelle
+            android.net.Uri gmmIntentUri = android.net.Uri.parse("geo:0,0?q=" + android.net.Uri.encode(address));
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps"); // Force l'ouverture dans Google Maps
+
+            if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(mapIntent);
+            } else {
+                // Si Google Maps n'est pas installé, ouvrir n'importe quelle app de cartes
+                startActivity(new Intent(Intent.ACTION_VIEW, gmmIntentUri));
+            }
+        });
     }
 
     // Méthode pour basculer la visibilité d'une vue (pour btnMenu et btnFilter)
@@ -216,6 +301,9 @@ public class AccueilActivity extends AppCompatActivity {
     }
     private void openHistory(){
         startActivity(new Intent(AccueilActivity.this, HistoryActivity.class));
+    }
+    private void openAccueil(){
+        startActivity(new Intent(AccueilActivity.this, AccueilActivity.class));
     }
 
     //les voitires recherchees:
@@ -355,6 +443,188 @@ public class AccueilActivity extends AppCompatActivity {
 
         // Informer l'adaptateur du changement
         carAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Assurez-vous d'initialiser mAuth et currentUserId dans onCreate
+     * pour que cette méthode fonctionne.
+     */
+    private void checkUnreadNotifications() {
+        if (currentUserId == null || currentUserId.isEmpty()) return;
+
+        // Requête A : Réservations non lues
+        Task<QuerySnapshot> unreadReservationsTask = db.collection("reservations")
+                .whereEqualTo("userId", currentUserId)
+                .whereIn("status", List.of("acceptée", "refusée"))
+                .whereEqualTo("clientRead", false)
+                .get();
+
+        // Requête B : Alertes Spécifiques non lues
+        Task<QuerySnapshot> unreadUserAlertsTask = db.collection("user_alerts")
+                .whereEqualTo("userId", currentUserId)
+                .whereEqualTo("clientRead", false)
+                .get();
+
+        // Requête C : Alertes Globales (Nouvelles Voitures)
+        Task<QuerySnapshot> globalAlertsTask = db.collection("global_alerts")
+                .whereEqualTo("type", "New_Car_Added").get();
+
+        // Combine les deux requêtes
+        Tasks.whenAllSuccess(unreadReservationsTask, unreadUserAlertsTask)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Object> results = task.getResult();
+                        int countA = ((QuerySnapshot) results.get(0)).size();
+                        int countB = ((QuerySnapshot) results.get(1)).size();
+                        int countC = ((QuerySnapshot) results.get(2)).size();
+
+                        // Le badge apparaît si A > 0 OU B > 0 OU C > 0
+                        updateNotificationBadge((countA + countB + countC) > 0);
+
+                    } else {
+                        Log.e(TAG, "Erreur lors de la vérification des notifications non lues: " + task.getException());
+                    }
+                });
+    }
+
+    /**
+     * Met à jour la visibilité du badge de notification.
+     * @param showBadge true pour afficher le cercle rouge, false pour le masquer.
+     */
+    private void updateNotificationBadge(boolean showBadge) {
+        if (notificationBadge != null) {
+            // Utiliser View.VISIBLE ou View.GONE selon la variable showBadge
+            notificationBadge.setVisibility(showBadge ? View.VISIBLE : View.GONE);
+            Log.d(TAG, "Notification badge set to: " + (showBadge ? "VISIBLE" : "GONE"));
+        } else {
+            Log.e(TAG, "notificationBadge est null. Vérifiez l'initialisation du findViewById.");
+        }
+    }
+
+    /**
+     * Récupère le nombre de notifications non lues (pour les collections qui ont un champ 'isRead').
+     */
+    private void fetchUnreadNotificationCount() {
+        if (currentUserId.isEmpty()) {
+            return;
+        }
+
+        // Récupérer le timestamp de la dernière lecture locale
+        long lastRead = getSharedPreferences("AppPrefs", MODE_PRIVATE)
+                .getLong("last_global_read_timestamp", 0);
+
+        Task<QuerySnapshot> resTask = db.collection("reservations")
+                .whereEqualTo("userId", currentUserId)
+                .whereEqualTo("clientRead", false).get();
+
+        Task<QuerySnapshot> userAlertsTask = db.collection("user_alerts")
+                .whereEqualTo("userId", currentUserId)
+                .whereEqualTo("clientRead", false).get();
+
+        Task<QuerySnapshot> globalAlertsTask = db.collection("global_alerts")
+                .whereEqualTo("type", "New_Car_Added")
+                .whereGreaterThan("timestamp", lastRead)
+                .get();
+
+        Tasks.whenAllSuccess(resTask, userAlertsTask, globalAlertsTask)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        int total = 0;
+                        for (Object res : task.getResult()) {
+                            total += ((QuerySnapshot) res).size();
+                        }
+                        updateNotificationBadge(total > 0);
+                    }
+                });
+    }
+
+    private void startNotificationListener() {
+        if (currentUserId == null || currentUserId.isEmpty()) return;
+
+        // 1. Écoute des réservations personnelles
+        db.collection("reservations")
+                .whereEqualTo("userId", currentUserId)
+                .whereEqualTo("clientRead", false)
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) return;
+                    // Si on a des réservations non lues, on affiche le badge
+                    if (snapshots != null && !snapshots.isEmpty()) {
+                        updateNotificationBadge(true);
+                    } else {
+                        // Si plus de réservations, on vérifie quand même les alertes globales
+                        fetchUnreadNotificationCount();
+                    }
+                });
+
+        // 2. Écoute des alertes globales avec filtre de temps
+        long lastRead = getSharedPreferences("AppPrefs", MODE_PRIVATE)
+                .getLong("last_global_read_timestamp", 0);
+
+        db.collection("global_alerts")
+                .whereEqualTo("type", "New_Car_Added")
+                .whereGreaterThan("timestamp", lastRead) // IMPORTANT : n'écouter que les NOUVELLES
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) return;
+                    if (snapshots != null && !snapshots.isEmpty()) {
+                        updateNotificationBadge(true);
+                        Log.d(TAG, "Nouvelle alerte globale détectée après le dernier check.");
+                    }
+                });
+    }
+
+    // Petite vérification rapide pour les alertes
+    private void checkUserAlertsOnce() {
+        db.collection("user_alerts")
+                .whereEqualTo("userId", currentUserId)
+                .whereEqualTo("clientRead", false)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    updateNotificationBadge(!queryDocumentSnapshots.isEmpty());
+                });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        startNotificationListener(); // Démarre l'écoute en temps réel
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (notificationListener != null) {
+            notificationListener.remove(); // Arrête l'écoute quand l'app est en arrière-plan
+        }
+    }
+
+    private void markNotificationsAsRead() {
+        if (currentUserId.isEmpty()) return;
+
+        // 1. Marquer les réservations comme lues
+        db.collection("reservations")
+                .whereEqualTo("userId", currentUserId)
+                .whereEqualTo("clientRead", false)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        db.collection("reservations").document(doc.getId()).update("clientRead", true);
+                    }
+                });
+
+        // 2. Marquer les alertes utilisateurs comme lues
+        db.collection("user_alerts")
+                .whereEqualTo("userId", currentUserId)
+                .whereEqualTo("clientRead", false)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        db.collection("user_alerts").document(doc.getId()).update("clientRead", true);
+                    }
+                });
+
+        // Note pour les alertes globales :
+        // Si c'est global, vous devrez probablement gérer la lecture localement (SharedPreferences)
+        // car on ne peut pas marquer "lu" pour tout le monde dans une collection partagée.
     }
 
 }

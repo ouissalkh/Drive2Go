@@ -12,7 +12,6 @@
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:paddingStart="8dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
@@ -21,11 +20,11 @@
         <Button
             android:id="@+id/btn_filter"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="35dp"
             android:backgroundTint="#DCDBDB"
-            android:text="@string/filter"
+            android:text="Filter"
             android:textColor="#000000"
-            android:textSize="14sp"
+            android:textSize="13sp"
             app:cornerRadius="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,39 +33,61 @@
         <EditText
             android:id="@+id/et_search"
             android:layout_width="0dp"
-            android:layout_height="38dp"
+            android:layout_height="30dp"
             android:layout_marginStart="8dp"
             android:autofillHints=""
             android:background="@drawable/rounded_search_background"
             android:backgroundTint="#DCDBDB"
             android:drawableStart="@drawable/drawable_search_sized"
-            android:drawablePadding="8dp"
+            android:drawablePadding="10dp"
             android:hint="@string/search"
             android:paddingStart="12dp"
+            android:paddingTop="5dp"
             android:paddingEnd="12dp"
+            android:paddingBottom="5dp"
             android:textColor="#000000"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_notifications"
+            app:layout_constraintEnd_toStartOf="@id/frame_notif"
             app:layout_constraintStart_toEndOf="@id/btn_filter"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/btn_notifications"
-            android:layout_width="43dp"
-            android:layout_height="43dp"
-            android:backgroundTint="#FFFFFF"
-            android:contentDescription="@string/notifications"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_bell"
+        <FrameLayout
+            android:id="@+id/frame_notif"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginEnd="-8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_menu"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@null" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- ImageButton -->
+            <ImageButton
+                android:id="@+id/btn_notifications"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="#FFFFFF"
+                android:contentDescription="@string/notifications"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_bell"
+                app:tint="@null" />
+
+            <!-- Cercle rouge -->
+            <View
+                android:id="@+id/notification_badge"
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/red_circle"
+                android:visibility="gone" />
+
+        </FrameLayout>
 
         <ImageButton
             android:id="@+id/btn_menu"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
             android:backgroundTint="#FFFFFF"
             android:contentDescription="Menu"
             android:scaleType="centerCrop"
@@ -99,14 +120,23 @@
             <Button
                 android:id="@+id/moins_plus"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:backgroundTint="@color/white"
                 android:text="Moins cher au plus cher"
                 android:textColor="@color/black"/>
+
+            <View
+                android:id="@+id/separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#BAB9B9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/moins_plus" />
             <Button
                 android:id="@+id/plus_mois"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="50dp"
                 android:text="Plus cher au moins cher"
                 android:backgroundTint="@color/white"
                 android:textColor="@color/black"/>
@@ -129,7 +159,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="24dp"
+            android:padding="15dp"
             android:background="#FFFFFF">
 
         <TextView
@@ -138,77 +168,106 @@
             android:layout_marginBottom="8dp"
             android:text="Contacter Nous"
             android:textColor="#000000"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
             <LinearLayout
+                android:id="@+id/id_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="3dp"
                 android:orientation="horizontal"
                 android:paddingBottom="3dp">
 
                 <ImageView
-                    android:layout_width="17dp"
-                    android:layout_height="17dp"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
                     android:layout_marginEnd="8dp"
                     android:src="@drawable/phone" />
 
                 <TextView
+                    android:id="@+id/appel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0948494404"
+                    android:text="0636707122"
                     android:textColor="#000000"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
+            <View
+                android:id="@+id/separator1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="3dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/id_phone" />
+
+
             <LinearLayout
+                android:id="@+id/id_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="3dp"
                 android:orientation="horizontal"
                 android:paddingBottom="3dp">
 
                 <ImageView
-                    android:layout_width="17dp"
-                    android:layout_height="17dp"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginTop="3dp"
                     android:src="@drawable/email" />
 
                 <TextView
+                    android:id="@+id/contacter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0948494404"
+                    android:text="admin@drive2go.com"
                     android:textColor="#000000"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
+            <View
+                android:id="@+id/separator2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="3dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/id_email" />
 
-            <ImageView
-                android:layout_width="17dp"
-                android:layout_height="17dp"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_localisation" />
-
-            <TextView
+            <LinearLayout
+                android:id="@+id/id_adresse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0948494404"
-                android:textColor="#000000"
-                android:textSize="14sp" />
-        </LinearLayout>
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_localisation" />
+
+                <TextView
+                    android:id="@+id/localisation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Maison Drive2Go"
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/top_bar">
+        app:layout_constraintTop_toBottomOf="@id/top_bar"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -218,7 +277,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_brands"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="55dp"
                 android:orientation="horizontal"
                 android:overScrollMode="never"
                 android:paddingStart="16dp"
@@ -238,8 +297,9 @@
                     android:layout_height="wrap_content"
                     android:text="Drive2Go !"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
+                    android:layout_marginBottom="5dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -249,28 +309,29 @@
                     android:layout_height="wrap_content"
                     android:text="La clé pour conduire votre voiture de rêves"
                     android:textColor="#CCCCCC"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_app_name" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
+                android:id="@+id/disponible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Voitures Disponibles"
                 android:textColor="#000000"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_car_listings"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toBottomOf="@+id/disponible"
                 android:nestedScrollingEnabled="false"
-                android:padding="8dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/cartecar" />
 
@@ -278,6 +339,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <include
+        android:id="@+id/bottomBar"
         layout="@layout/bottom_navigation_bar"
         android:layout_width="320dp"
         android:layout_height="38dp"

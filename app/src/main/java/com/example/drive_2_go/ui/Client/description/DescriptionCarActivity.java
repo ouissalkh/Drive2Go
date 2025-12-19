@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide; // Nécessite l'implémentation de Glide
 import com.example.drive_2_go.R; // Assurez-vous que l'import R est correct
 import com.example.drive_2_go.data.model.Car; // Importez votre classe Car
 import com.example.drive_2_go.ui.Client.login.LoginActivity;
-import com.example.drive_2_go.ui.main.MainActivity;
 import com.example.drive_2_go.ui.reservation.ReservationFormActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class DescriptionCarActivity extends AppCompatActivity {
 
     public static final String EXTRA_CAR = "extra_car";
+    public static final String EXTRA_CAR_ID = "CAR_ID";
 
     // Vues (variables membres)
     private TextView tvCarName, tvLicensePlate, tvBrandModelYear, tvPriceDetail;
@@ -103,11 +103,14 @@ public class DescriptionCarActivity extends AppCompatActivity {
             updateOrderButton(false, "Voiture non chargée", "#AAAAAA"); // Grisé par défaut
             return;
         }
+        // Récupérez l'ID de l'utilisateur connecté
+        String currentUserId = auth.getCurrentUser().getUid();
 
         // Requête : Chercher dans la collection 'reservations'
         db.collection("reservations")
+                .whereEqualTo("userId", currentUserId)
                 .whereEqualTo("carId", mCar.getId()) // 1. Pour la voiture actuelle
-                .whereEqualTo("status", "En attente de validation") // 2. Et qui est en attente
+                .whereEqualTo("status", "En attente") // 2. Et qui est en attente
                 .limit(1) // On a besoin de savoir s'il y en a au moins une
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -123,7 +126,7 @@ public class DescriptionCarActivity extends AppCompatActivity {
                         Log.d("RESERVATION", "Aucune réservation en attente pour la voiture: " + mCar.getName());
 
                         // ⭐️ Mettre à jour le bouton pour indiquer "Louer maintenant" et l'activer
-                        updateOrderButton(true, "Louer maintenant", "#4D7836"); // Couleur verte active (supposée)
+                        updateOrderButton(true, "Louer", "#0D2301"); // Couleur verte active (supposée)
 
                         // Reconfigurer l'écouteur de clic (car il peut avoir été désactivé)
                         setupOrderButtonListener();
@@ -181,25 +184,37 @@ public class DescriptionCarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.description_car); // Assurez-vous que le nom du layout est correct
+        setContentView(R.layout.description_car);
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        // 1. Initialiser les vues
         initViews();
 
-        // 2. Récupérer l'objet Car
-        mCar = getIncomingIntentData();
-
-        // ⭐️ IMPORTANT : Appel initial pour configurer les écouteurs simples (Fav et Back)
-        setupFavButtonListener();
-
-        // 3. Charger l'utilisateur connecté (ASYNCHRONE)
-        // Le reste de l'initialisation (vérification des favoris et listeners)
-        // sera effectué DANS la méthode loadCurrentUser() après succès.
-        loadCurrentUser();
-
+        // ⭐️ NOUVELLE LOGIQUE DE RÉCUPÉRATION DES DONNÉES ⭐️
+        if (getIntent().hasExtra(EXTRA_CAR_ID)) {
+            // Cas 1: L'ID est passé (vient de la notification ou d'un autre écran)
+            String carId = getIntent().getStringExtra(EXTRA_CAR_ID);
+            if (carId != null && !carId.isEmpty()) {
+                loadCarDetailsFromFirestore(carId); // 👈 Appel de la nouvelle méthode
+            } else {
+                Toast.makeText(this, "Erreur: ID de voiture manquant.", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        } else if (getIntent().hasExtra(EXTRA_CAR)) {
+            // Cas 2: L'objet Car complet est passé (vient de la liste des voitures)
+            mCar = (Car) getIntent().getSerializableExtra(EXTRA_CAR);
+            if (mCar != null) {
+                displayCarDetails(mCar);
+                loadCurrentUser(); // Le reste de l'initialisation se fait après le chargement User
+            } else {
+                Toast.makeText(this, "Erreur: Données de voiture nulles.", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        } else {
+            Toast.makeText(this, "Erreur: Aucune donnée de voiture trouvée.", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
 
@@ -250,16 +265,16 @@ public class DescriptionCarActivity extends AppCompatActivity {
 
         tvCarName.setText(car.getName());
         tvLicensePlate.setText(car.getLicensePlate());
-        String brandModelYear = car.getBrand() + " " + car.getModel() + " - " + car.getYear();
+        String brandModelYear = car.getModel() + " " + car.getYear();
         tvBrandModelYear.setText(brandModelYear);
-        tvPriceDetail.setText(car.getPrice() + " Dh / Jour");
+        tvPriceDetail.setText(car.getPrice() + " Dh");
         tvDescription.setText(car.getDescription());
         tvColor.setText(car.getColor());
         tvFuelType.setText(car.getFuelType());
-        String gearText = car.getGearType().equals("M") ? "Manuelle (M)" : "Automatique (A)";
+        String gearText = car.getGearType().equals("M") ? "Manuelle" : "Automatique";
         tvGearType.setText(gearText);
         tvMaxKm.setText(car.getMaxKm() + " km");
-        tvPeopleCount.setText(car.getPeopleCount() + " personnes");
+        tvPeopleCount.setText(String.valueOf(car.getPeopleCount()));
         tvBaggageCount.setText(String.valueOf(car.getBaggageCount()));
         String acStatus = car.isHasAC() ? "Oui" : "Non";
         tvHasAc.setText(acStatus);
@@ -332,6 +347,39 @@ public class DescriptionCarActivity extends AppCompatActivity {
                         updateFavoriteIcon();
                     });
         }
+    }
+
+
+    /**
+     * Charge les détails de la voiture depuis Firestore en utilisant uniquement le Car ID.
+     */
+    private void loadCarDetailsFromFirestore(String carId) {
+        db.collection("cars").document(carId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        mCar = documentSnapshot.toObject(Car.class);
+                        if (mCar != null) {
+                            // Mettre à jour les détails visuels de la voiture
+                            displayCarDetails(mCar);
+                            // Poursuivre l'initialisation (chargement de l'utilisateur, favoris, etc.)
+                            loadCurrentUser();
+                        } else {
+                            Toast.makeText(this, "Erreur de conversion de l'objet voiture.", Toast.LENGTH_LONG).show();
+                            finish();
+                        }
+                    } else {
+                        // ⭐️ CECI EST L'ERREUR QUE VOUS RECEVIEZ ⭐️
+                        Log.e("CarLoad", "Aucun document trouvé pour l'ID: " + carId);
+                        Toast.makeText(this, "Aucune voiture trouvée avec l'ID: " + carId, Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("CarLoad", "Échec de la lecture Firestore pour l'ID " + carId + ": " + e.getMessage());
+                    Toast.makeText(this, "Erreur de connexion : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    finish();
+                });
     }
 
 

@@ -57,13 +57,18 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         holder.tvGearType.setText(gearText);
 
         // Gestion de la climatisation (AC)
+        // ⭐️ LOGIQUE DE CLIMATISATION (hasAC) ⭐️
         if (car.isHasAC()) {
-            holder.imgAcStatus.setImageResource(R.drawable.ic_snowflake); // 💡 Assurez-vous que ic_snowflake est l'icône AC
+            holder.imgAcStatus.setImageResource(R.drawable.ic_snowflake);
+            // Si la clim existe (true), affiche l'icône de vérification
+            holder.imgCheckStatus.setImageResource(R.drawable.ic_check); // Utilisez votre drawable ic_check
+            holder.imgCheckStatus.setVisibility(View.VISIBLE); // Optionnel, mais préférable de la garder visible
         } else {
-            // Vous pouvez masquer l'icône ou utiliser une autre icône si pas de AC
-            holder.imgAcStatus.setVisibility(View.GONE);
+            holder.imgAcStatus.setImageResource(R.drawable.ic_snowflake);
+            // Si la clim n'existe pas (false), affiche l'icône de non-vérification
+            holder.imgCheckStatus.setImageResource(R.drawable.ic_not_check); // Utilisez votre drawable ic_not_check
+            holder.imgCheckStatus.setVisibility(View.VISIBLE); // La rendre visible pour montrer le statut négatif
         }
-
         // --- 2. Chargement de l'image avec Glide ---
         Glide.with(holder.imgCar.getContext())
                 .load(car.getImageUrl())
@@ -98,6 +103,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         // Bottom Icons (Bagage, AC, Vitesse, Personnes)
         TextView tvBaggageCount;
         ImageView imgAcStatus; // L'icône (snowflake)
+        ImageView imgCheckStatus;
         TextView tvGearType;
         TextView tvPeopleCount;
 
@@ -116,6 +122,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             // Icônes du bas
             tvBaggageCount = itemView.findViewById(R.id.tv_baggage_count);
             imgAcStatus = itemView.findViewById(R.id.img_ac_status);
+            imgCheckStatus = itemView.findViewById(R.id.img_check_status);
             tvGearType = itemView.findViewById(R.id.tv_gear_type);
             tvPeopleCount = itemView.findViewById(R.id.tv_people_count);
         }

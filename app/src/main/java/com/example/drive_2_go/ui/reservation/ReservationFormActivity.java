@@ -276,10 +276,11 @@ public class ReservationFormActivity extends AppCompatActivity {
         reservation.put("totalPrice", Integer.parseInt(totalPriceStr));
         reservation.put("paymentMethod", paymentMethod);
 
-        // ⭐️ NOUVEAUX CHAMPS DE STATUT ET DE TEMPS ⭐️
+        reservation.put("isRead", false);
+        reservation.put("clientRead", false);
 
         // 1. Statut (par défaut 'En attente de validation')
-        reservation.put("status", "En attente de validation");
+        reservation.put("status", "En attente");
 
         // 2. Temps d'envoi de la réservation par le client (curentTime)
         reservation.put("timeReservationClient", Timestamp.now());

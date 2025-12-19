@@ -21,4 +21,9 @@
     <color name="green">#2E7D32</color>
     <color name="gris">#5B5B5C</color>
     <color name="gray_6D6D6D">#6D6D6D</color>
+    <color name="green_700">#388E3C</color>
+    <color name="red_500">#F44336</color>
+    <color name="green_key2go">#4D7836</color>
+    <color name="light_gray_unread">#F0F0F0</color>
+    <color name="red_cancel">#D32F2F</color>
 </resources>

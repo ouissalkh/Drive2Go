@@ -12,15 +12,15 @@
         android:id="@+id/tv_title_reservation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Finaliser la Réservation"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#000000"
-        android:paddingTop="32dp"
         android:paddingHorizontal="24dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:paddingTop="15dp"
+        android:text="Finaliser la Réservation"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/separator_header"
@@ -49,12 +49,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Voiture Sélectionnée"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#4D7836"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp"
+                android:text="Voiture Sélectionnée"
+                android:textColor="#0D2301"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_car_model"
@@ -71,12 +71,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vos Informations"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#4D7836"
                 android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp"
+                android:text="Vos Informations"
+                android:textColor="#0D2301"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/et_client_name"
@@ -110,12 +110,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Durée de Location"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#4D7836"
                 android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp"
+                android:text="Durée de Location"
+                android:textColor="#0D2301"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -137,12 +137,13 @@
 
                 <ImageButton
                     android:id="@+id/btn_select_start_date"
-                    android:layout_width="36dp"
-                    android:layout_height="40dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="Sélectionner date de début"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_calendar_green" />
+                    android:src="@drawable/ic_calendar_green"
+                    android:tint="#0D2301" />
             </LinearLayout>
 
             <LinearLayout
@@ -165,12 +166,13 @@
 
                 <ImageButton
                     android:id="@+id/btn_select_end_date"
-                    android:layout_width="36dp"
-                    android:layout_height="40dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="Sélectionner date de fin"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_calendar_green" />
+                    android:src="@drawable/ic_calendar_green"
+                    android:tint="#0D2301" />
             </LinearLayout>
 
             <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0"/>
@@ -179,12 +181,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Méthode de Paiement"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#4D7836"
                 android:layout_marginTop="24dp"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp"
+                android:text="Méthode de Paiement"
+                android:textColor="#0D2301"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <RadioGroup
                 android:id="@+id/rg_payment_method"
@@ -243,15 +245,15 @@
             android:id="@+id/btn_confirm_reservation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="#0D2301"
             android:text="Confirmer"
+            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#4D7836"
             app:cornerRadius="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

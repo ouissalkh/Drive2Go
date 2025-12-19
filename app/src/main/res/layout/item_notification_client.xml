@@ -2,60 +2,60 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
-    android:paddingVertical="10dp"
-    android:paddingHorizontal="8dp">
-
-    <View
-        android:id="@+id/v_unread_indicator"
-        android:layout_width="4dp"
-        android:layout_height="0dp"
-        android:background="#4D7836"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginEnd="8dp"
-        android:visibility="visible"
-        />
+    android:paddingVertical="5dp"
+    android:paddingHorizontal="6dp">
 
     <ImageView
         android:id="@+id/img_notification_icon"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:src="@drawable/ic_check_circle"
-        android:tint="#4D7836"
-        android:layout_marginStart="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/v_unread_indicator"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/notif"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginStart="12dp"
-        app:layout_constraintStart_toEndOf="@id/img_notification_icon"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/tv_notification_time"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toEndOf="@id/img_notification_icon"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tv_notification_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
             android:text="Réservation Validée !"
+            android:textColor="#000000"
             android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="#000000"/> <TextView
-        android:id="@+id/tv_notification_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Votre location de la Mercedes A-Class est confirmée."
-        android:textSize="12sp"
-        android:textColor="#666666" android:maxLines="2"
-        android:ellipsize="end"/>
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/tv_notification_title">
+
+            <TextView
+                android:id="@+id/tv_notification_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Votre location est confirmée de BMW"
+                android:textColor="#666666"
+                android:textSize="12sp" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <TextView
@@ -64,16 +64,18 @@
         android:layout_height="wrap_content"
         android:text="2 min"
         android:textSize="10sp"
-        android:textColor="#666666" android:layout_marginEnd="8dp"
+        android:textColor="#666666"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="#E0E0E0" android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/img_notification_icon"
+        android:layout_marginTop="10dp"
+        android:background="#E0E0E0"
+        app:layout_constraintTop_toBottomOf="@+id/notif"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

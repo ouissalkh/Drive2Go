@@ -1,320 +1,618 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="#FAFAFA">
 
-    <!-- Background Image -->
-
-    <!-- Header -->
-
+    <!-- IMAGE HEADER -->
     <ImageView
         android:id="@+id/img_header_car"
-        android:layout_width="413dp"
-        android:layout_height="348dp"
-        android:layout_marginTop="76dp"
-        android:padding="60dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/img_renault_captur"
-        app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/header"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingTop="16dp"
-        android:paddingEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="300dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/img_renault_captur"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <RelativeLayout
+    <!-- GRADIENT (NE BLOQUE PAS LES CLICS) -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:background="@drawable/gradient_top_shadow"
+        android:clickable="false"
+        android:focusable="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="4dp"
+        android:paddingBottom="10dp"
+        android:scaleType="centerInside"
+        android:background="@drawable/circle_background_blur"
+        android:src="@drawable/ic_backbtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@android:color/white" />
+    <ImageButton
+        android:id="@+id/btn_fav"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/circle_background_blur"
+        android:paddingStart="8dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="10dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/favoris"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@android:color/white" />
+
+    <!-- SCROLL -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:background="@drawable/bg_sheet_rounded_top"
+        app:layout_constraintTop_toBottomOf="@id/img_header_car"
+        app:layout_constraintBottom_toTopOf="@id/bottom_bar_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:gravity="center_vertical">
+            android:orientation="vertical"
+            android:padding="8dp">
 
-            <!-- Bouton retour -->
-            <ImageButton
-                android:id="@+id/btn_back"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/circle_background"
-                android:contentDescription="Retour"
-                android:padding="8dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_backbtn"
-                app:tint="@android:color/white" />
-
-            <!-- Texte -->
-            <LinearLayout
-                android:id="@+id/layout_car_info"
+            <TextView
+                android:id="@+id/tv_car_name_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/btn_fav"
-                android:layout_toEndOf="@+id/btn_back"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:text="Renault Captur"
+                android:textColor="#111111"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_car_name_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Renault Captur"
-                    android:textColor="#000000"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_license_plate_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="GH-391-AD"
-                    android:textColor="#000000"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <!-- Bouton favori -->
-            <ImageButton
-                android:id="@+id/btn_fav"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:background="@drawable/circle_background"
-                android:contentDescription="Favori"
-                android:padding="8dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/favoris"
-                app:tint="@android:color/white" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <!-- Bottom container -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottomContainer"
-        android:layout_width="0dp"
-        android:layout_height="404dp"
-        android:background="@drawable/background_midle"
-        android:padding="25dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="90dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="30dp">
-
-            <LinearLayout
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_brand_model_year"
+                android:layout_marginTop="12dp"
+                android:scrollbars="none">
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#000000"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    tools:text="Renault Captur - 2022" />
+                    android:orientation="horizontal">
+                    <TextView
 
-                <TextView
-                    android:id="@+id/tv_description_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Description :"
-                    android:textColor="#0D2301"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                        android:id="@+id/tv_license_plate_detail"
 
-                <TextView
-                    android:id="@+id/tv_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textColor="#000000"
-                    android:textSize="14sp"
-                    tools:text="Ceci est une description détaillée de la voiture pour le locataire. Elle pourrait être assez longue pour tester le scroll." />
+                        android:layout_width="wrap_content"
 
-                <TextView
-                    android:id="@+id/tv_specs_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Spécifications :"
-                    android:textColor="#0D2301"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                        android:layout_height="wrap_content"
 
-                <GridLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:columnCount="2"
-                    android:rowOrderPreserved="false"
-                    android:useDefaultMargins="true">
+                        android:text="GH-391-AD"
+
+                        android:background="@drawable/bg_gray_pill"
+
+                        android:paddingHorizontal="8dp"
+
+                        android:paddingVertical="6dp"
+
+                        android:textColor="#424242"
+
+                        android:textSize="10sp" />
+
+
 
                     <TextView
+
+                        android:id="@+id/tv_brand_model_year"
+
                         android:layout_width="wrap_content"
+
                         android:layout_height="wrap_content"
-                        android:text="Couleur :"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
+
+                        android:layout_marginStart="10dp"
+
+                        android:background="@drawable/bg_gray_pill"
+
+                        android:paddingHorizontal="8dp"
+
+                        android:paddingVertical="6dp"
+                        tools:text="Série 2022"
+                        android:textColor="#424242"
+                        android:textSize="10sp" />
 
                     <TextView
-                        android:id="@+id/tv_color"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        tools:text="Rouge" />
 
-                    <TextView
+                        android:id="@+id/tv_max_km_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Type de Carburant :"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/bg_gray_pill"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="6dp"
+                        tools:text="200"
+                        android:textColor="#424242"
+                        android:textSize="10sp" />
 
                     <TextView
                         android:id="@+id/tv_fuel_type_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        tools:text="Essence" />
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/bg_gray_pill"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="6dp"
+                        tools:text="Carburation"
+                        android:textColor="#424242"
+                        android:textSize="10sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Transmission :"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
+
 
                     <TextView
                         android:id="@+id/tv_gear_type_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        tools:text="Manuelle (M)" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Max KM :"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tv_max_km_detail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        tools:text="800 km" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Places :"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tv_people_count_detail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        tools:text="5 personnes" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Bagages :"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tv_baggage_count_detail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        tools:text="2" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Climatisation (AC) :"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tv_has_ac_detail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        tools:text="Oui" />
-
-                </GridLayout>
-
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-
-        <!-- Price layout -->
-        <LinearLayout
-            android:id="@+id/priceLayout"
-            android:layout_width="0dp"
-            android:layout_height="75dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+                        android:background="@drawable/bg_gray_pill"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="6dp"
+                        tools:text="Manuelle"
+                        android:textColor="#424242"
+                        android:textSize="10sp"
+                        android:layout_marginStart="10dp"/>
+                </LinearLayout>
+            </HorizontalScrollView>
 
             <TextView
-                android:id="@+id/pricetextview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="left"
-                android:text="Prix : "
-                android:textColor="#0D2301"
-                android:textSize="22dp"
-                android:textStyle="bold" />
+                android:text="Caractéristiques"
+                android:layout_marginTop="24dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#111111"/>
+
+            <!-- GRILLE 4 CARTES -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <!-- CARTE 1 -->
+
+                <androidx.cardview.widget.CardView
+
+                    android:layout_width="0dp"
+
+                    android:layout_height="70dp"
+
+                    android:layout_weight="1"
+
+                    app:cardCornerRadius="12dp"
+
+                    app:cardElevation="4dp"
+
+                    app:cardBackgroundColor="#FFFFFF"
+
+                    android:layout_margin="4dp">
+
+
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content"
+
+                        android:gravity="center"
+
+                        android:orientation="vertical"
+
+                        android:padding="8dp">
+
+
+
+                        <ImageView
+
+                            android:layout_width="16dp"
+
+                            android:layout_height="16dp"
+
+                            android:src="@drawable/ic_snowflake"
+
+                            app:tint="#000000" />
+
+
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+
+                            android:layout_height="wrap_content"
+
+                            android:layout_marginTop="4dp"
+
+                            android:text="Clim"
+
+                            android:textColor="#9E9E9E"
+
+                            android:textSize="10sp" />
+
+
+
+                        <TextView
+
+                            android:id="@+id/tv_has_ac_detail"
+
+                            android:layout_width="wrap_content"
+
+                            android:layout_height="wrap_content"
+
+                            android:ellipsize="end"
+
+                            android:maxLines="1"
+
+                            android:textColor="#000000"
+
+                            android:textSize="12sp"
+
+                            android:textStyle="bold"
+
+                            tools:text="Yes" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+
+                <!-- CARTE 2 -->
+
+                <androidx.cardview.widget.CardView
+
+                    android:layout_width="0dp"
+
+                    android:layout_height="70dp"
+
+                    android:layout_weight="1"
+
+                    app:cardCornerRadius="12dp"
+
+                    app:cardElevation="4dp"
+
+                    app:cardBackgroundColor="#FFFFFF"
+
+                    android:layout_margin="4dp">
+
+
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content"
+
+                        android:gravity="center"
+
+                        android:orientation="vertical"
+
+                        android:padding="8dp">
+
+
+
+                        <ImageView
+
+                            android:layout_width="18dp"
+
+                            android:layout_height="18dp"
+
+                            android:src="@drawable/ic_baggage"
+
+                            app:tint="#000000" />
+
+
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+
+                            android:layout_height="wrap_content"
+
+                            android:layout_marginTop="4dp"
+
+                            android:text="Bagages"
+
+                            android:textColor="#9E9E9E"
+
+                            android:textSize="10sp" />
+
+
+
+                        <TextView
+
+                            android:id="@+id/tv_baggage_count_detail"
+
+                            android:layout_width="wrap_content"
+
+                            android:layout_height="wrap_content"
+
+                            android:ellipsize="end"
+
+                            android:maxLines="1"
+
+                            android:textColor="#000000"
+
+                            android:textSize="12sp"
+
+                            android:textStyle="bold"
+
+                            tools:text="1" />
+
+
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+
+                <!-- CARTE 3 -->
+
+                <androidx.cardview.widget.CardView
+
+                    android:layout_width="0dp"
+
+                    android:layout_height="70dp"
+
+                    android:layout_weight="1"
+
+                    app:cardCornerRadius="12dp"
+
+                    app:cardElevation="4dp"
+
+                    app:cardBackgroundColor="#FFFFFF"
+
+                    android:layout_margin="4dp">
+
+
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content"
+
+                        android:gravity="center"
+
+                        android:orientation="vertical"
+
+                        android:padding="8dp">
+
+
+
+                        <ImageView
+
+                            android:layout_width="16dp"
+
+                            android:layout_height="16dp"
+
+                            android:src="@drawable/ic_people"
+
+                            app:tint="#000000" />
+
+
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+
+                            android:layout_height="wrap_content"
+
+                            android:layout_marginTop="4dp"
+
+                            android:text="Places"
+
+                            android:textColor="#9E9E9E"
+
+                            android:textSize="10sp" />
+
+
+
+                        <TextView
+
+                            android:id="@+id/tv_people_count_detail"
+
+                            android:layout_width="wrap_content"
+
+                            android:layout_height="wrap_content"
+
+                            android:textColor="#000000"
+
+                            android:textSize="12sp"
+
+                            android:textStyle="bold"
+
+                            tools:text="5" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+
+                <!-- CARTE 4 -->
+
+                <androidx.cardview.widget.CardView
+
+                    android:layout_width="0dp"
+
+                    android:layout_height="70dp"
+
+                    android:layout_weight="1"
+
+                    app:cardCornerRadius="12dp"
+
+                    app:cardElevation="4dp"
+
+                    app:cardBackgroundColor="#FFFFFF"
+
+                    android:layout_margin="4dp">
+
+
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content"
+
+                        android:gravity="center"
+
+                        android:orientation="vertical"
+
+                        android:padding="8dp">
+
+
+
+                        <ImageView
+
+                            android:layout_width="18dp"
+
+                            android:layout_height="18dp"
+
+                            android:contentDescription="@string/couleur_de_la_voiture"
+
+                            android:src="@drawable/ic_edit_profilead"
+
+                            app:tint="#000000" />
+
+
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+
+                            android:layout_height="wrap_content"
+
+                            android:layout_marginTop="4dp"
+
+                            android:text="@string/couleur"
+
+                            android:textColor="#9E9E9E"
+
+                            android:textSize="10sp"
+
+                            tools:ignore="SmallSp" />
+
+
+
+                        <TextView
+
+                            android:id="@+id/tv_color"
+
+                            android:layout_width="wrap_content"
+
+                            android:layout_height="wrap_content"
+
+                            android:ellipsize="end"
+
+                            android:maxLines="1"
+
+                            android:textColor="#000000"
+
+                            android:textSize="12sp"
+
+                            android:textStyle="bold"
+
+                            tools:text="Gris" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_price_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:layout_marginTop="24dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#111111" />
+
+            <TextView
+                android:id="@+id/tv_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="4dp"
+                android:textColor="#616161"
+                android:textSize="15sp"
+                tools:text="Ceci est une description longue pour tester le scroll..." />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+    <!-- BOTTOM BAR -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bottom_bar_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="450 DH / jr"
-                android:textColor="#6F1111"
-                android:textSize="22dp"
-                android:textStyle="bold" />
-        </LinearLayout>
+                android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Prix total/jour" android:textSize="12sp"/>
+                <TextView android:id="@+id/tv_price_detail" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="450 DH" android:textStyle="bold" android:textSize="18sp"/>
+            </LinearLayout>
 
-        <!-- Louer button -->
-        <Button
-            android:id="@+id/orderBtn"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:backgroundTint="#0D2301"
-            android:text="Louer maintenant"
-            android:textColor="#FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:textSize="18sp" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/orderBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Louer"
+                android:backgroundTint="#0D2301" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,5 +18,11 @@
     <string name="save_button">Enregistrer</string>
     <string name="cloudinary_cloud_name">datr9fmfp</string>
     <string name="cloudinary_api_key">953344295627375</string>
+    <string name="louer">Louer</string>
+    <string name="_450_dh">450 DH</string>
+    <string name="prix_total_jour">Prix total / jour</string>
+    <string name="description">Description</string>
+    <string name="couleur">Couleur</string>
+    <string name="couleur_de_la_voiture">couleur de la voiture</string>
 
 </resources>

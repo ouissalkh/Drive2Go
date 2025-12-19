@@ -30,13 +30,13 @@
 
         <TextView
             android:id="@+id/tv_price"
-            android:layout_width="130dp"
-            android:layout_height="60dp"
+            android:layout_width="110dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_prix"
             android:gravity="center"
             tools:text="450 Dh"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@id/view_price_bg"
             app:layout_constraintTop_toTopOf="@+id/view_price_bg" />
@@ -61,8 +61,8 @@
 
                 <ImageView
                     android:id="@+id/img_fuel_icon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_marginEnd="8dp"
                     android:src="@drawable/ic_fuel"
                     android:contentDescription="Type de carburant" />
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     tools:text="Essence"
                     android:textColor="#000000"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -84,8 +84,8 @@
 
                 <ImageView
                     android:id="@+id/img_mileage_icon"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_marginEnd="8dp"
                     android:src="@drawable/ic_mileage"
                     android:contentDescription="Kilométrage maximum" />
@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     tools:text="max 800 km"
                     android:textColor="#000000"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -129,7 +129,7 @@
                 android:layout_height="wrap_content"
                 tools:text="Disponible"
                 android:textColor="#0CE729"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
 
@@ -139,7 +139,7 @@
                 android:layout_height="wrap_content"
                 tools:text="Renault Captur"
                 android:textColor="#000000"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -148,21 +148,21 @@
                 android:layout_height="wrap_content"
                 tools:text="GH-391-AD"
                 android:textColor="#000000"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
         <ImageView
             android:id="@+id/img_car"
-            android:layout_width="200dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
             android:layout_marginTop="6dp"
-            android:scaleType="fitCenter"
-            tools:src="@drawable/img_renault_captur"
             android:contentDescription="Image de la voiture"
+            android:scaleType="fitCenter"
             app:layout_constraintEnd_toStartOf="@+id/layout_details_vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_car_info" />
+            app:layout_constraintTop_toBottomOf="@id/layout_car_info"
+            tools:src="@drawable/img_renault_captur" />
 
         <LinearLayout
             android:id="@+id/layout_icons_bottom"
@@ -186,8 +186,8 @@
 
                 <ImageView
                     android:id="@+id/img_baggage_icon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
                     android:layout_marginEnd="4dp"
                     android:src="@drawable/ic_baggage"
                     android:contentDescription="Icône bagages" />
@@ -202,8 +202,8 @@
 
             <ImageView
                 android:id="@+id/img_ac_status"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:layout_marginEnd="6dp"
                 tools:src="@drawable/ic_snowflake"
                 android:contentDescription="Statut de la climatisation" />
@@ -225,8 +225,8 @@
 
                 <ImageView
                     android:id="@+id/img_gear_icon"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:layout_marginEnd="4dp"
                     android:src="@drawable/ic_gears"
                     android:contentDescription="Icône de transmission" />
@@ -248,8 +248,8 @@
 
                 <ImageView
                     android:id="@+id/img_door_icon"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:layout_marginEnd="4dp"
                     android:src="@drawable/ic_car_door"
                     android:contentDescription="Icône de portes" />
@@ -270,8 +270,8 @@
 
                 <ImageView
                     android:id="@+id/img_people_icon"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:layout_marginEnd="4dp"
                     android:src="@drawable/ic_people"
                     android:contentDescription="Icône de personnes" />

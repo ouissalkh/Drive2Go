@@ -69,40 +69,46 @@ public class ClientCarAdapter extends RecyclerView.Adapter<ClientCarAdapter.Clie
         holder.tvDoorCount.setText(String.valueOf(car.getDoorCount()));
         holder.tvPeopleCount.setText(String.valueOf(car.getPeopleCount()));
 
-        // Climatisation
-        holder.imgAcStatus.setVisibility(car.isHasAC() ? View.VISIBLE : View.GONE);
 
-        // Statut vérifié
-        holder.imgCheckStatus.setVisibility(car.isChecked() ? View.VISIBLE : View.GONE);
+        // ⭐️ LOGIQUE DE CLIMATISATION (hasAC) ⭐️
+        if (car.isHasAC()) {
+            holder.imgAcStatus.setImageResource(R.drawable.ic_snowflake);
+            // Si la clim existe (true), affiche l'icône de vérification
+            holder.imgCheckStatus.setImageResource(R.drawable.ic_check); // Utilisez votre drawable ic_check
+            holder.imgCheckStatus.setVisibility(View.VISIBLE); // Optionnel, mais préférable de la garder visible
+        } else {
+            holder.imgAcStatus.setImageResource(R.drawable.ic_snowflake);
+            // Si la clim n'existe pas (false), affiche l'icône de non-vérification
+            holder.imgCheckStatus.setImageResource(R.drawable.ic_not_check); // Utilisez votre drawable ic_not_check
+            holder.imgCheckStatus.setVisibility(View.VISIBLE); // La rendre visible pour montrer le statut négatif
+        }
+
 
 
         // --- 4. Image ---
-        String imageUrl = car.getImageUrl(); // Ceci est maintenant l'URL Cloud pour les nouvelles voitures
+        String imageUrl = car.getImageUrl();
 
         if (imageUrl != null && !imageUrl.isEmpty()) {
-            // 1. Vérifie si c'est une URL HTTP (Firebase Storage)
-            if (imageUrl.startsWith("http")) {
-                Glide.with(context)
-                        .load(imageUrl) // 👈 Charge l'URL cloud
-                        .placeholder(R.drawable.car) // Affiché pendant le chargement
-                        .centerCrop()
-                        .into(holder.imgCar);
-            } else {
-                // 2. Traitement d'un ancien chemin de fichier local (pour les voitures créées AVANT la mise à jour)
-                File imgFile = new File(imageUrl);
-                if (imgFile.exists()) {
-                    Glide.with(context).load(imgFile).into(holder.imgCar);
-                } else {
-                    // Afficher l'image par défaut si l'image est introuvable (ancien chemin non fonctionnel)
-                    holder.imgCar.setImageResource(R.drawable.car);
-                }
-            }
+            // Utilisez Glide pour charger l'image
+            Glide.with(context)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.car) // Optionnel: utilisez R.drawable.car comme placeholder
+                    .into(holder.imgCar);
+
+            // NOTE : Le bloc de vérification 'http' et 'File' peut être conservé
+            // SEULEMENT si vous avez BESOIN de gérer les anciens chemins de fichiers locaux.
+            // Si toutes vos données sont maintenant des URL, vous pouvez simplifier à :
+            /*
+            Glide.with(context)
+                .load(imageUrl)
+                .placeholder(R.drawable.car)
+                .into(holder.imgCar);
+            */
+
         } else {
-            // Le chemin/URL est vide ou null dans la base de données.
+            // Si l'URL est vide/null, chargez l'image par défaut
             holder.imgCar.setImageResource(R.drawable.car);
         }
-// ...
-
 
 
 
@@ -127,7 +133,8 @@ public class ClientCarAdapter extends RecyclerView.Adapter<ClientCarAdapter.Clie
         // Déclaration complète de TOUTES les vues de cartecar.xml
         TextView tvPrice, tvFuelType, tvMaxKm, tvAvailability, tvCarName, tvLicensePlate;
         TextView tvBaggageCount, tvGearType, tvDoorCount, tvPeopleCount;
-        ImageView imgCar, imgAcStatus, imgCheckStatus; // 👈 Les ImageView étaient manquantes
+        ImageView imgCar, imgCheckStatus; // 👈 Les ImageView étaient manquantes
+        ImageView imgAcStatus;
 
         public ClientCarViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -148,8 +155,8 @@ public class ClientCarAdapter extends RecyclerView.Adapter<ClientCarAdapter.Clie
 
             // Initialisation des ImageViews
             imgCar = itemView.findViewById(R.id.img_car);
-            imgAcStatus = itemView.findViewById(R.id.img_ac_status);
             imgCheckStatus = itemView.findViewById(R.id.img_check_status);
+            imgAcStatus = itemView.findViewById(R.id.img_ac_status);
         }
     }
 }

@@ -97,7 +97,6 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
                 Glide.with(context)
                         .load(imageUrl) // 👈 Charge l'URL cloud
                         .placeholder(R.drawable.car) // Affiché pendant le chargement
-                        .centerCrop()
                         .into(holder.imgCar);
             } else {
                 // 2. Traitement d'un ancien chemin de fichier local (pour les voitures créées AVANT la mise à jour)
