@@ -83,7 +83,7 @@ public class AdminVehiclesActivity extends BaseAdminActivity {
         searchView = findViewById(R.id.searchViewCars);
         fabAddCar = findViewById(R.id.fabAddCar);
         progressBar = findViewById(R.id.progressBar); // Vérifiez si vous l'avez gardé dans le XML, sinon supprimez
-        layoutEmptyState = findViewById(R.id.layoutEmptyState);
+         layoutEmptyState = findViewById(R.id.layoutEmptyState);
 
         // Si la progressBar n'est pas dans le nouveau XML, on évite le crash
         if (progressBar != null) progressBar.setVisibility(View.VISIBLE);

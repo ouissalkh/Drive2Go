@@ -27,7 +27,8 @@
             android:textColor="@color/material_dynamic_neutral60"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:layout_editor_absoluteY="94dp" />
+            tools:layout_editor_absoluteY="94dp"
+            tools:ignore="MissingConstraints" />
 
         <ImageView
             android:id="@+id/img_profil"

@@ -10,28 +10,13 @@
         android:layout_height="match_parent"
         android:background="#F5F5F5">
 
-        <include
-            android:id="@+id/navBarBottom"
-            layout="@layout/layout_navbar_admin"
-            android:layout_width="320dp"
-            android:layout_height="50dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:clipToPadding="false"
-
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/navBarBottom"
+            app:layout_constraintBottom_toTopOf="@+id/navbar_admin"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            >
+            app:layout_constraintEnd_toEndOf="parent">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -40,8 +25,7 @@
                 android:paddingTop="16dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:paddingBottom="16dp"
-                >
+                android:paddingBottom="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -298,13 +282,11 @@
                             app:iconifiedByDefault="false"
                             app:queryHint="Rechercher une réservation, un nom..."
                             app:defaultQueryHint="Rechercher..."
-
                             app:searchIcon="@drawable/drawable_search_sized"
                             app:queryBackground="@android:color/transparent"
                             app:submitBackground="@android:color/transparent"
                             android:focusable="true"
-                            android:focusedByDefault="false"
-                            />
+                            android:focusedByDefault="false" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/menu_layout"
@@ -340,14 +322,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
-                    android:clipToPadding="false"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="85dp" />
+                    android:clipToPadding="false"
+                    android:paddingBottom="100dp"/>
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
+
+        <include
+            android:id="@+id/nav_view_admin"
+            layout="@layout/layout_navbar_admin"
+            android:layout_width="320dp"
+            android:layout_height="38dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="20dp"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.drawerlayout.widget.DrawerLayout>
