@@ -18,6 +18,31 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Drive_2_Go">
 
+    <activity
+            android:name=".ui.Admin.ProfilUser.ProfilUserActivity"
+            android:exported="false" />
+     <activity
+            android:name=".ui.Admin.DescriptionCarAdmin.DecripCarAdminActivity"
+            android:exported="false" />
+    <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" /> <!-- Assurez-vous que cet drawable existe ! -->
+    <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/emerald_900" />
+    <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="NewReservationAdminChannel" />
+     <activity
+            android:name=".ui.Admin.Notifications_admin.NotificationAdminActivity"
+            android:exported="false" />
+
+    <activity
+            android:name=".ui.Admin.Table_bord.adminActivity"
+            android:exported="false" />
+        <activity        
+    
+
         <activity
             android:name=".ui.Admin.Table_bord.adminActivity"/>
         <activity
