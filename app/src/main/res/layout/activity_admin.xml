@@ -11,36 +11,66 @@
         android:layout_height="match_parent"
         android:background="#F5F5F5">
 
-        <!-- 1. Toolbar / Header
-        <LinearLayout
-            android:id="@+id/toolbar"
-            android:orientation="horizontal"
-            android:background="@color/emerald_900"
-            android:padding="16dp"
+        <RelativeLayout
+            android:id="@+id/headerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_alignParentTop="true">
-
-            <ImageView
-                android:id="@+id/logo"
-                android:src="@drawable/ic_car"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                card_view:tint="@android:color/white" />
+            android:layout_alignParentTop="true"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp">
 
             <TextView
-                android:id="@+id/appTitle"
+                android:id="@+id/dashboardTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Drive2go Admin"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:layout_marginStart="8dp"/>
+                android:text="Tableau de bord"
+                android:textStyle="bold"
+                android:textSize="25sp"
+                android:textColor="@color/emerald_900"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"/>
 
-        </LinearLayout>
--->
-        <!-- 2. Barre de navigation en bas -->
+            <!-- DÉBUT DE LA MODIFICATION POUR LE CONTENEUR DE NOTIFICATION ET LE BADGE -->
+            <FrameLayout
+                android:id="@+id/notificationContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/iconNotification"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_notification"
+                    android:contentDescription="Notifications"
+                    android:layout_gravity="center"/>
+
+                <TextView
+                    android:id="@+id/notificationBadge"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:padding="0dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="8sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </FrameLayout>
+            <!-- FIN DE LA MODIFICATION POUR LE CONTENEUR DE NOTIFICATION ET LE BADGE -->
+
+        </RelativeLayout>
+
         <include
             android:id="@+id/navBarBottom"
             layout="@layout/layout_navbar_admin"
@@ -50,251 +80,369 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"/>
 
-        <!-- 3. Contenu principal scrollable -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:layout_above="@id/navBarBottom"
-            android:padding="16dp">
+            android:layout_below="@id/headerLayout"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <!-- Titres -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tableau de bord"
-                    android:textStyle="bold"
-                    android:textSize="25sp"
-                    android:textColor="@color/emerald_900"
-                    android:layout_marginBottom="8dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Vue d'ensemble de votre activité"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="24dp"/>
-
-                <!-- Carte 1 : Véhicules disponibles -->
-                <androidx.cardview.widget.CardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        card_view:cardCornerRadius="16dp"
+                        card_view:cardElevation="4dp"
+                        android:background="@android:color/white">
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:padding="16dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical">
+
+                            <FrameLayout
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:background="@drawable/circle_bg"
+                                android:gravity="center">
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="match_parent"
+                                    android:src="@drawable/ic_car"
+                                    android:layout_gravity="center"/>
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="12dp">
+
+                                <TextView
+                                    android:text="Véhicules disponibles"
+                                    android:textColor="@android:color/black"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textStyle="bold"
+                                    android:textSize="13sp"
+                                    android:maxLines="1"/>
+                                <TextView
+                                    android:id="@+id/vehiculedispo"
+                                    android:text="24/34"
+                                    android:textSize="18sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/emerald_900"
+                                    android:textStyle="bold"/>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        card_view:cardCornerRadius="16dp"
+                        card_view:cardElevation="4dp"
+                        android:background="@android:color/white">
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:padding="16dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical">
+
+                            <FrameLayout
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:background="@drawable/circle_bg2"
+                                android:gravity="center">
+                                <ImageView
+                                    android:src="@drawable/ic_calendar"
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:layout_gravity="center"/>
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="12dp">
+
+                                <TextView
+                                    android:text="Réservations actives"
+                                    android:textColor="@android:color/black"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textStyle="bold"
+                                    android:textSize="13sp"
+                                    android:maxLines="1"/>
+
+                                <TextView
+                                    android:id="@+id/reservationactives"
+                                    android:text="18"
+                                    android:textSize="18sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/teal_700"
+                                    android:textStyle="bold"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="32dp">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        card_view:cardCornerRadius="16dp"
+                        card_view:cardElevation="4dp"
+                        android:background="@android:color/white">
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:padding="16dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical">
+
+                            <FrameLayout
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:background="@drawable/circle_bg3"
+                                android:gravity="center">
+                                <ImageView
+                                    android:src="@drawable/ic_users"
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:layout_gravity="center"/>
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="12dp">
+
+                                <TextView
+                                    android:text="Utilisateurs inscrits"
+                                    android:textColor="@android:color/black"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textStyle="bold"
+                                    android:textSize="13sp"
+                                    android:maxLines="1"/>
+
+                                <TextView
+                                    android:id="@+id/users"
+                                    android:text="156"
+                                    android:textSize="18sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/indigo_400"
+                                    android:textStyle="bold"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        card_view:cardCornerRadius="16dp"
+                        card_view:cardElevation="4dp"
+                        android:background="@android:color/white">
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:padding="16dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical">
+
+                            <FrameLayout
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:background="@drawable/circle_bg4"
+                                android:gravity="center">
+                                <ImageView
+                                    android:src="@drawable/ic_dollar"
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:layout_gravity="center"/>
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="12dp">
+
+                                <TextView
+                                    android:text="Revenus du mois"
+                                    android:textColor="@android:color/black"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textStyle="bold"
+                                    android:textSize="13sp"
+                                    android:maxLines="1"/>
+
+                                <TextView
+                                    android:id="@+id/revenuemensulle"
+                                    android:text="12 450 €"
+                                    android:textSize="18sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/orange_500"
+                                    android:textStyle="bold"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginBottom="24dp"
                     card_view:cardCornerRadius="16dp"
+                    card_view:cardElevation="4dp"
                     android:background="@android:color/white">
 
                     <LinearLayout
-                        android:orientation="horizontal"
-                        android:padding="16dp"
+                        android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
+                        android:layout_height="match_parent"
+                        android:padding="16dp">
 
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="0dp"
+                        <RelativeLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1">
-                            <TextView
-                                android:text="Véhicules disponibles"
-                                android:textColor="@android:color/black"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:textSize="18sp"/>
-                            <TextView
-                                android:id="@+id/vehiculedispo"
-                                android:text="24/34"
-                                android:textSize="20sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@android:color/darker_gray"/>
-                        </LinearLayout>
+                            android:layout_marginBottom="12dp">
 
-                        <FrameLayout
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_marginStart="16dp"
-                            android:background="@drawable/circle_bg"
-                            android:gravity="center">
-                            <ImageView
-                                android:layout_width="42dp"
-                                android:layout_height="match_parent"
-                                android:src="@drawable/ic_car"
-                                android:layout_gravity="center"/>
-                        </FrameLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Réservations Mensuelles"
+                                android:textStyle="bold"
+                                android:textSize="16sp"
+                                android:textColor="@android:color/black"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"/>
+
+                            <LinearLayout
+                                android:id="@+id/btnFilterYear"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:background="@drawable/filter_button_bg"
+                                android:orientation="horizontal"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp"
+                                android:paddingTop="6dp"
+                                android:paddingBottom="6dp"
+                                android:gravity="center"
+                                android:clickable="true"
+                                android:focusable="true">
+
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/ic_filter"
+                                    app:tint="@android:color/white" />
+
+                                <TextView
+                                    android:id="@+id/tvFilterYearLabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="2025"
+                                    android:textColor="@android:color/white"
+                                    android:textStyle="bold"
+                                    android:layout_marginStart="8dp"
+                                    android:textSize="14sp"/>
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <com.github.mikephil.charting.charts.BarChart
+                            android:id="@+id/barChartReservationsMois"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Carte 2 : Réservations actives -->
+
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    card_view:cardCornerRadius="16dp"
-                    android:background="@android:color/white">
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:padding="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1">
-                            <TextView
-                                android:text="Réservations actives"
-                                android:textColor="@android:color/black"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:textSize="18sp"/>
-                            <TextView
-                                android:id="@+id/reservationactives"
-                                android:text="18"
-                                android:textSize="20sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@android:color/darker_gray"/>
-                        </LinearLayout>
-
-                        <FrameLayout
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_marginStart="16dp"
-                            android:background="@drawable/circle_bg2"
-                            android:gravity="center">
-                            <ImageView
-                                android:src="@drawable/ic_calendar"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:layout_gravity="center"/>
-                        </FrameLayout>
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Carte 3 : Utilisateurs -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    card_view:cardCornerRadius="16dp"
-                    android:background="@android:color/white">
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:padding="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1">
-                            <TextView
-                                android:text="Utilisateurs"
-                                android:textColor="@android:color/black"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:textSize="18sp"/>
-                            <TextView
-                                android:id="@+id/users"
-                                android:text="156"
-                                android:textSize="20sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@android:color/darker_gray"/>
-                        </LinearLayout>
-
-                        <FrameLayout
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_marginStart="16dp"
-                            android:background="@drawable/circle_bg3"
-                            android:gravity="center">
-                            <ImageView
-                                android:src="@drawable/ic_users"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:layout_gravity="center"/>
-                        </FrameLayout>
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Carte 4 : Revenus du mois -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    card_view:cardCornerRadius="16dp"
-                    android:background="@android:color/white">
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:padding="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1">
-                            <TextView
-                                android:text="Revenus du mois"
-                                android:textColor="@android:color/black"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:textSize="18sp"/>
-                            <TextView
-                                android:id="@+id/revenuemensulle"
-                                android:text="12 450 $"
-                                android:textSize="20sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@android:color/darker_gray"/>
-                        </LinearLayout>
-
-                        <FrameLayout
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_marginStart="16dp"
-                            android:background="@drawable/circle_bg4"
-                            android:gravity="center">
-                            <ImageView
-                                android:src="@drawable/ic_dollar"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:layout_gravity="center"/>
-                        </FrameLayout>
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-
-                <!-- Carte 5 : Filtres -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="300dp"
                     android:layout_marginBottom="32dp"
-                    app:cardCornerRadius="16dp"/>
+                    card_view:cardCornerRadius="16dp"
+                    card_view:cardElevation="4dp"
+                    android:background="@android:color/white">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Répartition des Réservations par Marque"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:textColor="@android:color/black"
+                            android:layout_marginBottom="12dp"/>
+
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/pieChartReservationsMarque"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"/>
 
 
             </LinearLayout>
@@ -302,4 +450,3 @@
 
     </RelativeLayout>
 </androidx.drawerlayout.widget.DrawerLayout>
-

@@ -7,8 +7,8 @@
     <queries>
         <package android:name="com.google.android.gms" />
     </queries>
+
     <application
-        android:name=".ui.Admin.addeditCar.MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -17,60 +17,66 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Drive_2_Go">
-
-    <activity
+        <activity
+            android:name=".ui.Admin.DescriptionCarAdmin.DecripCarAdminActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.Admin.ProfilUser.ProfilUserActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.Admin.Notifications_admin.NotificationAdminActivity"
+            android:exported="false" />
+        <!--
+        <activity
+            android:name=".ui.Admin.ProfilUser.ProfilUserActivity"
+            android:exported="false" />
+        -->
+        <!--
      <activity
             android:name=".ui.Admin.DescriptionCarAdmin.DecripCarAdminActivity"
             android:exported="false" />
-    <meta-data
+        -->
+        <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notification" /> <!-- Assurez-vous que cet drawable existe ! -->
-    <meta-data
+        <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/emerald_900" />
-    <meta-data
+        <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="NewReservationAdminChannel" />
+        <!--
      <activity
             android:name=".ui.Admin.Notifications_admin.NotificationAdminActivity"
             android:exported="false" />
-
-    <activity
+        -->
+        <activity
             android:name=".ui.Admin.Table_bord.adminActivity"
             android:exported="false" />
-        <activity        
-    
-
-        <activity
+        <!--
+<activity
             android:name=".ui.Admin.Table_bord.adminActivity"/>
+        -->
         <activity
             android:name=".ui.Client.creationCompte.RegisterActivity"
             android:exported="false" />
-
-
+        <activity android:name=".ui.Admin.addeditCar.AddEditVehicleActivity" />
         <activity
-            android:name=".ui.Admin.addeditCar.AddEditVehicleActivity"/>
-
-        <activity android:name=".ui.Admin.Parck_automobiles.AdminVehiclesActivity"
+            android:name=".ui.Admin.Parck_automobiles.AdminVehiclesActivity"
             android:exported="false" />
-
-
         <activity
             android:name=".ui.Admin.Gestion_Users.GestionUsersActivity"
             android:exported="false" />
-
         <activity
             android:name=".ui.Admin.Gestion_Reservations.ReservationsActivity"
             android:exported="false" />
-        
-<activity android:name=".ui.Client.creationCompte.VerifyCodeActivity"/>
-        <activity android:name=".ui.Client.accueil.AccueilActivity"
-            android:exported="false"/>
+        <activity android:name=".ui.Client.creationCompte.VerifyCodeActivity" />
+        <activity
+            android:name=".ui.Client.accueil.AccueilActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.Client.favoris.Favoris"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".ui.Client.profil.Profil"
             android:exported="false" />

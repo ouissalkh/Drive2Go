@@ -12,13 +12,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="16dp">
+        android:paddingBottom="16dp"> <!-- Augmenté un peu le padding pour une jolie finition -->
 
         <!-- HEADER VERT -->
         <View
             android:id="@+id/headerBg"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="65dp"
             android:background="@drawable/bg_header_rounded"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:text="Réservation #1"
+            android:text="Réservation #JT1FYIRK"
             android:textColor="#CCFFFFFF"
             android:textSize="12sp"
             android:textStyle="bold"
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Marie Dubois"
+            android:text="Fatima Zahra Moumni"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -58,7 +58,7 @@
             android:backgroundTint="#33FFFFFF"
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"
-            android:text="✓ Confirmée"
+            android:text="En attente de validation"
             android:textColor="@color/white"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -73,42 +73,43 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/bg_rounded_gray"
-            android:padding="12dp"
+            android:padding="5dp"
             app:layout_constraintTop_toBottomOf="@id/headerBg">
+
+            <ImageButton
+                android:id="@+id/iconVehicle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="Vehicle icon"
+                android:padding="7dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_iconcar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
                 android:id="@+id/lblVehicle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:text="Véhicule"
                 android:textColor="@color/text_gray"
                 android:textSize="11sp"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="64dp" />
-
-
-            <ImageButton
-                android:layout_width="58dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:background="@drawable/nav_item_bg"
-                android:contentDescription="home"
-                android:padding="7dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_iconcar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iconVehicle"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvVehicleName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Renault Captur"
+                android:layout_marginStart="8dp"
+                android:text="Toyota Corolla"
                 android:textColor="@color/text_dark"
                 android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@id/lblVehicle"
-                tools:layout_editor_absoluteX="64dp" />
+                app:layout_constraintStart_toEndOf="@id/iconVehicle"
+                app:layout_constraintTop_toBottomOf="@id/lblVehicle" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -121,41 +122,43 @@
             android:layout_marginTop="12dp"
             android:background="@drawable/bg_rounded_gray"
             android:backgroundTint="@color/blue_bg"
-            android:padding="12dp"
+            android:padding="5dp"
             app:layout_constraintTop_toBottomOf="@id/containerVehicle">
+
+            <ImageButton
+                android:id="@+id/iconPeriod"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="Calendar icon"
+                android:padding="7dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_calendar_noir"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
                 android:id="@+id/lblPeriod"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:text="Période"
                 android:textColor="@color/text_gray"
                 android:textSize="11sp"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="64dp" />
-
-            <ImageButton
-                android:layout_width="58dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:background="@drawable/nav_item_bg"
-                android:contentDescription="home"
-                android:padding="7dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_calendar_noir"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iconPeriod"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvPeriodDates"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2025-11-06\nau 2025-11-10"
+                android:layout_marginStart="8dp"
+                android:text="13/12/2025\nau 20/12/2025"
                 android:textColor="@color/text_dark"
                 android:textSize="14sp"
-                app:layout_constraintTop_toBottomOf="@id/lblPeriod"
-                tools:layout_editor_absoluteX="64dp" />
+                app:layout_constraintStart_toEndOf="@id/iconPeriod"
+                app:layout_constraintTop_toBottomOf="@id/lblPeriod" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- CONTACT INFO -->
@@ -166,7 +169,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
             android:drawablePadding="8dp"
-            android:text="marie.dubois@email.com"
+            android:text=""
             android:textColor="@color/text_dark"
             app:drawableStartCompat="@drawable/ic_email_noir"
             app:drawableTint="@color/text_gray"
@@ -181,7 +184,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginStart="16dp"
             android:drawablePadding="8dp"
-            android:text="06 12 34 56 78"
+            android:text=""
             android:textColor="@color/text_dark"
             app:drawableStartCompat="@drawable/ic_phone_noir"
             app:drawableTint="@color/text_gray"
@@ -196,16 +199,16 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/bg_rounded_price"
-            android:padding="16dp"
+            android:padding="5dp"
             app:layout_constraintTop_toBottomOf="@id/tvPhone">
 
             <TextView
+                android:id="@+id/tvCurrency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="€"
+                android:text="$"
                 android:textSize="24sp"
                 android:textColor="@color/teal_primary"
-                android:layout_marginEnd="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -213,19 +216,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
+                android:layout_marginStart="8dp"
                 android:text="Prix total"
                 android:textColor="@color/text_gray"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tvCurrency"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvTotalPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="180€"
+                android:text="2800,00 DH"
                 android:textColor="@color/teal_text"
                 android:textSize="24sp"
                 android:textStyle="normal"
@@ -234,25 +237,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!-- BOUTON -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnDetails"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:paddingVertical="12dp"
-            android:text="Voir les détails"
-            android:textAllCaps="false"
-            android:textColor="@color/text_dark"
-            app:icon="@android:drawable/ic_menu_view"
-            app:iconGravity="textStart"
-            app:iconTint="@color/text_dark"
-            app:strokeColor="#E0E0E0"
-            app:cornerRadius="8dp"
-            app:layout_constraintTop_toBottomOf="@id/containerPrice" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

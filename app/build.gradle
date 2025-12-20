@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.drive_2_go"
-    compileSdk = 34 // J'ai mis 34 (stable). 36 est risqué car c'est une version bêta/preview.
+    compileSdk = 36 // J'ai mis 34 (stable). 36 est risqué car c'est une version bêta/preview.
 
     defaultConfig {
         applicationId = "com.example.drive_2_go"
@@ -19,7 +19,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            minifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -71,6 +71,7 @@ dependencies {
 
     // --- Gestion des Images (Glide) ---
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation libs.activity
     // Pour Java, on utilise 'annotationProcessor'
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
