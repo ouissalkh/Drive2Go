@@ -9,14 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.drive_2_go.R;
 import com.example.drive_2_go.data.model.ReservationDisplayModel;
-
 import java.util.List;
 import java.util.Locale;
 
@@ -39,170 +36,91 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ReservationViewHolder holder, int position) {
-        ReservationDisplayModel currentDisplayItem = reservationList.get(position);
+        ReservationDisplayModel item = reservationList.get(position);
 
         try {
-            // 1. Remplissage des textes de base
-            holder.tvResNum.setText(String.format(Locale.FRENCH, "Réservation #%s", currentDisplayItem.getReservationNumber()));
-            holder.tvName.setText(currentDisplayItem.getUserName());
-            holder.tvVehicleName.setText(currentDisplayItem.getCarName());
+            // Sécurité Affichage Nom
+            String name = (item.getUserName() != null) ? item.getUserName() : "Utilisateur Inconnu";
+            holder.tvName.setText(name);
 
-            String period = String.format(Locale.FRENCH, "%s\nau %s", currentDisplayItem.getStartDate(), currentDisplayItem.getEndDate());
-            holder.tvPeriodDates.setText(period);
+            // Numéro Réservation
+            holder.tvResNum.setText("Réservation #" + (item.getReservationNumber() != null ? item.getReservationNumber() : "---"));
 
-            holder.tvEmail.setText(currentDisplayItem.getEmail());
-            holder.tvPhone.setText(currentDisplayItem.getPhone());
-            holder.tvTotalPrice.setText(String.format(Locale.FRENCH, "%.2f DH", currentDisplayItem.getTotalPrice())); // J'ai remis DH ou € selon ta préférence
+            // Véhicule
+            holder.tvVehicleName.setText(item.getCarName() != null ? item.getCarName() : "Véhicule non défini");
 
-            // 2. Gestion des Statuts et Couleurs
-            holder.tvStatus.setText(getStatusText(currentDisplayItem.getStatus()));
-            updateStatusStyle(holder.headerBg, holder.tvStatus, currentDisplayItem.getStatus());
+            // Période
+            String startDate = item.getStartDate() != null ? item.getStartDate() : "?";
+            String endDate = item.getEndDate() != null ? item.getEndDate() : "?";
+            holder.tvPeriodDates.setText(startDate + " au " + endDate);
 
-            // =========================================================
-            // ACTION 1 : CLIC SUR LE TÉLÉPHONE -> APPEL
-            // =========================================================
-            holder.tvPhone.setOnClickListener(v -> {
-                String phoneNumber = currentDisplayItem.getPhone();
-                if (phoneNumber != null && !phoneNumber.trim().isEmpty() && !phoneNumber.contains("Non Trouvé")) {
-                    try {
-                        // ACTION_DIAL ouvre le clavier sans lancer l'appel directement (plus sûr)
-                        Intent intent = new Intent(Intent.ACTION_DIAL);
-                        intent.setData(Uri.parse("tel:" + phoneNumber.trim()));
-                        context.startActivity(intent);
-                    } catch (Exception e) {
-                        Toast.makeText(context, "Impossible d'ouvrir le téléphone.", Toast.LENGTH_SHORT).show();
-                        Log.e("Adapter", "Erreur téléphone: " + e.getMessage());
-                    }
-                } else {
-                    Toast.makeText(context, "Numéro de téléphone indisponible.", Toast.LENGTH_SHORT).show();
-                }
-            });
+            // Contact
+            holder.tvEmail.setText(item.getEmail() != null ? item.getEmail() : "Pas d'email");
+            holder.tvPhone.setText(item.getPhone() != null ? item.getPhone() : "Pas de téléphone");
 
-            // =========================================================
-            // ACTION 2 : CLIC SUR L'EMAIL -> ENVOYER UN MAIL
-            // =========================================================
-            holder.tvEmail.setOnClickListener(v -> {
-                String email = currentDisplayItem.getEmail();
-                if (email != null && !email.trim().isEmpty() && !email.contains("Non Trouvé")) {
-                    try {
-                        Intent intent = new Intent(Intent.ACTION_SENDTO);
-                        intent.setData(Uri.parse("mailto:" + email.trim()));
-                        // Sujet automatique
-                        intent.putExtra(Intent.EXTRA_SUBJECT, "Drive2Go: Réservation #" + currentDisplayItem.getReservationNumber());
-                        context.startActivity(intent);
-                    } catch (Exception e) {
-                        Toast.makeText(context, "Aucune application d'email trouvée.", Toast.LENGTH_SHORT).show();
-                        Log.e("Adapter", "Erreur email: " + e.getMessage());
-                    }
-                } else {
-                    Toast.makeText(context, "Adresse email indisponible.", Toast.LENGTH_SHORT).show();
-                }
-            });
+            // Prix (Correction du crash formatage)
+            Double price = item.getTotalPrice();
+            holder.tvTotalPrice.setText(String.format(Locale.FRENCH, "%.2f DH", (price != null ? price : 0.0)));
 
-            // Action bouton Détails
-            holder.btnDetails.setOnClickListener(v -> {
-                Log.d("Adapter", "Détails de la réservation n°" + currentDisplayItem.getReservationNumber());
-                Toast.makeText(context, "Détails: " + currentDisplayItem.getReservationNumber(), Toast.LENGTH_SHORT).show();
-            });
+            // Statut
+            holder.tvStatus.setText(getStatusText(item.getStatus()));
+            updateStatusStyle(holder.headerBg, holder.tvStatus, item.getStatus());
+
+            // Actions Clics
+            holder.tvPhone.setOnClickListener(v -> openDialer(item.getPhone()));
+            holder.tvEmail.setOnClickListener(v -> openEmail(item.getEmail(), item.getReservationNumber()));
 
         } catch (Exception e) {
-            Log.e("Adapter", "Erreur de liaison des données pour la réservation " + position + ": " + e.getMessage());
-            holder.tvName.setText("Erreur de données");
+            Log.e("Adapter", "Erreur binding: " + e.getMessage());
+            holder.tvName.setText("Erreur d'affichage");
+        }
+    }
+
+    private void openDialer(String phone) {
+        if (phone != null && !phone.isEmpty()) {
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse("tel:" + phone));
+            context.startActivity(intent);
+        }
+    }
+
+    private void openEmail(String email, String resId) {
+        if (email != null && !email.isEmpty()) {
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:" + email));
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Drive2Go: Réservation #" + resId);
+            context.startActivity(intent);
         }
     }
 
     @Override
-    public int getItemCount() {
-        return reservationList.size();
-    }
+    public int getItemCount() { return reservationList.size(); }
 
-    public void updateReservations(List<ReservationDisplayModel> newReservations) {
+    public void updateReservations(List<ReservationDisplayModel> newList) {
         this.reservationList.clear();
-        this.reservationList.addAll(newReservations);
+        this.reservationList.addAll(newList);
         notifyDataSetChanged();
     }
 
-    // =========================================================
-    // MÉTHODES UTILITAIRES
-    // =========================================================
-
     private String getStatusText(String status) {
-        if (status == null) {
-            return "Inconnu";
-        }
-        switch (status) {
-            case "En attente de validation":
-            case "En attente":
-                return "En attente";
-            case "acceptée":
-            case "Confirmée":
-                return "Confirmée";
-            case "refusée":
-            case "Annulée":
-                return "Annulée";
-            case "Terminée":
-                return "Terminée";
-            default:
-                return status;
-        }
+        if (status == null) return "En attente";
+        if (status.equalsIgnoreCase("acceptée")) return "Confirmée";
+        if (status.equalsIgnoreCase("refusée")) return "Annulée";
+        return status;
     }
 
-    private void updateStatusStyle(View headerBg, TextView tvStatus, String status) {
-        int bgColorResId;
-        int textColorResId;
-
-        if (status == null) {
-            bgColorResId = R.color.grey;
-            textColorResId = R.color.white;
-        } else {
-            // Attention aux noms exacts venant de Firestore (sensible à la casse)
-            switch (status) {
-                case "En attente":
-                case "En attente de validation":
-                    bgColorResId = R.color.orange; // Assure-toi que cette couleur existe dans colors.xml
-                    textColorResId = R.color.black;
-                    break;
-                case "acceptée":
-                case "Confirmée":
-                    bgColorResId = R.color.green_primary; // ou une couleur verte définie
-                    textColorResId = R.color.white;
-                    break;
-                case "refusée":
-                case "Annulée":
-                    bgColorResId = R.color.red_primary; // ou une couleur rouge définie
-                    textColorResId = R.color.white;
-                    break;
-                default:
-                    bgColorResId = R.color.grey;
-                    textColorResId = R.color.white;
-                    break;
-            }
+    private void updateStatusStyle(View header, TextView tvStatus, String status) {
+        int colorRes = R.color.teal_primary; // Par défaut
+        if (status != null) {
+            if (status.equalsIgnoreCase("refusée")) colorRes = android.R.color.holo_red_dark;
+            else if (status.equalsIgnoreCase("En attente")) colorRes = android.R.color.holo_orange_dark;
         }
-
-        // Utilisation de ContextCompat pour éviter les erreurs de version Android
-        try {
-            headerBg.setBackgroundColor(ContextCompat.getColor(context, bgColorResId));
-            tvStatus.setTextColor(ContextCompat.getColor(context, textColorResId));
-        } catch (Exception e) {
-            // Fallback si la couleur n'existe pas
-            Log.e("Adapter", "Erreur couleur: " + e.getMessage());
-        }
+        header.setBackgroundColor(ContextCompat.getColor(context, colorRes));
     }
 
     public static class ReservationViewHolder extends RecyclerView.ViewHolder {
-        final TextView tvResNum;
-        final TextView tvName;
-        final TextView tvStatus;
-        final View headerBg;
-
-        final TextView tvVehicleName;
-        final TextView tvPeriodDates;
-
-        final TextView tvEmail;
-        final TextView tvPhone;
-
-        final TextView tvTotalPrice;
-        final com.google.android.material.button.MaterialButton btnDetails;
+        TextView tvResNum, tvName, tvStatus, tvVehicleName, tvPeriodDates, tvEmail, tvPhone, tvTotalPrice;
+        View headerBg;
 
         public ReservationViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -210,15 +128,11 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
             tvName = itemView.findViewById(R.id.tvName);
             tvStatus = itemView.findViewById(R.id.tvStatus);
             headerBg = itemView.findViewById(R.id.headerBg);
-
             tvVehicleName = itemView.findViewById(R.id.tvVehicleName);
             tvPeriodDates = itemView.findViewById(R.id.tvPeriodDates);
-
             tvEmail = itemView.findViewById(R.id.tvEmail);
             tvPhone = itemView.findViewById(R.id.tvPhone);
-
             tvTotalPrice = itemView.findViewById(R.id.tvTotalPrice);
-            btnDetails = itemView.findViewById(R.id.btnDetails);
         }
     }
 }
