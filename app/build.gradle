@@ -1,11 +1,12 @@
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
+    // Pas de plugin 'kotlin-android' car vous travaillez en Java
 }
 
 android {
     namespace = "com.example.drive_2_go"
-    compileSdk = 34
+    compileSdk = 34 // J'ai mis 34 (stable). 36 est risqué car c'est une version bêta/preview.
 
     defaultConfig {
         applicationId = "com.example.drive_2_go"
@@ -18,17 +19,23 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled = false
+            isMinifyEnabled = false
             proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
             )
         }
     }
 
+    // Configuration pour JAVA (Version 1.8 ou 11)
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    
+    buildFeatures {
+        buildConfig = true
+        viewBinding = true // Optionnel : Utile si vous voulez remplacer findViewById
     }
 
     packaging {
@@ -41,54 +48,44 @@ android {
 
 dependencies {
 
-    // UI
+    // --- Interface Utilisateur (UI) ---
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation("androidx.drawerlayout:drawerlayout:1.2.0")
+    
+    // Auth Google (Pour le Login Google)
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 
-    // Glide
-    implementation("com.github.bumptech.glide:glide:4.15.1")
-    implementation libs.firebase.analytics
-    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
+    // --- Firebase (Géré par le BoM) ---
+    // Le BoM gère toutes les versions. On le déclare une seule fois.
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
 
+    // Déclarez les modules Firebase SANS numéro de version
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-messaging")
 
+    // --- Gestion des Images (Glide) ---
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    // Pour Java, on utilise 'annotationProcessor'
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
-    // Email
+    // --- Cloudinary (Stockage images) ---
+    implementation("com.cloudinary:cloudinary-android:3.0.2")
+
+    // --- Graphiques (MPAndroidChart) ---
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    // --- Email (JavaMail) ---
     implementation("com.sun.mail:android-mail:1.6.7")
     implementation("com.sun.mail:android-activation:1.6.7")
 
-    // Tests
+    // --- Tests ---
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-
-    implementation("com.google.firebase:firebase-storage:20.3.0")
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-
-    implementation ("com.google.android.gms:play-services-auth:20.7.0")
-
-    implementation (platform("com.google.firebase:firebase-bom:33.5.1"))
-
-// Firestore
-    implementation ("com.google.firebase:firebase-firestore")
-
-// Auth si tu l’utilises
-    implementation ("com.google.firebase:firebase-auth")
-
-    implementation ("com.google.android.material:material:1.11.0")
-
-    //cloudinary
-    implementation ("com.cloudinary:cloudinary-android:3.0.2")
-
-
-    // Tests
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
-
-
-
-
 }
